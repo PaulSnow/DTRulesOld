@@ -1,0 +1,179 @@
+<job>
+    <entity name='job' DTRulesId='100001' id='null'>
+        <cases>
+            <array name='cases' id='100002'>
+                <entity name='case' DTRulesId='100009' id='1000'>
+                    <case>
+                        <entity name='case'>self reference</entity>
+                    </case>
+                    <persons>
+                        <array name='persons' id='100010'>
+                            <entity name='person' DTRulesId='100013' id='1001'>
+                                <attribute name='income_group_member'>true</attribute>
+                                <attribute name='age'>3</attribute>
+                                <attribute name='total_income'>300</attribute>
+                                <attribute name='eligible'>false</attribute>
+                                <address>
+                                    <entity name='address' DTRulesId='100016' id='v1'>
+                                        <attribute name='mapping*key'>v1</attribute>
+                                        <address>
+                                            <entity name='address'>self reference</entity>
+                                        </address>
+                                        <attribute name='zipcode'>11111</attribute>
+                                    </entity>
+                                </address>
+                                <attribute name='mapping*key'>1001</attribute>
+                                <attribute name='pregnant'>false</attribute>
+                                <attribute name='dob'>Mon Sep 08 11:37:10 CDT 2008</attribute>
+                                <person>
+                                    <entity name='person'>self reference</entity>
+                                </person>
+                                <incomes>
+                                    <array name='incomes' id='100014'>
+                                        <entity name='income' DTRulesId='100018' id='v2'>
+                                            <attribute name='amount'>300</attribute>
+                                            <attribute name='type'>tips</attribute>
+                                            <attribute name='mapping*key'>v2</attribute>
+                                            <attribute name='earned'>true</attribute>
+                                            <income>
+                                                <entity name='income'>self reference</entity>
+                                            </income>
+                                        </entity>
+                                    </array>
+                                </incomes>
+                                <attribute name='cin'>1001</attribute>
+                                <attribute name='applicant'>false</attribute>
+                            </entity>
+                            <entity name='person' DTRulesId='100020' id='1002'>
+                                <attribute name='income_group_member'>true</attribute>
+                                <attribute name='age'>24</attribute>
+                                <attribute name='total_income'>800</attribute>
+                                <attribute name='eligible'>true</attribute>
+                                <address>
+                                    <entity name='address' DTRulesId='100023' id='v3'>
+                                        <attribute name='mapping*key'>v3</attribute>
+                                        <address>
+                                            <entity name='address'>self reference</entity>
+                                        </address>
+                                        <attribute name='zipcode'>11111</attribute>
+                                    </entity>
+                                </address>
+                                <attribute name='mapping*key'>1002</attribute>
+                                <attribute name='pregnant'>true</attribute>
+                                <attribute name='dob'>Mon Sep 08 11:37:10 CDT 2008</attribute>
+                                <person>
+                                    <entity name='person'>self reference</entity>
+                                </person>
+                                <incomes>
+                                    <array name='incomes' id='100021'>
+                                        <entity name='income' DTRulesId='100025' id='v4'>
+                                            <attribute name='amount'>800</attribute>
+                                            <attribute name='type'>salary</attribute>
+                                            <attribute name='mapping*key'>v4</attribute>
+                                            <attribute name='earned'>true</attribute>
+                                            <income>
+                                                <entity name='income'>self reference</entity>
+                                            </income>
+                                        </entity>
+                                    </array>
+                                </incomes>
+                                <attribute name='cin'>1002</attribute>
+                                <attribute name='applicant'>true</attribute>
+                            </entity>
+                        </array>
+                    </persons>
+                    <attribute name='caseid'>1000</attribute>
+                    <attribute name='case_total_income'>1100</attribute>
+                    <attribute name='mapping*key'>1000</attribute>
+                    <attribute name='AI'>366.0</attribute>
+                    <attribute name='incomegroup'>3</attribute>
+                    <relationships>
+                        <array name='relationships' id='100011'>
+                            <entity name='relationship' DTRulesId='100027' id='v5'>
+                                <attribute name='type'>child</attribute>
+                                <target>
+                                    <entity name='person' DTRulesId='100013' id='1001'>multiple reference</entity>
+                                </target>
+                                <attribute name='mapping*key'>v5</attribute>
+                                <source>
+                                    <entity name='person' DTRulesId='100020' id='1002'>multiple reference</entity>
+                                </source>
+                                <relationship>
+                                    <entity name='relationship'>self reference</entity>
+                                </relationship>
+                            </entity>
+                            <entity name='relationship' DTRulesId='100029' id='v6'>
+                                <attribute name='type'>parent</attribute>
+                                <target>
+                                    <entity name='person' DTRulesId='100020' id='1002'>multiple reference</entity>
+                                </target>
+                                <attribute name='mapping*key'>v6</attribute>
+                                <source>
+                                    <entity name='person' DTRulesId='100013' id='1001'>multiple reference</entity>
+                                </source>
+                                <relationship>
+                                    <entity name='relationship'>self reference</entity>
+                                </relationship>
+                            </entity>
+                        </array>
+                    </relationships>
+                </entity>
+            </array>
+        </cases>
+        <job>
+            <entity name='job'>self reference</entity>
+        </job>
+        <the_applicant>
+            <entity name='person' DTRulesId='100020' id='1002'>multiple reference</entity>
+        </the_applicant>
+        <excluded_types>
+            <array name='excluded_types' id='100003'>
+                <attribute name=''>CS</attribute>
+                <attribute name=''>MA</attribute>
+            </array>
+        </excluded_types>
+        <attribute name='mapping*key'>null</attribute>
+        <incomes>
+            <array name='incomes' id='100005'>
+                <entity name='income' DTRulesId='100018' id='v2'>multiple reference</entity>
+                <entity name='income' DTRulesId='100025' id='v4'>multiple reference</entity>
+            </array>
+        </incomes>
+        <results>
+            <array name='results' id='100004'>
+                <entity name='result' DTRulesId='100031' id='null'>
+                    <attribute name='age'>3</attribute>
+                    <attribute name='total_income'>300</attribute>
+                    <attribute name='eligible'>false</attribute>
+                    <attribute name='caseid'>1000</attribute>
+                    <result>
+                        <entity name='result'>self reference</entity>
+                    </result>
+                    <attribute name='case_total_income'>1100</attribute>
+                    <attribute name='mapping*key'>null</attribute>
+                    <attribute name='dob'>Mon Sep 08 11:37:10 CDT 2008</attribute>
+                    <attribute name='incomegroup'>3</attribute>
+                    <attribute name='AI'>366.0</attribute>
+                    <attribute name='pregnant'>false</attribute>
+                    <attribute name='cin'>1001</attribute>
+                </entity>
+                <entity name='result' DTRulesId='100033' id='null'>
+                    <attribute name='age'>24</attribute>
+                    <attribute name='total_income'>800</attribute>
+                    <attribute name='eligible'>true</attribute>
+                    <attribute name='caseid'>1000</attribute>
+                    <result>
+                        <entity name='result'>self reference</entity>
+                    </result>
+                    <attribute name='case_total_income'>1100</attribute>
+                    <attribute name='mapping*key'>null</attribute>
+                    <attribute name='dob'>Mon Sep 08 11:37:10 CDT 2008</attribute>
+                    <attribute name='incomegroup'>3</attribute>
+                    <attribute name='AI'>366.0</attribute>
+                    <attribute name='pregnant'>true</attribute>
+                    <attribute name='cin'>1002</attribute>
+                </entity>
+            </array>
+        </results>
+    </entity>
+</job>
