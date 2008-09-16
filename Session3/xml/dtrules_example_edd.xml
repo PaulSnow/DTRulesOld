@@ -1,0 +1,208 @@
+<entity_data_dictionary>
+    <edd_header>
+        <edd_create_stamp>Mon, 8 Sep 2008 11:36:42 -0500</edd_create_stamp>
+        <Excel_File_Name>c:/eb/workspace/Session3/edd/rules_example_edd.xls</Excel_File_Name>
+    </edd_header>
+    <edd>
+        <entry>
+            <entity entityname='job' attribute='cases' type='list' subtype='' default='null' access='r' input=''>
+            </entity>
+            <comment>List of cases in this job</comment>
+        </entry>
+        <entry>
+            <entity entityname='job' attribute='excluded_types' type='list' subtype='' default='{ CS  MA }' access='r' input=''>
+            </entity>
+            <comment>A list of excluded unearned income types</comment>
+        </entry>
+        <entry>
+            <entity entityname='job' attribute='the_applicant' type='entity' subtype='' default='null' access='rw' input=''>
+            </entity>
+            <comment>The current applicant being processed</comment>
+        </entry>
+        <entry>
+            <entity entityname='job' attribute='results' type='list' subtype='' default='null' access='rw' input=''>
+            </entity>
+            <comment>The results from running our Rule Set</comment>
+        </entry>
+        <entry>
+            <entity entityname='job' attribute='incomes' type='list' subtype='' default='' access='r' input=''>
+            </entity>
+            <comment>Incomes loaded into the EDD</comment>
+        </entry>
+        <entry>
+            <entity entityname='case' attribute='caseid' type='string' subtype='' default='null' access='r' input='main'>
+            </entity>
+            <comment>caseid</comment>
+        </entry>
+        <entry>
+            <entity entityname='case' attribute='persons' type='list' subtype='' default='null' access='r' input=''>
+            </entity>
+            <comment>List of individuals in the case</comment>
+        </entry>
+        <entry>
+            <entity entityname='case' attribute='case_total_income' type='integer' subtype='' default='0' access='rw' input=''>
+            </entity>
+            <comment>Total income for the case</comment>
+        </entry>
+        <entry>
+            <entity entityname='case' attribute='relationships' type='list' subtype='' default='null' access='r' input=''>
+            </entity>
+            <comment>All the relationships in the case</comment>
+        </entry>
+        <entry>
+            <entity entityname='case' attribute='incomegroup' type='integer' subtype='' default='0' access='rw' input=''>
+            </entity>
+            <comment>Count of the number in the Incomegroup</comment>
+        </entry>
+        <entry>
+            <entity entityname='case' attribute='AI' type='float' subtype='' default='0' access='rw' input=''>
+            </entity>
+            <comment>The Adjusted Income</comment>
+        </entry>
+        <entry>
+            <entity entityname='person' attribute='applicant' type='boolean' subtype='' default='false' access='r' input='main'>
+            </entity>
+            <comment>Is this individual the Applicant</comment>
+        </entry>
+        <entry>
+            <entity entityname='person' attribute='cin' type='string' subtype='' default='null' access='r' input='main'>
+            </entity>
+            <comment>Unique Client ID</comment>
+        </entry>
+        <entry>
+            <entity entityname='person' attribute='age' type='integer' subtype='' default='0' access='r' input='main'>
+            </entity>
+            <comment>The age of the individual</comment>
+        </entry>
+        <entry>
+            <entity entityname='person' attribute='dob' type='date' subtype='' default='' access='r' input='main'>
+            </entity>
+            <comment>Date of Birth</comment>
+        </entry>
+        <entry>
+            <entity entityname='person' attribute='pregnant' type='boolean' subtype='' default='false' access='r' input='main'>
+            </entity>
+            <comment>Is this person pregnant</comment>
+        </entry>
+        <entry>
+            <entity entityname='person' attribute='eligible' type='boolean' subtype='' default='false' access='rw' input=''>
+            </entity>
+            <comment>Default not eligible</comment>
+        </entry>
+        <entry>
+            <entity entityname='person' attribute='incomes' type='list' subtype='' default='null' access='r' input=''>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='person' attribute='total_income' type='integer' subtype='' default='0' access='rw' input=''>
+            </entity>
+            <comment>Total income for the person</comment>
+        </entry>
+        <entry>
+            <entity entityname='person' attribute='income_group_member' type='boolean' subtype='' default='false' access='rw' input=''>
+            </entity>
+            <comment>Is this person in the Income Group</comment>
+        </entry>
+        <entry>
+            <entity entityname='person' attribute='address' type='entity' subtype='' default='' access='rw' input='main'>
+            </entity>
+            <comment>Address obj</comment>
+        </entry>
+        <entry>
+            <entity entityname='income' attribute='earned' type='boolean' subtype='' default='true' access='r' input='main'>
+            </entity>
+            <comment>Earned or unEarned</comment>
+        </entry>
+        <entry>
+            <entity entityname='income' attribute='type' type='string' subtype='' default='tips' access='r' input='main'>
+            </entity>
+            <comment>Child Support, Salary, tips, self imployment, Medical Assistance, Game show winninngs</comment>
+        </entry>
+        <entry>
+            <entity entityname='income' attribute='amount' type='integer' subtype='' default='null' access='r' input='main'>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='relationship' attribute='source' type='entity' subtype='' default='null' access='r' input='main'>
+            </entity>
+            <comment>these describe the relationships in the case</comment>
+        </entry>
+        <entry>
+            <entity entityname='relationship' attribute='target' type='entity' subtype='' default='null' access='r' input='main'>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='relationship' attribute='type' type='string' subtype='' default='null' access='r' input='main'>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='constants' attribute='spouse' type='string' subtype='' default='spouse' access='r' input=''>
+            </entity>
+            <comment>constants for relationships: spouse</comment>
+        </entry>
+        <entry>
+            <entity entityname='constants' attribute='child' type='string' subtype='' default='child' access='r' input=''>
+            </entity>
+            <comment>constants for relationships: child</comment>
+        </entry>
+        <entry>
+            <entity entityname='constants' attribute='parent' type='string' subtype='' default='parent' access='r' input=''>
+            </entity>
+            <comment>constants for relationships: parent</comment>
+        </entry>
+        <entry>
+            <entity entityname='result' attribute='caseid' type='string' subtype='' default='caseid' access='rw' input=''>
+            </entity>
+            <comment>The Case ID for the Individual</comment>
+        </entry>
+        <entry>
+            <entity entityname='result' attribute='cin' type='string' subtype='' default='null' access='rw' input=''>
+            </entity>
+            <comment>The individual CIN</comment>
+        </entry>
+        <entry>
+            <entity entityname='result' attribute='age' type='integer' subtype='' default='0' access='rw' input=''>
+            </entity>
+            <comment>Individual info</comment>
+        </entry>
+        <entry>
+            <entity entityname='result' attribute='pregnant' type='boolean' subtype='' default='false' access='rw' input=''>
+            </entity>
+            <comment>Individual info</comment>
+        </entry>
+        <entry>
+            <entity entityname='result' attribute='case_total_income' type='integer' subtype='' default='0' access='rw' input=''>
+            </entity>
+            <comment>case info</comment>
+        </entry>
+        <entry>
+            <entity entityname='result' attribute='total_income' type='integer' subtype='' default='0' access='rw' input=''>
+            </entity>
+            <comment>Individual info</comment>
+        </entry>
+        <entry>
+            <entity entityname='result' attribute='AI' type='float' subtype='' default='0' access='rw' input=''>
+            </entity>
+            <comment>case info</comment>
+        </entry>
+        <entry>
+            <entity entityname='result' attribute='incomegroup' type='integer' subtype='' default='0' access='rw' input=''>
+            </entity>
+            <comment>case info</comment>
+        </entry>
+        <entry>
+            <entity entityname='result' attribute='eligible' type='boolean' subtype='' default='false' access='rw' input=''>
+            </entity>
+            <comment>Individual info</comment>
+        </entry>
+        <entry>
+            <entity entityname='result' attribute='dob' type='date' subtype='' default='' access='rw' input=''>
+            </entity>
+            <comment>birth date</comment>
+        </entry>
+        <entry>
+            <entity entityname='address' attribute='zipcode' type='string' subtype='' default='11111' access='r' input='main'>
+            </entity>
+        </entry>
+    </edd>
+</entity_data_dictionary>

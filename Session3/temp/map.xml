@@ -1,0 +1,43 @@
+<mapping>
+    <XMLtoEDD>
+        <map>
+            <setattribute tag='caseid' RAttribute='caseid' enclosure='case' type='string'></setattribute>
+            <setattribute tag='applicant' RAttribute='applicant' enclosure='person' type='boolean'></setattribute>
+            <setattribute tag='cin' RAttribute='cin' enclosure='person' type='string'></setattribute>
+            <setattribute tag='age' RAttribute='age' enclosure='person' type='integer'></setattribute>
+            <setattribute tag='dob' RAttribute='dob' enclosure='person' type='date'></setattribute>
+            <setattribute tag='pregnant' RAttribute='pregnant' enclosure='person' type='boolean'></setattribute>
+            <setattribute tag='address' RAttribute='address' enclosure='person' type='entity'></setattribute>
+            <setattribute tag='earned' RAttribute='earned' enclosure='income' type='boolean'></setattribute>
+            <setattribute tag='type' RAttribute='type' enclosure='income' type='string'></setattribute>
+            <setattribute tag='amount' RAttribute='amount' enclosure='income' type='integer'></setattribute>
+            <setattribute tag='source' RAttribute='source' enclosure='relationship' type='entity'></setattribute>
+            <setattribute tag='target' RAttribute='target' enclosure='relationship' type='entity'></setattribute>
+            <setattribute tag='type' RAttribute='type' enclosure='relationship' type='string'></setattribute>
+            <setattribute tag='zipcode' RAttribute='zipcode' enclosure='address' type='string'></setattribute>
+            <createentity entity='job' tag='job' id='id'></createentity>
+            <createentity entity='case' tag='case' id='id'></createentity>
+            <createentity entity='person' tag='person' id='id'></createentity>
+            <createentity entity='income' tag='income' id='id'></createentity>
+            <createentity entity='relationship' tag='relationship' id='id'></createentity>
+            <createentity entity='constants' tag='constants' id='id'></createentity>
+            <createentity entity='result' tag='result' id='id'></createentity>
+            <createentity entity='address' tag='address' id='id'></createentity>
+        </map>
+        <entities>
+            <entity name='job' number='*'></entity>
+            <entity name='case' number='*'></entity>
+            <entity name='person' number='*'></entity>
+            <entity name='income' number='*'></entity>
+            <entity name='relationship' number='*'></entity>
+            <entity name='constants' number='*'></entity>
+            <entity name='result' number='*'></entity>
+            <entity name='address' number='*'></entity>
+        </entities>
+        <initialization>
+            <initialentity entity='job' epush='true'></initialentity>
+            <initialentity entity='constants' epush='true'></initialentity>
+            <initialentity entity='result' epush='true'></initialentity>
+        </initialization>
+    </XMLtoEDD>
+</mapping>

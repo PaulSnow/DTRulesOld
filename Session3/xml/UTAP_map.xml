@@ -1,0 +1,73 @@
+<mapping>
+    <XMLtoEDD>
+        <map>
+            <setattribute tag='caseid' RAttribute='caseid' enclosure='case' type='string'/>
+		
+            <setattribute tag='cin' RAttribute='cin' enclosure='person' type='string'/>
+            <setattribute tag='addressid' RAttribute='address' enclosure='person' type='entity'/>
+		
+            <setattribute tag='dob' RAttribute='dob' enclosure='person' type='date'/>
+            <setattribute tag='xapplicant' RAttribute='Applicant' enclosure='person' type='boolean'/>
+            <setattribute tag='age' RAttribute='Age' enclosure='person' type='integer'></setattribute>
+            <setattribute tag='pregnant' RAttribute='Pregnant' enclosure='person' type='boolean'/>
+            <setattribute tag='earned' RAttribute='earned' enclosure='income' type='boolean'/>
+            <setattribute tag='type' RAttribute='type' enclosure='income' type='string'/>
+            <setattribute tag='amount' RAttribute='amount' enclosure='income' type='integer'/>
+            <setattribute tag='source' RAttribute='source' enclosure='relationship' type='entity'/>
+            <setattribute tag='target' RAttribute='target' enclosure='relationship' type='entity'/>
+            <setattribute tag='type' RAttribute='type' enclosure='relationship' type='string'/>
+           
+            <createentity entity='case' tag='case' id='id'/>
+            <createentity entity='person' tag='person' id='id'/>
+            <createentity entity='person' tag='target' id='id'/>
+            <createentity entity='person' tag='source' id='id'/>
+            <createentity entity='income' tag='income' id='id'/>
+            <createentity entity='relationship' tag='relationship' id='id'/>
+            <createentity entity='address' tag='addressid' id='id'/>
+
+        </map>
+        
+        <dataobjects>
+            <do2entitymap 
+				entity_tag    = "person"	            
+                entity        = "person"
+                class         = "com.dtrules.example2.Test_Code_Example$Person"
+				key           = "cin"
+	            key_attribute = "id" 
+            />
+           <do2entitymap 
+				entity_tag    = "source"	            
+                entity        = "person"
+                class         = "com.dtrules.example2.Test_Code_Example$Person"
+				key           = "cin"
+	            key_attribute = "id" 
+            />
+            <do2entitymap 
+				entity_tag    = "target"	            
+                entity        = "person"
+                class         = "com.dtrules.example2.Test_Code_Example$Person"
+				key           = "cin"
+	            key_attribute = "id" 
+            />
+            <do2entitymap
+                entity        = "income"
+			    entity_tag    = "income"
+                class         = "com.dtrules.example2.Test_Code_Example$Income" 
+
+			/>
+        </dataobjects>
+        
+        <entities>
+            <entity name='job' number='1'/>
+            <entity name='case' number='*'/>
+            <entity name='person' number='*'/>
+            <entity name='income' number='*'/>
+            <entity name='relationship' number='*'/>
+            <entity name='constants' number='1'/>
+        </entities>
+        <initialization>
+            <initialentity entity='job' epush='true'/>      
+            <initialentity entity='constants' epush='true'/> 
+        </initialization>
+    </XMLtoEDD>
+</mapping>
