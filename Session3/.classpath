@@ -7,7 +7,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/DTParser"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DTScanner"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ExcelUtil"/>
-	<classpathentry kind="lib" path="C:/RulesEngine/workspace/DTRules/lib/jsr94.jar"/>
-	<classpathentry kind="lib" path="C:/RulesEngine/workspace/MaximusExcelUtil/lib/poi.jar"/>
+	<classpathentry kind="lib" path="/DTRules/lib/jsr94.jar"/>
+	<classpathentry kind="lib" path="/ExcelUtil/lib/poi.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

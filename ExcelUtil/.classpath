@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="lib" path="/DTRules/lib/jsr94.jar"/>
-	<classpathentry kind="lib" path="lib/poi-3.1-FINAL-20080629.jar"/>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/DSLCompiler"/>
@@ -9,5 +8,6 @@
 	<classpathentry kind="src" path="/DTParser"/>
 	<classpathentry kind="src" path="/DTScanner"/>
 	<classpathentry kind="lib" path="/DTParser/lib/java-cup-11a.jar"/>
+	<classpathentry kind="lib" path="lib/poi.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

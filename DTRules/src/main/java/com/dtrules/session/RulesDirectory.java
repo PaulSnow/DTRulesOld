@@ -134,8 +134,8 @@ public class RulesDirectory {
         }
         this.propertyfile = propertyfile;  
         this.systemPath   = systemPath.trim();
-
-        InputStream s = openstream(this,systemPath +"/"+ propertyfile);
+        String f = systemPath + "/" + propertyfile;
+        InputStream s = openstream(this,f);
     	loadRulesDirectory(s);
     }
     

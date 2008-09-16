@@ -6,55 +6,55 @@
 </Load>
 <Load>&lt;map &gt;
 </Load>
-<Load>&lt;setattribute enclosure = &apos;case&apos;type = &apos;string&apos;RAttribute = &apos;caseid&apos;tag = &apos;caseid&apos;&gt;
+<Load>&lt;setattribute enclosure = &apos;case&apos;RAttribute = &apos;caseid&apos;tag = &apos;caseid&apos;type = &apos;string&apos;&gt;
 </Load>
-<Load>&lt;setattribute enclosure = &apos;person&apos;type = &apos;string&apos;RAttribute = &apos;cin&apos;tag = &apos;cin&apos;&gt;
+<Load>&lt;setattribute enclosure = &apos;person&apos;RAttribute = &apos;cin&apos;tag = &apos;cin&apos;type = &apos;string&apos;&gt;
 </Load>
-<Load>&lt;setattribute enclosure = &apos;person&apos;type = &apos;entity&apos;RAttribute = &apos;address&apos;tag = &apos;addressid&apos;&gt;
+<Load>&lt;setattribute enclosure = &apos;person&apos;RAttribute = &apos;address&apos;tag = &apos;addressid&apos;type = &apos;entity&apos;&gt;
 </Load>
-<Load>&lt;setattribute enclosure = &apos;person&apos;type = &apos;date&apos;RAttribute = &apos;dob&apos;tag = &apos;dob&apos;&gt;
+<Load>&lt;setattribute enclosure = &apos;person&apos;RAttribute = &apos;dob&apos;tag = &apos;dob&apos;type = &apos;date&apos;&gt;
 </Load>
-<Load>&lt;setattribute enclosure = &apos;person&apos;type = &apos;boolean&apos;RAttribute = &apos;Applicant&apos;tag = &apos;xapplicant&apos;&gt;
+<Load>&lt;setattribute enclosure = &apos;person&apos;RAttribute = &apos;Applicant&apos;tag = &apos;xapplicant&apos;type = &apos;boolean&apos;&gt;
 </Load>
-<Load>&lt;setattribute enclosure = &apos;person&apos;type = &apos;integer&apos;RAttribute = &apos;Age&apos;tag = &apos;age&apos;&gt;
+<Load>&lt;setattribute enclosure = &apos;person&apos;RAttribute = &apos;Age&apos;tag = &apos;age&apos;type = &apos;integer&apos;&gt;
 </Load>
-<Load>&lt;setattribute enclosure = &apos;person&apos;type = &apos;boolean&apos;RAttribute = &apos;Pregnant&apos;tag = &apos;pregnant&apos;&gt;
+<Load>&lt;setattribute enclosure = &apos;person&apos;RAttribute = &apos;Pregnant&apos;tag = &apos;pregnant&apos;type = &apos;boolean&apos;&gt;
 </Load>
-<Load>&lt;setattribute enclosure = &apos;income&apos;type = &apos;boolean&apos;RAttribute = &apos;earned&apos;tag = &apos;earned&apos;&gt;
+<Load>&lt;setattribute enclosure = &apos;income&apos;RAttribute = &apos;earned&apos;tag = &apos;earned&apos;type = &apos;boolean&apos;&gt;
 </Load>
-<Load>&lt;setattribute enclosure = &apos;income&apos;type = &apos;string&apos;RAttribute = &apos;type&apos;tag = &apos;type&apos;&gt;
+<Load>&lt;setattribute enclosure = &apos;income&apos;RAttribute = &apos;type&apos;tag = &apos;type&apos;type = &apos;string&apos;&gt;
 </Load>
-<Load>&lt;setattribute enclosure = &apos;income&apos;type = &apos;integer&apos;RAttribute = &apos;amount&apos;tag = &apos;amount&apos;&gt;
+<Load>&lt;setattribute enclosure = &apos;income&apos;RAttribute = &apos;amount&apos;tag = &apos;amount&apos;type = &apos;integer&apos;&gt;
 </Load>
-<Load>&lt;setattribute enclosure = &apos;relationship&apos;type = &apos;entity&apos;RAttribute = &apos;source&apos;tag = &apos;source&apos;&gt;
+<Load>&lt;setattribute enclosure = &apos;relationship&apos;RAttribute = &apos;source&apos;tag = &apos;source&apos;type = &apos;entity&apos;&gt;
 </Load>
-<Load>&lt;setattribute enclosure = &apos;relationship&apos;type = &apos;entity&apos;RAttribute = &apos;target&apos;tag = &apos;target&apos;&gt;
+<Load>&lt;setattribute enclosure = &apos;relationship&apos;RAttribute = &apos;target&apos;tag = &apos;target&apos;type = &apos;entity&apos;&gt;
 </Load>
-<Load>&lt;setattribute enclosure = &apos;relationship&apos;type = &apos;string&apos;RAttribute = &apos;type&apos;tag = &apos;type&apos;&gt;
+<Load>&lt;setattribute enclosure = &apos;relationship&apos;RAttribute = &apos;type&apos;tag = &apos;type&apos;type = &apos;string&apos;&gt;
 </Load>
-<Load>&lt;createentity tag = &apos;case&apos;entity = &apos;case&apos;id = &apos;id&apos;&gt;
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;case&apos;entity = &apos;case&apos;&gt;
 </Load>
-<Load>&lt;createentity tag = &apos;person&apos;entity = &apos;person&apos;id = &apos;id&apos;&gt;
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;person&apos;entity = &apos;person&apos;&gt;
 </Load>
-<Load>&lt;createentity tag = &apos;target&apos;entity = &apos;person&apos;id = &apos;id&apos;&gt;
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;target&apos;entity = &apos;person&apos;&gt;
 </Load>
-<Load>&lt;createentity tag = &apos;source&apos;entity = &apos;person&apos;id = &apos;id&apos;&gt;
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;source&apos;entity = &apos;person&apos;&gt;
 </Load>
-<Load>&lt;createentity tag = &apos;income&apos;entity = &apos;income&apos;id = &apos;id&apos;&gt;
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;income&apos;entity = &apos;income&apos;&gt;
 </Load>
-<Load>&lt;createentity tag = &apos;relationship&apos;entity = &apos;relationship&apos;id = &apos;id&apos;&gt;
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;relationship&apos;entity = &apos;relationship&apos;&gt;
 </Load>
-<Load>&lt;createentity tag = &apos;addressid&apos;entity = &apos;address&apos;id = &apos;id&apos;&gt;
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;addressid&apos;entity = &apos;address&apos;&gt;
 </Load>
 <Load>&lt;dataobjects &gt;
 </Load>
-<Load>&lt;do2entitymap key_attribute = &apos;id&apos;key = &apos;cin&apos;class = &apos;com.dtrules.example2.Test_Code_Example$Person&apos;entity_tag = &apos;person&apos;entity = &apos;person&apos;&gt;
+<Load>&lt;do2entitymap entity_tag = &apos;person&apos;key_attribute = &apos;id&apos;entity = &apos;person&apos;class = &apos;com.dtrules.example2.Test_Code_Example$Person&apos;key = &apos;cin&apos;&gt;
 </Load>
-<Load>&lt;do2entitymap key_attribute = &apos;id&apos;key = &apos;cin&apos;class = &apos;com.dtrules.example2.Test_Code_Example$Person&apos;entity_tag = &apos;source&apos;entity = &apos;person&apos;&gt;
+<Load>&lt;do2entitymap entity_tag = &apos;source&apos;key_attribute = &apos;id&apos;entity = &apos;person&apos;class = &apos;com.dtrules.example2.Test_Code_Example$Person&apos;key = &apos;cin&apos;&gt;
 </Load>
-<Load>&lt;do2entitymap key_attribute = &apos;id&apos;key = &apos;cin&apos;class = &apos;com.dtrules.example2.Test_Code_Example$Person&apos;entity_tag = &apos;target&apos;entity = &apos;person&apos;&gt;
+<Load>&lt;do2entitymap entity_tag = &apos;target&apos;key_attribute = &apos;id&apos;entity = &apos;person&apos;class = &apos;com.dtrules.example2.Test_Code_Example$Person&apos;key = &apos;cin&apos;&gt;
 </Load>
-<Load>&lt;do2entitymap class = &apos;com.dtrules.example2.Test_Code_Example$Income&apos;entity_tag = &apos;income&apos;entity = &apos;income&apos;&gt;
+<Load>&lt;do2entitymap entity_tag = &apos;income&apos;entity = &apos;income&apos;class = &apos;com.dtrules.example2.Test_Code_Example$Income&apos;&gt;
 </Load>
 <Load>&lt;entities &gt;
 </Load>
@@ -88,6 +88,19 @@
 <process>
 <createEntity name='person' id='1001'>
 <process>
+<def entity='/person 100013 createEntity ' name='age'>3</def>
+<message>   /age &quot;3&quot; def</message>
+</process>
+<process>
+<createEntity name='address' id=''></createEntity>
+<def entity='/person 100013 createEntity ' name='address'>/address 100016 createEntity </def>
+<message>   /address &quot;&quot; def</message>
+</process>
+<process>
+<def entity='/person 100013 createEntity ' name='pregnant'>false</def>
+<message>   /pregnant &quot;false&quot; def</message>
+</process>
+<process>
 <def entity='/person 100013 createEntity ' name='cin'>&quot;1001&quot;</def>
 <message>   /cin &quot;1001&quot; def</message>
 </process>
@@ -96,29 +109,12 @@
 <message>   /applicant &quot;false&quot; def</message>
 </process>
 <process>
-<def entity='/person 100013 createEntity ' name='pregnant'>false</def>
-<message>   /pregnant &quot;false&quot; def</message>
-</process>
-<process>
-<createEntity name='address' id=''></createEntity>
-<def entity='/person 100013 createEntity ' name='address'>/address 100016 createEntity </def>
-<message>   /address &quot;&quot; def</message>
-</process>
-<process>
-<def entity='/person 100013 createEntity ' name='dob'>09/08/2008 11:37 AM</def>
-<message>   /dob &quot;Mon Sep 08 11:37:10 CDT 2008&quot; def</message>
-</process>
-<process>
-<def entity='/person 100013 createEntity ' name='age'>3</def>
-<message>   /age &quot;3&quot; def</message>
+<def entity='/person 100013 createEntity ' name='dob'>09/15/2008 10:24 PM</def>
+<message>   /dob &quot;Mon Sep 15 22:24:15 CDT 2008&quot; def</message>
 </process>
 <process>
 <process>
 <createEntity name='income' id=''>
-<process>
-<def entity='/income 100018 createEntity ' name='amount'>300</def>
-<message>   /amount &quot;300&quot; def</message>
-</process>
 <process>
 <def entity='/income 100018 createEntity ' name='earned'>true</def>
 <message>   /earned &quot;true&quot; def</message>
@@ -126,6 +122,10 @@
 <process>
 <def entity='/income 100018 createEntity ' name='type'>&quot;tips&quot;</def>
 <message>   /type &quot;tips&quot; def</message>
+</process>
+<process>
+<def entity='/income 100018 createEntity ' name='amount'>300</def>
+<message>   /amount &quot;300&quot; def</message>
 </process>
 </createEntity>
 </process>
@@ -135,6 +135,19 @@
 <process>
 <createEntity name='person' id='1002'>
 <process>
+<def entity='/person 100020 createEntity ' name='age'>24</def>
+<message>   /age &quot;24&quot; def</message>
+</process>
+<process>
+<createEntity name='address' id=''></createEntity>
+<def entity='/person 100020 createEntity ' name='address'>/address 100023 createEntity </def>
+<message>   /address &quot;&quot; def</message>
+</process>
+<process>
+<def entity='/person 100020 createEntity ' name='pregnant'>true</def>
+<message>   /pregnant &quot;true&quot; def</message>
+</process>
+<process>
 <def entity='/person 100020 createEntity ' name='cin'>&quot;1002&quot;</def>
 <message>   /cin &quot;1002&quot; def</message>
 </process>
@@ -143,29 +156,12 @@
 <message>   /applicant &quot;true&quot; def</message>
 </process>
 <process>
-<def entity='/person 100020 createEntity ' name='pregnant'>true</def>
-<message>   /pregnant &quot;true&quot; def</message>
-</process>
-<process>
-<createEntity name='address' id=''></createEntity>
-<def entity='/person 100020 createEntity ' name='address'>/address 100023 createEntity </def>
-<message>   /address &quot;&quot; def</message>
-</process>
-<process>
-<def entity='/person 100020 createEntity ' name='dob'>09/08/2008 11:37 AM</def>
-<message>   /dob &quot;Mon Sep 08 11:37:10 CDT 2008&quot; def</message>
-</process>
-<process>
-<def entity='/person 100020 createEntity ' name='age'>24</def>
-<message>   /age &quot;24&quot; def</message>
+<def entity='/person 100020 createEntity ' name='dob'>09/15/2008 10:24 PM</def>
+<message>   /dob &quot;Mon Sep 15 22:24:15 CDT 2008&quot; def</message>
 </process>
 <process>
 <process>
 <createEntity name='income' id=''>
-<process>
-<def entity='/income 100025 createEntity ' name='amount'>800</def>
-<message>   /amount &quot;800&quot; def</message>
-</process>
 <process>
 <def entity='/income 100025 createEntity ' name='earned'>true</def>
 <message>   /earned &quot;true&quot; def</message>
@@ -173,6 +169,10 @@
 <process>
 <def entity='/income 100025 createEntity ' name='type'>&quot;salary&quot;</def>
 <message>   /type &quot;salary&quot; def</message>
+</process>
+<process>
+<def entity='/income 100025 createEntity ' name='amount'>800</def>
+<message>   /amount &quot;800&quot; def</message>
 </process>
 </createEntity>
 </process>
@@ -392,7 +392,7 @@
 <def entity='/result 100031 createEntity ' name='result.AI'>366.0</def>
 <def entity='/result 100031 createEntity ' name='result.incomegroup'>3</def>
 <def entity='/result 100031 createEntity ' name='result.caseid'>&quot;1000&quot;</def>
-<def entity='/result 100031 createEntity ' name='result.dob'>09/08/2008 11:37 AM</def>
+<def entity='/result 100031 createEntity ' name='result.dob'>09/15/2008 10:24 PM</def>
 </initialActions>
 <Condition n='0'r='N'>
 <Formal>person.age &gt; 18</Formal>
@@ -428,7 +428,7 @@
 <def entity='/result 100033 createEntity ' name='result.AI'>366.0</def>
 <def entity='/result 100033 createEntity ' name='result.incomegroup'>3</def>
 <def entity='/result 100033 createEntity ' name='result.caseid'>&quot;1000&quot;</def>
-<def entity='/result 100033 createEntity ' name='result.dob'>09/08/2008 11:37 AM</def>
+<def entity='/result 100033 createEntity ' name='result.dob'>09/15/2008 10:24 PM</def>
 </initialActions>
 <Condition n='0'r='Y'>
 <Formal>person.age &gt; 18</Formal>
