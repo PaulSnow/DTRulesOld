@@ -22,7 +22,6 @@
 package com.dtrules.compiler.cup;
 
 import java.util.*;
-import java.io.*;
 import java_cup.runtime.*;
 
 /** CUP v0.11a beta 20060608 generated parser.
