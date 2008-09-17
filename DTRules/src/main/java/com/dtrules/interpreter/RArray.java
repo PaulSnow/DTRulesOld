@@ -200,8 +200,13 @@ public class RArray extends ARObject implements Collection<IRObject> {
 			    try{
 				   obj.execute(state);
 			    }catch(RulesException e){
-			       e.setPostfix(this.postFix());
-			       e.setIndex(cnt);
+			       String ps = "";
+			       for(int i=0;i<array.size();i++){
+			           if (i==cnt) ps += " ERROR==> ";
+			           ps += array.get(i).postFix()+" ";
+			           if (i==cnt) ps += " <== ";
+			       }
+			       e.setPostfix(ps);
 			       throw e;
 			    }
 			}

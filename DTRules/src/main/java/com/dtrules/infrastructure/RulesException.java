@@ -25,8 +25,7 @@ public class RulesException extends RuleException {
 	String location;
     String message;
     String decisionTable="";
-    String postfix      = null;
-    int    index        = -1;
+    String postfix      = null;    
     String filename     = null;
     String section      = null;
     int    number;
@@ -36,9 +35,7 @@ public class RulesException extends RuleException {
             postfix = s;
         }
     }
-    public void setIndex(int index){
-        if(this.index <0)this.index = index;
-    }
+   
     public String getPostfix(){
         return postfix;
     }
@@ -83,9 +80,8 @@ public class RulesException extends RuleException {
         return 
           (decisionTable!="" ?  "\nDecision Table: "+decisionTable:"\n") +
                                   "File name:      "+filename+"\n"+
-          ((section!= null)  ?    ("Section:       "+section + " " + number +"\n"):"")+  
-          ((postfix!= null)  ?    ("Postfix:       "+postfix+"\n"):"")+
-          ((index>=0)        ?    ("                index: "+index+"\n"):"")+
+          ((section!= null)  ?   ("Section:        "+section + " " + number +"\n"):"")+  
+          ((postfix!= null)  ?   ("Postfix:        "+postfix+"\n"):"")+
         	                      "Location:       '"+location+"'\n" +
         	                      "Type:           '"+errortype+"'\n" +
         	                      "Error:          '"+message+"'\n" ;
