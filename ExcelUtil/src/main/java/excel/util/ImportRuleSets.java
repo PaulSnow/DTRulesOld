@@ -144,16 +144,29 @@ public class ImportRuleSets {
     }
     
     public void convertEDD(String excelFileName, String outputXMLName) throws Exception {
-
-        // First open the EDD input file.
-        if(! (excelFileName.endsWith(".xls"))) throw new Exception("EDD Excel File name is invalid"); 
-                
-        InputStream input = new FileInputStream(new File(excelFileName));
+        InputStream  input = new FileInputStream(new File(excelFileName));
+        OutputStream xstrm = new FileOutputStream(outputXMLName);
+        
+        // If the EDD is an XML file, We assume no conversion is necessary.
+        if(excelFileName.endsWith(".xml")){
+            // Transfer bytes from in to out
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = input.read(buf)) > 0) {
+                xstrm.write(buf, 0, len);
+            }
+            input.close();
+            xstrm.close();
+            return;
+            
+        }else if(! (excelFileName.endsWith(".xls"))) throw new Exception("EDD Excel File name is invalid"); 
+        // If the EDD is an Excel file, we need to convert the thing.        
+       
         HSSFWorkbook wb = new HSSFWorkbook(input);
         HSSFSheet sheet = wb.getSheetAt(0);
 
         // Open the EDD.xml output file
-        OutputStream xstrm = new FileOutputStream(outputXMLName);
+        
         XMLPrinter   xout = new XMLPrinter("entity_data_dictionary", xstrm);
                 
         // Write out a header in the EDD xml file.

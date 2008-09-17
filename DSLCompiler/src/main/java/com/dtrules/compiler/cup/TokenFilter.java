@@ -90,6 +90,7 @@ public class TokenFilter implements Scanner{
      * 
      * @param type integer code associated with a symbol.
      */
+    @SuppressWarnings("unchecked")
     private String type2str(int type){
         try{
             Class   tokentypes  = sym.class;

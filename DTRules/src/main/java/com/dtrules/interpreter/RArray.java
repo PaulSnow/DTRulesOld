@@ -201,6 +201,7 @@ public class RArray extends ARObject implements Collection<IRObject> {
 				   obj.execute(state);
 			    }catch(RulesException e){
 			       e.setPostfix(this.postFix());
+			       e.setIndex(cnt);
 			       throw e;
 			    }
 			}
