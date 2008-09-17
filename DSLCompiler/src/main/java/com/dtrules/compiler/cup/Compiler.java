@@ -22,15 +22,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
-
-import javax.swing.JComboBox.KeySelectionManager;
-
-import java_cup.runtime.Scanner;
-import java_cup.runtime.lr_parser;
-
 import com.dtrules.compiler.RType;
-import com.dtrules.decisiontables.RDecisionTable;
 import com.dtrules.entity.REntity;
 import com.dtrules.entity.REntityEntry;
 import com.dtrules.infrastructure.RulesException;
@@ -39,23 +31,18 @@ import com.dtrules.interpreter.RName;
 import com.dtrules.session.EntityFactory;
 import com.dtrules.session.ICompiler;
 import com.dtrules.session.IRSession;
-import com.dtrules.session.RSession;
 
 public class Compiler implements ICompiler {
     
     private       HashMap<RName,RType>     types = null;
     private final EntityFactory            ef;
     private final IRSession                session;
-    private RDecisionTable                 currentTable;    
+       
     private       int                      localcnt = 0;  // Count of local variables 
                   HashMap<String,RLocalType> localtypes = new HashMap<String,RLocalType>();
        
     public void setTableName(String tablename) {
-        try{
-        currentTable = ef.getDecisionTable(RName.getRName(tablename));
-        }catch (RulesException e) {
-            /** Just ignore this if the name isn't found **/
-        }
+        
     }
     
     
@@ -67,7 +54,7 @@ public class Compiler implements ICompiler {
      * @throws Exception
      */
     private void addType( REntity entity, RName name, int itype) throws Exception {
-        RType type =  (RType) types.get(name);
+        RType type =  types.get(name);
         if(type==null){
             type      = new RType(name,itype,entity);
             types.put(name,type);
@@ -90,27 +77,27 @@ public class Compiler implements ICompiler {
      * @return
      * @throws Exception
      */
-    public HashMap getTypes(EntityFactory ef) throws Exception {
+    public HashMap<RName,RType> getTypes(EntityFactory ef) throws Exception {
         
         if(types!=null)return types;
         
         types = new HashMap<RName, RType>();
-        Iterator entities = ef.getEntityRNameIterator();
+        Iterator<RName> entities = ef.getEntityRNameIterator();
         while(entities.hasNext()){
-            RName    name    = (RName) entities.next();
+            RName    name    = entities.next();
             REntity  entity  = ef.findRefEntity(name);
-            Iterator attribs = entity.getAttributeIterator();
+            Iterator<RName> attribs = entity.getAttributeIterator();
             addType(entity,entity.getName(),IRObject.iEntity);
             while(attribs.hasNext()){
-                RName        attribname = (RName) attribs.next();
+                RName        attribname = attribs.next();
                 REntityEntry entry      = entity.getEntry(attribname);
                 addType(entity,attribname,entry.type);
             }
         }
         
-        Iterator tables = ef.getDecisionTableRNameIterator();
+        Iterator<RName> tables = ef.getDecisionTableRNameIterator();
         while(tables.hasNext()){
-            RName tablename = (RName) tables.next();
+            RName tablename = tables.next();
             RType type = new RType(tablename,IRObject.iDecisiontable,(REntity) ef.getDecisiontables());
             if(types.containsKey(tablename)){
                 System.out.println("Multiple Decision Tables found with the name '"+types.get(tablename)+"'");
@@ -125,7 +112,7 @@ public class Compiler implements ICompiler {
      * Prints all the types known to the compiler
      */
     public void printTypes(PrintStream out) throws RulesException {
-        Object typenames[] = (Object []) types.keySet().toArray();
+        Object typenames[] = types.keySet().toArray();
         for(int i=0;i<typenames.length-1;i++){
             for(int j=0;j<typenames.length-1;j++){
                 RName one = (RName)typenames[j], two = (RName)typenames[j+1];
@@ -238,7 +225,7 @@ public class Compiler implements ICompiler {
     /* (non-Javadoc)
      * @see com.dtrules.compiler.ICompiler#getTypes()
      */
-    public HashMap getTypes() {
+    public HashMap<RName,RType> getTypes() {
         return types;
     }
     /**

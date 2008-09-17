@@ -34,6 +34,7 @@ public class EDDLoader implements IGenericXMLParser {
 	final String           filename;
     boolean                succeeded =  true;
 	String                 errorMsgs =  "";
+	int                    version   =  1;
 	
 	EDDLoader(String _filename, EntityFactory _ef){
 		ef = _ef;
@@ -58,6 +59,17 @@ public class EDDLoader implements IGenericXMLParser {
 
     public void beginTag(String[] tagstk, int tagstkptr, String tag,
 		HashMap attribs) throws IOException, Exception {
+        
+        if(tag.equals("entity_data_dictionary") ){
+            
+            try{
+                version = Integer.parseInt((String) attribs.get("version"));
+            }catch(NullPointerException e){}   // Ignore any errors
+            catch(Exception e){} 
+        
+        }else if(version == 2){
+            beginTag2(tagstk,tagstkptr,tag,attribs);
+        }    
 	}
 
 	public void endTag(String[] tagstk, 
@@ -65,8 +77,14 @@ public class EDDLoader implements IGenericXMLParser {
 			           String   tag, 
 			           String   body, 
 			           HashMap  attribs) throws Exception, IOException {
-
-		if(tag.equals("entity")){
+	                 // 
+	    
+	    if(version==2){
+	        
+	        endTag2(tagstk,tagstkptr,tag,body,attribs);
+	    
+	    }else if(tag.equals("entity")){
+		    
 		  String entityname = (String) attribs.get("entityname");
 		  String attribute  = (String) attribs.get("attribute");
 		  String type       = (String) attribs.get("type");
@@ -131,16 +149,91 @@ public class EDDLoader implements IGenericXMLParser {
 		      errorMsgs += errstr;
 		  }
         }
-		//else if(tag.equals("obj")){
-        //  String javaclass = (String)attribs.get("class");  
-        //  Class javaobj = getClass().getClassLoader().loadClass(javaclass);
-          //new REntityWrapper(ef,javaobj,false,RName.getRName(body));
-        //}
-		
 	}
 
 	public boolean error(String v) throws Exception {
 		return true;
 	}
 
+	
+	/** Support for the New EDD format **/
+	
+	String entityname;
+	String entitycomment;
+	String entityaccess;
+    public void beginTag2(String[] tagstk, int tagstkptr, String tag,
+            HashMap attribs) throws IOException, Exception {
+        if(tag.equals("entity")){
+            entityname      = (String) attribs.get("name");
+            entitycomment   = (String) attribs.get("comment");
+            entityaccess    = (String) attribs.get("access");
+        }
+    }
+
+    public void endTag2(String[] tagstk, 
+                           int      tagstkptr, 
+                           String   tag, 
+                           String   body, 
+                           HashMap  attribs) throws Exception, IOException {
+        if(!tag.equals("field")) return;
+        
+        
+        String default_value  = (String) attribs.get("default_value");
+        String attrib_name    = (String) attribs.get("name");
+        String attrib_comment = (String) attribs.get("comment");
+        String access         = (String) attribs.get("access");
+        String subtype        = (String) attribs.get("subtype");
+	    String type           = (String) attribs.get("type");
+	    
+	    boolean writeable = access.toLowerCase().indexOf("w")>=0;
+        boolean readable  = access.toLowerCase().indexOf("r")>=0;
+        if(!writeable && !readable){
+            errorMsgs +="\nThe attribute "+attrib_name+" has to be either readable or writable\r\n";
+            succeeded=false;
+        }
+        
+    int itype=-1;
+
+    // Now the type.  An easy thing.
+    try {
+      itype = RSession.typeStr2Int(type,entityname,attrib_name);
+    } catch (RulesException e1) {
+      errorMsgs+= e1.getMessage()+"\n";
+      succeeded = false;
+    }
+                
+    IRObject defaultO = EntityFactory.computeDefaultValue(ef, ef.ruleset, default_value, itype) ;
+    
+    RName  entityRName = RName.getRName(entityname.trim(),false);
+    RName  attributeRName = RName.getRName(attrib_name.trim(),false);
+    REntity entity = ef.findcreateRefEntity(false,entityRName);
+    int    intType = -1;
+    try {
+      intType = RSession.typeStr2Int(type,entityname,attrib_name);
+    } catch (RulesException e) { 
+      errorMsgs += "Bad Type: '"+type+"' encountered on entity: '"+entityname+"' attribute: '"+attrib_name+"' \n";
+      succeeded = false;
+    }
+    String errstr  = entity.addAttribute(attributeRName,
+                                         default_value, 
+                                         defaultO,
+                                         writeable,
+                                         readable,
+                                         intType,
+                                         subtype);
+    if(errstr!=null){
+        succeeded = false;
+        errorMsgs += errstr;
+    }
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
