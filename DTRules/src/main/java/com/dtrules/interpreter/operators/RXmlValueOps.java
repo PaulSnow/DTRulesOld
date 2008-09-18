@@ -21,7 +21,7 @@ package com.dtrules.interpreter.operators;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;
-import com.dtrules.mapping.XMLTag;
+import com.dtrules.mapping.XMLNode;
 import com.dtrules.session.DTState;
 
 @SuppressWarnings("unchecked")
@@ -44,11 +44,11 @@ public class RXmlValueOps {
             public void execute(DTState state) throws RulesException {
 				String    value     = state.datapop().stringValue();
 				String    attribute = state.datapop().stringValue();
-				XMLTag    xmlTag    = state.datapop().xmlTagValue();
+				XMLNode   xmlNode   = state.datapop().xmlTagValue();
 				
-				state.traceInfo("SetXmlAttribute","tag='"+xmlTag.getTag()+"' attribute='"+attribute+"' value='"+value+"'");
+				state.traceInfo("SetXmlAttribute","tag='"+xmlNode.getTag()+"' attribute='"+attribute+"' value='"+value+"'");
 				
-				xmlTag.getAttribs().put(attribute, value);
+				xmlNode.getAttribs().put(attribute, value);
 			}
 		}
 		/**
@@ -64,15 +64,15 @@ public class RXmlValueOps {
             @Override
             public void execute(DTState state) throws RulesException {
                 String    attribute = state.datapop().stringValue();
-                XMLTag    xmlTag    = state.datapop().xmlTagValue();
+                XMLNode   xmlNode    = state.datapop().xmlTagValue();
                 
-                String    value     = (String) xmlTag.getAttribs().get(attribute);
+                String    value     = (String) xmlNode.getAttribs().get(attribute);
                 if(value != null ){
                    state.datapush(RString.newRString(value)); 
-                   state.traceInfo("GetXmlAttribute","tag='"+xmlTag.getTag()+"' attribute='"+attribute+"' value='"+value+"'");
+                   state.traceInfo("GetXmlAttribute","tag='"+xmlNode.getTag()+"' attribute='"+attribute+"' value='"+value+"'");
                 }else{
                    state.datapush(RNull.getRNull()); 
-                   state.traceInfo("GetXmlAttribute","tag='"+xmlTag.getTag()+"' attribute='"+attribute+"' null='true'");
+                   state.traceInfo("GetXmlAttribute","tag='"+xmlNode.getTag()+"' attribute='"+attribute+"' null='true'");
                 }
             }
         }

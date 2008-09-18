@@ -236,7 +236,7 @@ public class Mapping {
             if(session.getState().testState(DTState.TRACE)){
                 session.getState().traceTagBegin("loadData","");
             }
-            XMLTag tag = datasrc.getRootTag();
+            XMLNode tag = datasrc.getRootTag();
             processTag(tag);
             if(session.getState().testState(DTState.TRACE)){
                 session.getState().traceTagEnd("loadData",null);
@@ -254,17 +254,19 @@ public class Mapping {
     /**
      * Load a tag into a session.
      */
-    void processTag(XMLTag tag) throws Exception {
-        tagstk[tagstkptr++] = tag.tag;
-        dataloader.beginTag(tagstk, tagstkptr, tag.tag, tag.attribs);
-        for(XMLTag nextTag : tag.tags){
-            state.traceTagBegin("process", null);
-            processTag(nextTag);
-            state.traceTagEnd("process", null);
+    void processTag(XMLNode tag) throws Exception {
+        if(tag.type()== XMLNode.Type.TAG){
+            tagstk[tagstkptr++] = tag.getTag();
+            dataloader.beginTag(tagstk, tagstkptr, tag.getTag(), tag.getAttribs());
+            for(XMLNode nextTag : tag.getTags()){
+                state.traceTagBegin("process", null);
+                processTag(nextTag);
+                state.traceTagEnd("process", null);
+            }
+            ((LoadDatamapData)dataloader).endTag(tagstk, tagstkptr, tag, tag.getBody(), tag.getAttribs());
+            tagstkptr--;
+            tagstk[tagstkptr]= null;
         }
-        ((LoadDatamapData)dataloader).endTag(tagstk, tagstkptr, tag, tag.body, tag.attribs);
-        tagstkptr--;
-        tagstk[tagstkptr]= null;
     }
 
 

@@ -1,7 +1,7 @@
 <entity_data_dictionary>
     <edd_header>
-        <edd_create_stamp>Mon, 25 Aug 2008 08:06:44 -0500</edd_create_stamp>
-        <Excel_File_Name>c:/eb/eb_dev2/XmlProcessing/edd/test_edd.xls</Excel_File_Name>
+        <edd_create_stamp>Thu, 18 Sep 2008 13:54:35 -0500</edd_create_stamp>
+        <Excel_File_Name>c:/eb/eb_dev2/RulesEngine/XmlProcessor/edd/test_edd.xls</Excel_File_Name>
     </edd_header>
     <edd>
         <entry>

@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 import com.dtrules.entity.IREntity;
 import com.dtrules.infrastructure.RulesException;
-import com.dtrules.mapping.XMLTag;
+import com.dtrules.mapping.XMLNode;
 import com.dtrules.session.DTState;
 import com.dtrules.session.IRSession;
 
@@ -162,7 +162,7 @@ public abstract class ARObject implements IRObject {
     /* (non-Javadoc)
      * @see com.dtrules.interpreter.IRObject#xmlTagValue()
      */
-    public XMLTag xmlTagValue() throws RulesException {
+    public XMLNode xmlTagValue() throws RulesException {
         throw new RulesException("Conversion Error","","No XmlValue value exists for "+this);
     }    
     

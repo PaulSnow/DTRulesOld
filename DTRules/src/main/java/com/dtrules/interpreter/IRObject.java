@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 import com.dtrules.entity.IREntity;
 import com.dtrules.infrastructure.RulesException;
-import com.dtrules.mapping.XMLTag;
+import com.dtrules.mapping.XMLNode;
 import com.dtrules.session.DTState;
 import com.dtrules.session.IRSession;
 
@@ -106,7 +106,7 @@ public interface IRObject {
 	
     public IRObject rclone();
     
-    public XMLTag               xmlTagValue()   throws RulesException;
+    public XMLNode              xmlTagValue()   throws RulesException;
     public long                 longValue ()    throws RulesException;
     public int                  intValue ()     throws RulesException;
     public RInteger             rIntegerValue() throws RulesException;

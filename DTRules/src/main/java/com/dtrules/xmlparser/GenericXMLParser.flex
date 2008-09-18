@@ -115,7 +115,7 @@ import java.io.IOException;
 
     String getcomment(){
         String s = yytext();
-        s = yytext().substring(4,s.length()-7);
+        s = yytext().substring(4,s.length()-3);
         return s;
     }
     
@@ -191,6 +191,20 @@ import java.io.IOException;
   public int getYYLine() { return yyline+1;}
   public int getYYColumn() { return yycolumn+1;}
   
+   /**
+     * Loads an XML file with the given Generic Parser.
+     * <br><br>
+     * @param file  An inputStream providing the XML
+     * @param gp    A parser implementing the IGenericXMLParser interface.
+     */
+    static public void load(java.io.InputStream xmlStream, IGenericXMLParser2 gp) throws Exception{
+        GenericXMLParser parser = new GenericXMLParser(xmlStream);
+        parser.setParser(gp);
+        while(true){
+            if(GenericXMLParser.YYEOF == parser.yylex()) break;
+        }
+     } 
+     
     /**
 	 * Loads an XML file with the given Generic Parser.
 	 * <br><br>
@@ -204,6 +218,20 @@ import java.io.IOException;
 			if(GenericXMLParser.YYEOF == parser.yylex()) break;
 		}
 	 } 
+	
+	/**
+      * Loads an XML file with the given Generic Parser.
+      * @param xmlStream
+      * @param gp
+      * @throws Exception
+      */
+     static public void load(java.io.Reader xmlStream, IGenericXMLParser2 gp) throws Exception{
+        GenericXMLParser parser = new GenericXMLParser(xmlStream);
+        parser.setParser(gp);
+        while(true){
+            if(GenericXMLParser.YYEOF == parser.yylex()) break;
+        }
+     } 
 	 
 	 /**
 	  * Loads an XML file with the given Generic Parser.
@@ -234,8 +262,8 @@ string2    = "\""[^\"]*"\""
 string     = {string1}|{string2}
 body       = ({ws}|[^<>])*
 any        = Char|ws|Digit|">"|"<"|"&"|.
-cbody      = ~"-->"
-comment    = "<!--"~"-->"
+comment    = "<!--"([^-]|([-][^-])|[-][-][^>])*"-->"
+header     = "<?"([^?]|[?][^>])*"?>"
 
 %xstate Attributes
 %xstate Tag
@@ -246,10 +274,10 @@ comment    = "<!--"~"-->"
 <YYINITIAL> {
 
   "<"                   {pushstate(Tag); }
-  "<?"{body}"?>"        {parser.header(getheader());}
-  {ws} { }
-  "<!--"{cbody}"-->"    {parser.comment(getcomment());}
-  {any}          { error(yytext()); }
+  {header}              {parser.header(getheader());}
+  {ws}                  { }
+  {comment}             {parser.comment(getcomment());}
+  {any}                 { error(yytext()); }
   
 }  
 
@@ -296,7 +324,7 @@ comment    = "<!--"~"-->"
      return 1;
    }
   
-  {comment} {}
+  {comment}    {parser.comment(getcomment());}
   {ws} { }
   {any}          { error(yytext()); }
   
@@ -323,7 +351,7 @@ comment    = "<!--"~"-->"
      pushstate(Tag); 
   }
 
-  "<!--"{cbody}"-->"    {parser.comment(getcomment());}
+  {comment}    {parser.comment(getcomment());}
 
   {any}     { body += yytext(); error(yytext()); }
 }
@@ -341,7 +369,7 @@ comment    = "<!--"~"-->"
   }
 
   {ws}      {}
-  "<!--"{cbody}"-->"    {parser.comment(getcomment());}
+  {comment}        {parser.comment(getcomment());}
   {any}          { error(yytext()); }
 
 }

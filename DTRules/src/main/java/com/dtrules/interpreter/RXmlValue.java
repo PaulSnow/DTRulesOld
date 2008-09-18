@@ -6,7 +6,7 @@ package com.dtrules.interpreter;
 import java.util.ArrayList;
 import java.util.Date;
 import com.dtrules.infrastructure.RulesException;
-import com.dtrules.mapping.XMLTag;
+import com.dtrules.mapping.XMLNode;
 import com.dtrules.session.DTState;
 
 /**
@@ -18,11 +18,11 @@ import com.dtrules.session.DTState;
  *
  */
 public class RXmlValue extends ARObject {
-    XMLTag  tag;
+    XMLNode tag;
     DTState state;
     int     id;
     
-    public RXmlValue(DTState state, XMLTag tag){
+    public RXmlValue(DTState state, XMLNode tag){
         this.tag = tag;
         id = state.getSession().getUniqueID();
     }
@@ -68,7 +68,7 @@ public class RXmlValue extends ARObject {
     public ArrayList<IRObject> arrayValue() throws RulesException {
         ArrayList<IRObject> a = new ArrayList<IRObject>();
         if(tag.getTags().size()>0){
-           for(XMLTag t : tag.getTags()){
+           for(XMLNode t : tag.getTags()){
                a.add(new RXmlValue(state,t));
            }
         }
@@ -145,7 +145,7 @@ public class RXmlValue extends ARObject {
      * @see com.dtrules.interpreter.ARObject#xmlTagValue()
      */
     @Override
-    public XMLTag xmlTagValue() throws RulesException {
+    public XMLNode xmlTagValue() throws RulesException {
         return tag;
     }
 

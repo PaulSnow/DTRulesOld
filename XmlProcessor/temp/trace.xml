@@ -44,32 +44,34 @@
 </Load>
 </loadMapping>
 <loadData >
+<process></process>
 <process>
 <createEntity name='document_set' id=''>
 <process>
 <createEntity name='document_set_metadata' id=''>
+<process></process>
 <process>
-<def entity='/document_set_metadata 100007 createEntity ' name='dset_ecn'>com.dtrules.interpreter.RXmlValue@64f6cd</def>
+<def entity='/document_set_metadata 100007 createEntity ' name='dset_ecn'>com.dtrules.interpreter.RXmlValue@18088c0</def>
 <message>   /dset_ecn &quot;9854785&quot; def</message>
 </process>
 <process>
-<def entity='/document_set_metadata 100007 createEntity ' name='dset_channel_source'>com.dtrules.interpreter.RXmlValue@872380</def>
+<def entity='/document_set_metadata 100007 createEntity ' name='dset_channel_source'>com.dtrules.interpreter.RXmlValue@1922221</def>
 <message>   /dset_channel_source &quot;RUMMOR&quot; def</message>
 </process>
 <process>
-<def entity='/document_set_metadata 100007 createEntity ' name='dset_scan_station_id'>com.dtrules.interpreter.RXmlValue@2bb514</def>
+<def entity='/document_set_metadata 100007 createEntity ' name='dset_scan_station_id'>com.dtrules.interpreter.RXmlValue@fec107</def>
 <message>   /dset_scan_station_id &quot;12&quot; def</message>
 </process>
 <process>
-<def entity='/document_set_metadata 100007 createEntity ' name='dset_mgmt_release_ts'>com.dtrules.interpreter.RXmlValue@17d5d2a</def>
+<def entity='/document_set_metadata 100007 createEntity ' name='dset_mgmt_release_ts'>com.dtrules.interpreter.RXmlValue@132e13d</def>
 <message>   /dset_mgmt_release_ts &quot;01-12-31T12:00:00&quot; def</message>
 </process>
 <process>
-<def entity='/document_set_metadata 100007 createEntity ' name='dset_creation_ts'>com.dtrules.interpreter.RXmlValue@16fa474</def>
+<def entity='/document_set_metadata 100007 createEntity ' name='dset_creation_ts'>com.dtrules.interpreter.RXmlValue@1617189</def>
 <message>   /dset_creation_ts &quot;2001-12-31T12:00:00&quot; def</message>
 </process>
 <process>
-<def entity='/document_set_metadata 100007 createEntity ' name='dset_created_by'>com.dtrules.interpreter.RXmlValue@95c083</def>
+<def entity='/document_set_metadata 100007 createEntity ' name='dset_created_by'>com.dtrules.interpreter.RXmlValue@64f6cd</def>
 <message>   /dset_created_by &quot;Pishing&quot; def</message>
 </process>
 </createEntity>

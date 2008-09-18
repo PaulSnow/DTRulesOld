@@ -12,6 +12,10 @@ import java.util.HashMap;
  */
 public interface XMLNode {
 
+    public enum Type { TAG, COMMENT, HEADER } 
+        
+    public Type type ();
+    
     public abstract String toString();
 
     /**

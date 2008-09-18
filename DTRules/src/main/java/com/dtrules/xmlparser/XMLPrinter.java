@@ -75,7 +75,36 @@ public class XMLPrinter implements IXMLPrinter {
         out.print(text);
         newline = false;
     }
-    
+    /**
+     * Prints out spaces to indent
+     */
+    private void indent(){
+        int indent = tagStack.size();
+        for(int i=0;i<indent;i++)print("    ");
+    }
+    /**
+     * Prints a comment 
+     */
+    public void comment(String comment){
+        if(intextbody)throw new RuntimeException("Can't open a tag within a data body");
+        newline();
+        intagbody = false;
+        intextbody = false;
+        indent();
+        print("<!--"); print(comment); print("-->");
+    }
+    /**
+     * Print the header
+     * @param comment
+     */
+    public void header(String header){
+        if(intextbody)throw new RuntimeException("Can't open a tag within a data body");
+        newline();
+        intagbody = false;
+        intextbody = false;
+        indent();
+        print("<?"); print(header); print("?>");
+    }
     /**
      * Prints a simple open tag with no attributes.
      * @param tag
@@ -83,8 +112,7 @@ public class XMLPrinter implements IXMLPrinter {
     private void halfopentag(String tag){
         if(intextbody)throw new RuntimeException("Can't open a tag within a data body");
         newline();
-        int indent = tagStack.size();
-        for(int i=0;i<indent;i++)print("    ");
+        indent();
         print("<"); 
         print(tag);
         tagStack.add(tag);

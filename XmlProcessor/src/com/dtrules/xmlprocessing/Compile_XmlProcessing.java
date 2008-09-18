@@ -13,7 +13,7 @@ public class Compile_XmlProcessing {
      * *****  This path is hard coded to the project where you check
      * *****  out the example.
      */
-    public static String path               = "c:/eb/eb_dev2/RulesEngine/XmlProcessing/" ;
+    public static String path               = "c:/eb/eb_dev2/RulesEngine/XmlProcessor/" ;
     public static String rulesDirectoryFile = "xml/DTRules.xml";
     public static String ruleset            = "process_test_xml";
    

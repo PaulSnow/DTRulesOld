@@ -17,14 +17,14 @@ import java.util.HashMap;
  * Sep 24, 2007
  *
  */
-public class XMLTag {
+public class XMLTag implements XMLNode {
     String                  tag;
     HashMap<String, Object> attribs = new HashMap<String,Object>();
-    ArrayList<XMLTag>       tags    = new ArrayList<XMLTag>();
+    ArrayList<XMLNode>      tags    = new ArrayList<XMLNode>();
     Object                  body    = null;
-    XMLTag                  parent;
+    XMLNode                 parent;
     
-    public XMLTag(String tag, XMLTag parent){
+    public XMLTag(String tag, XMLNode parent){
         this.tag    = tag;
         this.parent = parent;
     }
@@ -65,14 +65,14 @@ public class XMLTag {
     /**
      * @return the tags
      */
-    public ArrayList<XMLTag> getTags() {
+    public ArrayList<XMLNode> getTags() {
         return tags;
     }
 
     /**
      * @param tags the tags to set
      */
-    public void setTags(ArrayList<XMLTag> tags) {
+    public void setTags(ArrayList<XMLNode> tags) {
         this.tags = tags;
     }
 
@@ -93,7 +93,7 @@ public class XMLTag {
     /**
      * @return the parent
      */
-    public XMLTag getParent() {
+    public XMLNode getParent() {
         return parent;
     }
 
@@ -111,5 +111,5 @@ public class XMLTag {
         return attribs;
     }
     
-    
+    public Type type(){ return Type.TAG; }
 }

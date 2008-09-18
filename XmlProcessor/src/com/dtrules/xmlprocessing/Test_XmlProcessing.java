@@ -35,7 +35,7 @@ public class Test_XmlProcessing {
            
            // Load the Document to test into a DataMap
            
-           DataMap document = new DataMap("test");
+           DataMap document = new DataMap(null);
            document.loadXML(new FileInputStream(path+"temp/test.xml"));
            
            // Get the XML mapping for the rule set, and load a set of data into the EDD

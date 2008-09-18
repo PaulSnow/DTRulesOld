@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
  */  
+
 package com.dtrules.mapping;
 
 import java.io.IOException;
@@ -36,13 +37,17 @@ import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RString;
 import com.dtrules.interpreter.RTime;
 import com.dtrules.interpreter.RXmlValue;
+import com.dtrules.mapping.XMLNode;
 import com.dtrules.session.DTState;
 import com.dtrules.session.IRSession;
 import com.dtrules.session.RSession;
 
 @SuppressWarnings({"unchecked"})
 public class LoadDatamapData extends LoadXMLData {
-	    
+
+    XMLNode xmltag = null;
+
+    
     public LoadDatamapData(Mapping _map){
         super(_map);
     }
@@ -51,12 +56,10 @@ public class LoadDatamapData extends LoadXMLData {
         super(_map, session, _ruleSetName);
     }
     
-    XMLTag xmltag = null;
-    
-    public void endTag(String[] tagstk, int tagstkptr, XMLTag tag, Object body,
+    public void endTag(String[] tagstk, int tagstkptr, XMLNode tag, Object body,
             HashMap attribs) throws Exception, IOException {
        this.xmltag = tag;
-       endTag(tagstk,tagstkptr,tag.tag,body,attribs);
+       endTag(tagstk,tagstkptr,tag.getTag(),body,attribs);
     }
 
     

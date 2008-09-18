@@ -37,7 +37,7 @@ import java.util.HashMap;
 
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.xmlparser.GenericXMLParser;
-import com.dtrules.xmlparser.IGenericXMLParser;
+import com.dtrules.xmlparser.IGenericXMLParser2;
 import com.dtrules.xmlparser.IXMLPrinter;
 import com.dtrules.xmlparser.XMLPrinter;
 
@@ -45,8 +45,8 @@ import com.dtrules.xmlparser.XMLPrinter;
 public class DataMap implements IXMLPrinter{
     Mapping map;
     OutputStream out = null;
-    ArrayList<XMLTag> tagStack = new ArrayList<XMLTag>();
-    XMLTag rootTag;
+    ArrayList<XMLNode> tagStack = new ArrayList<XMLNode>();
+    XMLNode rootTag;
    
     /**
      * Write out this DataMap as an XML file.  I do not write out
@@ -59,17 +59,30 @@ public class DataMap implements IXMLPrinter{
      * will become a zero length string (for example).
      * @param out
      */
-    static public void print(XMLPrinter xout, XMLTag tag){
-        if(tag.body == null && tag.tags.size()>0){
-           xout.opentag(tag.tag,tag.attribs);
-           for(XMLTag t : tag.tags){ 
-               print(xout,t);
-           }
-           xout.closetag();
-        }else{
-           xout.opentag(tag.tag,tag.attribs); 
-           xout.printdata(tag.body);
-           xout.closetag();
+    static public void print(XMLPrinter xout, XMLNode tag){
+        if(tag.type() == XMLNode.Type.TAG){ 
+                if(tag.getBody() == null && tag.getTags().size()>0){
+                   if(tag.getTag()!=null){
+                       xout.opentag(tag.getTag(),tag.getAttribs());
+                   }
+                   for(XMLNode t : tag.getTags()){ 
+                       print(xout,t);
+                   }
+                   if(tag.getTag()!=null){
+                       xout.closetag();
+                   }
+                }else{
+                   xout.opentag(tag.getTag(),tag.getAttribs()); 
+                   xout.printdata(tag.getBody());
+                   xout.closetag();
+                }
+
+        } else if (tag.type() == XMLNode.Type.COMMENT ){
+                xout.comment(tag.getBody().toString());
+
+        } else if (tag.type() == XMLNode.Type.HEADER ){
+                xout.header(tag.getBody().toString());
+
         }
     }
     
@@ -126,19 +139,19 @@ public class DataMap implements IXMLPrinter{
      */
     public String getTag(int i){
         if(i<0 || i>=tagStack.size())return null;
-        return tagStack.get(i).tag;
+        return tagStack.get(i).getTag();
     }
      
     public boolean isInContext(String tag, String key_attribute, Object value){
-        XMLTag t = top();
+        XMLNode t = top();
         while(t!=null && t!=rootTag){
-            if( t.tag.equals(tag)                      && 
+            if( t.getTag().equals(tag)                      && 
                 (key_attribute == null ||
-                        t.attribs.containsKey(key_attribute)   &&
-                        (value==null || t.attribs.get(key_attribute).equals(value)))){
+                        t.getAttribs().containsKey(key_attribute)   &&
+                        (value==null || t.getAttribs().get(key_attribute).equals(value)))){
                 return true;
             }
-            t = t.parent;
+            t = t.getParent();
         }
         return false;
     }
@@ -161,24 +174,44 @@ public class DataMap implements IXMLPrinter{
     }
 
     private void newtag(String tag ){
-        XMLTag t = top();
-        if(t!=null && top().body!=null){
+        XMLNode t = top();
+        if(t!=null && top().getBody()!=null){
             throw new RuntimeException("You can't have tags and body text within the same XML tag!");
         }
-        XMLTag newtag = new XMLTag(tag,t);
+        XMLNode newtag = new XMLTag(tag,t);
         if(t!=null){
-            t.tags.add(newtag);
+            t.getTags().add(newtag);
         }
         tagStack.add(newtag);
     }
     
-    private XMLTag top(){
+    private void header(String header){
+        XMLNode t = top();
+        if(t!=null && top().getBody()!=null){
+            throw new RuntimeException("You can't have tags and body text within the same XML tag!");
+        }
+        XMLNode newheader = new XMLHeader();
+        newheader.setBody(header);
+        t.getTags().add(newheader);
+    }
+
+    private void comment(String comment){
+        XMLNode t = top();
+        if(t!=null && top().getBody()!=null){
+            throw new RuntimeException("You can't have tags and body text within the same XML tag!");
+        }
+        XMLNode newcomment = new XMLComment();
+        newcomment.setBody(comment);
+        t.getTags().add(newcomment);
+    }
+
+    private XMLNode top(){
         if(tagStack.size()==0)return null;
         return tagStack.get(tagStack.size()-1);
     }
     
     private void addValue(String key, Object value){
-        top().attribs.put(key, value);
+        top().getAttribs().put(key, value);
     }
     
     /* (non-Javadoc)
@@ -374,12 +407,12 @@ public class DataMap implements IXMLPrinter{
      * are made, then everything is converted to a String and added together.
      */
     public void printdata(Object bodyvalue) {
-        XMLTag t = top();
-        if(t.body==null){
-            t.body = bodyvalue;
+        XMLNode t = top();
+        if(t.getBody()==null){
+            t.setBody(bodyvalue);
             return;
         }
-        t.body = t.body.toString() + bodyvalue.toString();
+        t.setBody(t.getBody().toString() + bodyvalue.toString());
     }
 
     /* (non-Javadoc)
@@ -450,7 +483,7 @@ public class DataMap implements IXMLPrinter{
      * Return the Root XMLTag of the data structures
      * @return
      */
-    public XMLTag getRootTag(){ return rootTag; }    
+    public XMLNode getRootTag(){ return rootTag; }    
     /**
      * Read the attributes of a Data Object and populate an EDD with
      * those values.  This assumes that the class for the Data Object has
@@ -499,7 +532,7 @@ public class DataMap implements IXMLPrinter{
         doMap.OpenEntityTag(this, obj);
     }
     
-    private class XmlLoader implements IGenericXMLParser {
+    private class XmlLoader implements IGenericXMLParser2 {
         DataMap datamap;
         
         XmlLoader(DataMap datamap){
@@ -521,6 +554,16 @@ public class DataMap implements IXMLPrinter{
         
         public boolean error(String v) throws Exception {
             return true;
+        }
+        
+        public void comment(String comment) {
+            datamap.comment(comment);
+            
+        }
+
+        public void header(String header) {
+            datamap.header(header);
+            
         }
         
     }
