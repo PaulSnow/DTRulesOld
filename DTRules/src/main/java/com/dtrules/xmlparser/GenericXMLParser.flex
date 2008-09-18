@@ -3,6 +3,7 @@ import java.util.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.regex.Pattern;
+import java.io.IOException;
 @SuppressWarnings({"unchecked","unused"})
 %%
 %public
@@ -39,7 +40,7 @@ import java.util.regex.Pattern;
     ArrayList         		attribstk       = new ArrayList();
     HashMap<String,String>    attribs         = new HashMap<String,String>();
     boolean           		printflg        = true;
-    IGenericXMLParser 		parser          = null;
+    IGenericXMLParser2 		parser          = null;
     
     String            		body            = "";
     String            		currenttag      = "";
@@ -85,10 +86,44 @@ import java.util.regex.Pattern;
 	   this.sourcename=source;
 	}
 
+   class Shell implements IGenericXMLParser2 {
+        IGenericXMLParser p;
+        Shell(IGenericXMLParser p){this.p = p;}
+        public void comment(String comment) {}
+        public void header(String header) {}
+        public void beginTag(String[] tagstk, int tagstkptr, String tag,
+                HashMap<String, String> attribs) throws IOException, Exception {
+            p.beginTag(tagstk, tagstkptr, tag, attribs);
+        }
+        public void endTag(String[] tagstk, int tagstkptr, String tag,
+                String body, HashMap<String, String> attribs) throws Exception,
+                IOException {
+            p.endTag(tagstk, tagstkptr, tag, body, attribs);
+        }
+        public boolean error(String v) throws Exception {
+            return p.error(v);
+        }
+        
+    }
     public void setParser (IGenericXMLParser p_parser){
-       parser = p_parser;
+        parser = new Shell(p_parser);
     }
 
+    public void setParser (IGenericXMLParser2 p_parser){
+        parser = p_parser;
+    }
+
+    String getcomment(){
+        String s = yytext();
+        s = yytext().substring(4,s.length()-7);
+        return s;
+    }
+    
+    String getheader(){
+        String s = yytext();
+        s = yytext().substring(2, s.length()-4);
+        return s;
+    }
     void pushstate(int state) { 
        statestk[statestkptr++]=yystate();
        yybegin(state); 
@@ -199,6 +234,7 @@ string2    = "\""[^\"]*"\""
 string     = {string1}|{string2}
 body       = ({ws}|[^<>])*
 any        = Char|ws|Digit|">"|"<"|"&"|.
+cbody      = ~"-->"
 comment    = "<!--"~"-->"
 
 %xstate Attributes
@@ -209,10 +245,10 @@ comment    = "<!--"~"-->"
 
 <YYINITIAL> {
 
-  "<"            {pushstate(Tag); }
-  "<?"{body}"?>" {}
+  "<"                   {pushstate(Tag); }
+  "<?"{body}"?>"        {parser.header(getheader());}
   {ws} { }
-  {comment} {}
+  "<!--"{cbody}"-->"    {parser.comment(getcomment());}
   {any}          { error(yytext()); }
   
 }  
@@ -287,7 +323,8 @@ comment    = "<!--"~"-->"
      pushstate(Tag); 
   }
 
-  {comment} {}
+  "<!--"{cbody}"-->"    {parser.comment(getcomment());}
+
   {any}     { body += yytext(); error(yytext()); }
 }
 
@@ -304,7 +341,7 @@ comment    = "<!--"~"-->"
   }
 
   {ws}      {}
-  {comment} {}
+  "<!--"{cbody}"-->"    {parser.comment(getcomment());}
   {any}          { error(yytext()); }
 
 }
