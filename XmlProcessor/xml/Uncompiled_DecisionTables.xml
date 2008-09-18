@@ -1,0 +1,183 @@
+<decision_tables>
+    <decision_table>
+        <table_name>Verify_Documents</table_name>
+        <xls_file>VerifyDocuments.xls</xls_file>
+        <attribute_fields>
+            <comments>Just to begin with, this table checks the Meta Data of a document file.</comments>
+            <type>ALL</type>
+        </attribute_fields>
+        <contexts>
+            <context_details>
+                <context_description>add the document_set_metadata to the context of this table</context_description>
+            </context_details>
+        </contexts>
+        <initial_actions>
+        </initial_actions>
+        <conditions>
+            <condition_details>
+                <condition_number>1</condition_number>
+                <condition_comment>1</condition_comment>
+                <condition_description>dset_ecn matches the ecn_redex</condition_description>
+                <condition_column column_number='1' column_value='N'></condition_column>
+                <condition_column column_number='2' column_value='-'></condition_column>
+                <condition_column column_number='3' column_value='-'></condition_column>
+                <condition_column column_number='4' column_value='-'></condition_column>
+                <condition_column column_number='5' column_value='-'></condition_column>
+                <condition_column column_number='6' column_value='-'></condition_column>
+                <condition_column column_number='7' column_value='-'></condition_column>
+                <condition_column column_number='8' column_value='-'></condition_column>
+                <condition_column column_number='9' column_value='-'></condition_column>
+                <condition_column column_number='10' column_value='-'></condition_column>
+                <condition_column column_number='11' column_value='-'></condition_column>
+                <condition_column column_number='12' column_value='-'></condition_column>
+                <condition_column column_number='13' column_value='-'></condition_column>
+                <condition_column column_number='14' column_value='-'></condition_column>
+                <condition_column column_number='15' column_value='-'></condition_column>
+                <condition_column column_number='16' column_value='-'></condition_column>
+            </condition_details>
+            <condition_details>
+                <condition_number>2</condition_number>
+                <condition_comment>2</condition_comment>
+                <condition_description>channel_sources includes the string dset_channel_source</condition_description>
+                <condition_column column_number='1' column_value='-'></condition_column>
+                <condition_column column_number='2' column_value='N'></condition_column>
+                <condition_column column_number='3' column_value='-'></condition_column>
+                <condition_column column_number='4' column_value='-'></condition_column>
+                <condition_column column_number='5' column_value='-'></condition_column>
+                <condition_column column_number='6' column_value='-'></condition_column>
+                <condition_column column_number='7' column_value='-'></condition_column>
+                <condition_column column_number='8' column_value='-'></condition_column>
+                <condition_column column_number='9' column_value='-'></condition_column>
+                <condition_column column_number='10' column_value='-'></condition_column>
+                <condition_column column_number='11' column_value='-'></condition_column>
+                <condition_column column_number='12' column_value='-'></condition_column>
+                <condition_column column_number='13' column_value='-'></condition_column>
+                <condition_column column_number='14' column_value='-'></condition_column>
+                <condition_column column_number='15' column_value='-'></condition_column>
+                <condition_column column_number='16' column_value='-'></condition_column>
+            </condition_details>
+            <condition_details>
+                <condition_number>3</condition_number>
+                <condition_comment>3</condition_comment>
+                <condition_description>dset_scan_station_id matches the integer_redex</condition_description>
+                <condition_column column_number='1' column_value='-'></condition_column>
+                <condition_column column_number='2' column_value='-'></condition_column>
+                <condition_column column_number='3' column_value='N'></condition_column>
+                <condition_column column_number='4' column_value='-'></condition_column>
+                <condition_column column_number='5' column_value='-'></condition_column>
+                <condition_column column_number='6' column_value='-'></condition_column>
+                <condition_column column_number='7' column_value='-'></condition_column>
+                <condition_column column_number='8' column_value='-'></condition_column>
+                <condition_column column_number='9' column_value='-'></condition_column>
+                <condition_column column_number='10' column_value='-'></condition_column>
+                <condition_column column_number='11' column_value='-'></condition_column>
+                <condition_column column_number='12' column_value='-'></condition_column>
+                <condition_column column_number='13' column_value='-'></condition_column>
+                <condition_column column_number='14' column_value='-'></condition_column>
+                <condition_column column_number='15' column_value='-'></condition_column>
+                <condition_column column_number='16' column_value='-'></condition_column>
+            </condition_details>
+            <condition_details>
+                <condition_number>4</condition_number>
+                <condition_comment>4</condition_comment>
+                <condition_description>dset_mgmt_release_ts matches date_regex</condition_description>
+                <condition_column column_number='1' column_value='-'></condition_column>
+                <condition_column column_number='2' column_value='-'></condition_column>
+                <condition_column column_number='3' column_value='-'></condition_column>
+                <condition_column column_number='4' column_value='N'></condition_column>
+                <condition_column column_number='5' column_value='-'></condition_column>
+                <condition_column column_number='6' column_value='-'></condition_column>
+                <condition_column column_number='7' column_value='-'></condition_column>
+                <condition_column column_number='8' column_value='-'></condition_column>
+                <condition_column column_number='9' column_value='-'></condition_column>
+                <condition_column column_number='10' column_value='-'></condition_column>
+                <condition_column column_number='11' column_value='-'></condition_column>
+                <condition_column column_number='12' column_value='-'></condition_column>
+                <condition_column column_number='13' column_value='-'></condition_column>
+                <condition_column column_number='14' column_value='-'></condition_column>
+                <condition_column column_number='15' column_value='-'></condition_column>
+                <condition_column column_number='16' column_value='-'></condition_column>
+            </condition_details>
+            <condition_details>
+                <condition_number>5</condition_number>
+                <condition_comment>5</condition_comment>
+                <condition_description>dset_creation_ts matches date_regex</condition_description>
+                <condition_column column_number='1' column_value='-'></condition_column>
+                <condition_column column_number='2' column_value='-'></condition_column>
+                <condition_column column_number='3' column_value='-'></condition_column>
+                <condition_column column_number='4' column_value='-'></condition_column>
+                <condition_column column_number='5' column_value='N'></condition_column>
+                <condition_column column_number='6' column_value='-'></condition_column>
+                <condition_column column_number='7' column_value='-'></condition_column>
+                <condition_column column_number='8' column_value='-'></condition_column>
+                <condition_column column_number='9' column_value='-'></condition_column>
+                <condition_column column_number='10' column_value='-'></condition_column>
+                <condition_column column_number='11' column_value='-'></condition_column>
+                <condition_column column_number='12' column_value='-'></condition_column>
+                <condition_column column_number='13' column_value='-'></condition_column>
+                <condition_column column_number='14' column_value='-'></condition_column>
+                <condition_column column_number='15' column_value='-'></condition_column>
+                <condition_column column_number='16' column_value='-'></condition_column>
+            </condition_details>
+            <condition_details>
+                <condition_number>6</condition_number>
+                <condition_comment>6</condition_comment>
+                <condition_description>known_users includes the string dset_created_by</condition_description>
+                <condition_column column_number='1' column_value='-'></condition_column>
+                <condition_column column_number='2' column_value='-'></condition_column>
+                <condition_column column_number='3' column_value='-'></condition_column>
+                <condition_column column_number='4' column_value='-'></condition_column>
+                <condition_column column_number='5' column_value='-'></condition_column>
+                <condition_column column_number='6' column_value='N'></condition_column>
+                <condition_column column_number='7' column_value='-'></condition_column>
+                <condition_column column_number='8' column_value='-'></condition_column>
+                <condition_column column_number='9' column_value='-'></condition_column>
+                <condition_column column_number='10' column_value='-'></condition_column>
+                <condition_column column_number='11' column_value='-'></condition_column>
+                <condition_column column_number='12' column_value='-'></condition_column>
+                <condition_column column_number='13' column_value='-'></condition_column>
+                <condition_column column_number='14' column_value='-'></condition_column>
+                <condition_column column_number='15' column_value='-'></condition_column>
+                <condition_column column_number='16' column_value='-'></condition_column>
+            </condition_details>
+        </conditions>
+        <actions>
+            <action_details>
+                <action_number>1</action_number>
+                <action_comment>Insert into the XML an attribute indicating a bad ecn format</action_comment>
+                <action_description>dset_ecn:  set attribute &quot;error&quot; = &quot;Bad ECN format&quot;</action_description>
+                <action_column column_number='1' column_value='X'></action_column>
+            </action_details>
+            <action_details>
+                <action_number>2</action_number>
+                <action_comment>Insert into the XML an attribute indicating an channel source</action_comment>
+                <action_description>dset_channel_source: set attribute &quot;error&quot; = &quot;Unknown Channel Source&quot;</action_description>
+                <action_column column_number='2' column_value='X'></action_column>
+            </action_details>
+            <action_details>
+                <action_number>3</action_number>
+                <action_comment>Insert into the XML an attribute indicating no scan_station number</action_comment>
+                <action_description>dset_scan_station_id: set attribute &quot;error&quot; = &quot;Invalid Scan Station Number&quot;</action_description>
+                <action_column column_number='3' column_value='X'></action_column>
+            </action_details>
+            <action_details>
+                <action_number>1</action_number>
+                <action_comment>Insert into the XML an attribute indicating a bad date</action_comment>
+                <action_description>dset_mgmt_release_ts:  set attribute &quot;error&quot; = &quot;Bad Date Format&quot;</action_description>
+                <action_column column_number='4' column_value='X'></action_column>
+            </action_details>
+            <action_details>
+                <action_number>2</action_number>
+                <action_comment>Insert into the XML an attribute indicating a bad date</action_comment>
+                <action_description>dset_creation_ts: set attribute &quot;error&quot; = &quot;Bad Date Format&quot;</action_description>
+                <action_column column_number='5' column_value='X'></action_column>
+            </action_details>
+            <action_details>
+                <action_number>3</action_number>
+                <action_comment>Insert into the XML an attribute indicating an unknown user</action_comment>
+                <action_description>dset_created_by: set attribute &quot;error&quot; = &quot;Unknown User&quot;</action_description>
+                <action_column column_number='6' column_value='X'></action_column>
+            </action_details>
+        </actions>
+    </decision_table>
+</decision_tables>

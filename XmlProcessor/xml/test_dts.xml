@@ -1,0 +1,203 @@
+<decision_tables>
+<decision_table>
+<table_name>Verify_Documents</table_name>
+<xls_file>VerifyDocuments.xls</xls_file>
+<attribute_fields>
+<comments>Just to begin with, this table checks the Meta Data of a document file.</comments>
+<type>ALL</type></attribute_fields>
+<contexts>
+<context_details>
+<context_description>add the document_set_metadata to the context of this table</context_description>
+<context_postfix>
+document_set_metadata entitypush execute entitypop 
+</context_postfix></context_details></contexts>
+<initial_actions>
+        </initial_actions>
+<conditions>
+<condition_details>
+<condition_number>1</condition_number>
+<condition_comment>1</condition_comment>
+<condition_description>dset_ecn matches the ecn_redex</condition_description>
+<condition_postfix>
+ecn_redex dset_ecn cvs regexmatch 
+</condition_postfix>
+<condition_column column_value="N" column_number="1"></condition_column>
+<condition_column column_value="-" column_number="2"></condition_column>
+<condition_column column_value="-" column_number="3"></condition_column>
+<condition_column column_value="-" column_number="4"></condition_column>
+<condition_column column_value="-" column_number="5"></condition_column>
+<condition_column column_value="-" column_number="6"></condition_column>
+<condition_column column_value="-" column_number="7"></condition_column>
+<condition_column column_value="-" column_number="8"></condition_column>
+<condition_column column_value="-" column_number="9"></condition_column>
+<condition_column column_value="-" column_number="10"></condition_column>
+<condition_column column_value="-" column_number="11"></condition_column>
+<condition_column column_value="-" column_number="12"></condition_column>
+<condition_column column_value="-" column_number="13"></condition_column>
+<condition_column column_value="-" column_number="14"></condition_column>
+<condition_column column_value="-" column_number="15"></condition_column>
+<condition_column column_value="-" column_number="16"></condition_column></condition_details>
+<condition_details>
+<condition_number>2</condition_number>
+<condition_comment>2</condition_comment>
+<condition_description>channel_sources includes the string dset_channel_source</condition_description>
+<condition_postfix>
+channel_sources dset_channel_source cvs memberof 
+</condition_postfix>
+<condition_column column_value="-" column_number="1"></condition_column>
+<condition_column column_value="N" column_number="2"></condition_column>
+<condition_column column_value="-" column_number="3"></condition_column>
+<condition_column column_value="-" column_number="4"></condition_column>
+<condition_column column_value="-" column_number="5"></condition_column>
+<condition_column column_value="-" column_number="6"></condition_column>
+<condition_column column_value="-" column_number="7"></condition_column>
+<condition_column column_value="-" column_number="8"></condition_column>
+<condition_column column_value="-" column_number="9"></condition_column>
+<condition_column column_value="-" column_number="10"></condition_column>
+<condition_column column_value="-" column_number="11"></condition_column>
+<condition_column column_value="-" column_number="12"></condition_column>
+<condition_column column_value="-" column_number="13"></condition_column>
+<condition_column column_value="-" column_number="14"></condition_column>
+<condition_column column_value="-" column_number="15"></condition_column>
+<condition_column column_value="-" column_number="16"></condition_column></condition_details>
+<condition_details>
+<condition_number>3</condition_number>
+<condition_comment>3</condition_comment>
+<condition_description>dset_scan_station_id matches the integer_redex</condition_description>
+<condition_postfix>
+integer_redex dset_scan_station_id cvs regexmatch 
+</condition_postfix>
+<condition_column column_value="-" column_number="1"></condition_column>
+<condition_column column_value="-" column_number="2"></condition_column>
+<condition_column column_value="N" column_number="3"></condition_column>
+<condition_column column_value="-" column_number="4"></condition_column>
+<condition_column column_value="-" column_number="5"></condition_column>
+<condition_column column_value="-" column_number="6"></condition_column>
+<condition_column column_value="-" column_number="7"></condition_column>
+<condition_column column_value="-" column_number="8"></condition_column>
+<condition_column column_value="-" column_number="9"></condition_column>
+<condition_column column_value="-" column_number="10"></condition_column>
+<condition_column column_value="-" column_number="11"></condition_column>
+<condition_column column_value="-" column_number="12"></condition_column>
+<condition_column column_value="-" column_number="13"></condition_column>
+<condition_column column_value="-" column_number="14"></condition_column>
+<condition_column column_value="-" column_number="15"></condition_column>
+<condition_column column_value="-" column_number="16"></condition_column></condition_details>
+<condition_details>
+<condition_number>4</condition_number>
+<condition_comment>4</condition_comment>
+<condition_description>dset_mgmt_release_ts matches date_regex</condition_description>
+<condition_postfix>
+date_regex dset_mgmt_release_ts cvs regexmatch 
+</condition_postfix>
+<condition_column column_value="-" column_number="1"></condition_column>
+<condition_column column_value="-" column_number="2"></condition_column>
+<condition_column column_value="-" column_number="3"></condition_column>
+<condition_column column_value="N" column_number="4"></condition_column>
+<condition_column column_value="-" column_number="5"></condition_column>
+<condition_column column_value="-" column_number="6"></condition_column>
+<condition_column column_value="-" column_number="7"></condition_column>
+<condition_column column_value="-" column_number="8"></condition_column>
+<condition_column column_value="-" column_number="9"></condition_column>
+<condition_column column_value="-" column_number="10"></condition_column>
+<condition_column column_value="-" column_number="11"></condition_column>
+<condition_column column_value="-" column_number="12"></condition_column>
+<condition_column column_value="-" column_number="13"></condition_column>
+<condition_column column_value="-" column_number="14"></condition_column>
+<condition_column column_value="-" column_number="15"></condition_column>
+<condition_column column_value="-" column_number="16"></condition_column></condition_details>
+<condition_details>
+<condition_number>5</condition_number>
+<condition_comment>5</condition_comment>
+<condition_description>dset_creation_ts matches date_regex</condition_description>
+<condition_postfix>
+date_regex dset_creation_ts cvs regexmatch 
+</condition_postfix>
+<condition_column column_value="-" column_number="1"></condition_column>
+<condition_column column_value="-" column_number="2"></condition_column>
+<condition_column column_value="-" column_number="3"></condition_column>
+<condition_column column_value="-" column_number="4"></condition_column>
+<condition_column column_value="N" column_number="5"></condition_column>
+<condition_column column_value="-" column_number="6"></condition_column>
+<condition_column column_value="-" column_number="7"></condition_column>
+<condition_column column_value="-" column_number="8"></condition_column>
+<condition_column column_value="-" column_number="9"></condition_column>
+<condition_column column_value="-" column_number="10"></condition_column>
+<condition_column column_value="-" column_number="11"></condition_column>
+<condition_column column_value="-" column_number="12"></condition_column>
+<condition_column column_value="-" column_number="13"></condition_column>
+<condition_column column_value="-" column_number="14"></condition_column>
+<condition_column column_value="-" column_number="15"></condition_column>
+<condition_column column_value="-" column_number="16"></condition_column></condition_details>
+<condition_details>
+<condition_number>6</condition_number>
+<condition_comment>6</condition_comment>
+<condition_description>known_users includes the string dset_created_by</condition_description>
+<condition_postfix>
+known_users dset_created_by cvs memberof 
+</condition_postfix>
+<condition_column column_value="-" column_number="1"></condition_column>
+<condition_column column_value="-" column_number="2"></condition_column>
+<condition_column column_value="-" column_number="3"></condition_column>
+<condition_column column_value="-" column_number="4"></condition_column>
+<condition_column column_value="-" column_number="5"></condition_column>
+<condition_column column_value="N" column_number="6"></condition_column>
+<condition_column column_value="-" column_number="7"></condition_column>
+<condition_column column_value="-" column_number="8"></condition_column>
+<condition_column column_value="-" column_number="9"></condition_column>
+<condition_column column_value="-" column_number="10"></condition_column>
+<condition_column column_value="-" column_number="11"></condition_column>
+<condition_column column_value="-" column_number="12"></condition_column>
+<condition_column column_value="-" column_number="13"></condition_column>
+<condition_column column_value="-" column_number="14"></condition_column>
+<condition_column column_value="-" column_number="15"></condition_column>
+<condition_column column_value="-" column_number="16"></condition_column></condition_details></conditions>
+<actions>
+<action_details>
+<action_number>1</action_number>
+<action_comment>Insert into the XML an attribute indicating a bad ecn format</action_comment>
+<action_description>dset_ecn:  set attribute &quot;error&quot; = &quot;Bad ECN format&quot;</action_description>
+<action_postfix>
+dset_ecn &quot;error&quot; &quot;Bad ECN format&quot; setXmlAttribute 
+</action_postfix>
+<action_column column_value="X" column_number="1"></action_column></action_details>
+<action_details>
+<action_number>2</action_number>
+<action_comment>Insert into the XML an attribute indicating an channel source</action_comment>
+<action_description>dset_channel_source: set attribute &quot;error&quot; = &quot;Unknown Channel Source&quot;</action_description>
+<action_postfix>
+dset_channel_source &quot;error&quot; &quot;Unknown Channel Source&quot; setXmlAttribute 
+</action_postfix>
+<action_column column_value="X" column_number="2"></action_column></action_details>
+<action_details>
+<action_number>3</action_number>
+<action_comment>Insert into the XML an attribute indicating no scan_station number</action_comment>
+<action_description>dset_scan_station_id: set attribute &quot;error&quot; = &quot;Invalid Scan Station Number&quot;</action_description>
+<action_postfix>
+dset_scan_station_id &quot;error&quot; &quot;Invalid Scan Station Number&quot; setXmlAttribute 
+</action_postfix>
+<action_column column_value="X" column_number="3"></action_column></action_details>
+<action_details>
+<action_number>1</action_number>
+<action_comment>Insert into the XML an attribute indicating a bad date</action_comment>
+<action_description>dset_mgmt_release_ts:  set attribute &quot;error&quot; = &quot;Bad Date Format&quot;</action_description>
+<action_postfix>
+dset_mgmt_release_ts &quot;error&quot; &quot;Bad Date Format&quot; setXmlAttribute 
+</action_postfix>
+<action_column column_value="X" column_number="4"></action_column></action_details>
+<action_details>
+<action_number>2</action_number>
+<action_comment>Insert into the XML an attribute indicating a bad date</action_comment>
+<action_description>dset_creation_ts: set attribute &quot;error&quot; = &quot;Bad Date Format&quot;</action_description>
+<action_postfix>
+dset_creation_ts &quot;error&quot; &quot;Bad Date Format&quot; setXmlAttribute 
+</action_postfix>
+<action_column column_value="X" column_number="5"></action_column></action_details>
+<action_details>
+<action_number>3</action_number>
+<action_comment>Insert into the XML an attribute indicating an unknown user</action_comment>
+<action_description>dset_created_by: set attribute &quot;error&quot; = &quot;Unknown User&quot;</action_description>
+<action_postfix>
+dset_created_by &quot;error&quot; &quot;Unknown User&quot; setXmlAttribute 
+</action_postfix>
+<action_column column_value="X" column_number="6"></action_column></action_details></actions></decision_table></decision_tables>

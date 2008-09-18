@@ -1,0 +1,255 @@
+<DTRulesTrace>
+<loadMapping file='test_map.xml'>
+<Load>&lt;mapping &gt;
+</Load>
+<Load>&lt;XMLtoEDD &gt;
+</Load>
+<Load>&lt;map &gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;document_set&apos;type = &apos;entity&apos;RAttribute = &apos;document_set_metadata&apos;tag = &apos;document_set_metadata&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;document_set&apos;type = &apos;entity&apos;RAttribute = &apos;document_set_payload_data&apos;tag = &apos;document_set_payload_data&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;document_set_metadata&apos;type = &apos;xmlvalue&apos;RAttribute = &apos;dset_ecn&apos;tag = &apos;dset_ecn&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;document_set_metadata&apos;type = &apos;xmlvalue&apos;RAttribute = &apos;dset_channel_source&apos;tag = &apos;dset_channel_source&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;document_set_metadata&apos;type = &apos;xmlvalue&apos;RAttribute = &apos;dset_scan_station_id&apos;tag = &apos;dset_scan_station_id&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;document_set_metadata&apos;type = &apos;xmlvalue&apos;RAttribute = &apos;dset_mgmt_release_ts&apos;tag = &apos;dset_mgmt_release_ts&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;document_set_metadata&apos;type = &apos;xmlvalue&apos;RAttribute = &apos;dset_creation_ts&apos;tag = &apos;dset_creation_ts&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;document_set_metadata&apos;type = &apos;xmlvalue&apos;RAttribute = &apos;dset_created_by&apos;tag = &apos;dset_created_by&apos;&gt;
+</Load>
+<Load>&lt;createentity tag = &apos;document_set&apos;entity = &apos;document_set&apos;id = &apos;id&apos;&gt;
+</Load>
+<Load>&lt;createentity tag = &apos;document_set_metadata&apos;entity = &apos;document_set_metadata&apos;id = &apos;id&apos;&gt;
+</Load>
+<Load>&lt;createentity tag = &apos;constants&apos;entity = &apos;constants&apos;id = &apos;id&apos;&gt;
+</Load>
+<Load>&lt;entities &gt;
+</Load>
+<Load>&lt;entity name = &apos;document_set&apos;number = &apos;1&apos;&gt;
+</Load>
+<Load>&lt;entity name = &apos;document_set_metadata&apos;number = &apos;*&apos;&gt;
+</Load>
+<Load>&lt;entity name = &apos;constants&apos;number = &apos;*&apos;&gt;
+</Load>
+<Load>&lt;initialization &gt;
+</Load>
+<Load>&lt;initialentity epush = &apos;true&apos;entity = &apos;document_set&apos;&gt;
+</Load>
+<Load>&lt;initialentity epush = &apos;true&apos;entity = &apos;constants&apos;&gt;
+</Load>
+</loadMapping>
+<loadData >
+<process>
+<createEntity name='document_set' id=''>
+<process>
+<createEntity name='document_set_metadata' id=''>
+<process>
+<def entity='/document_set_metadata 100007 createEntity ' name='dset_ecn'>com.dtrules.interpreter.RXmlValue@64f6cd</def>
+<message>   /dset_ecn &quot;9854785&quot; def</message>
+</process>
+<process>
+<def entity='/document_set_metadata 100007 createEntity ' name='dset_channel_source'>com.dtrules.interpreter.RXmlValue@872380</def>
+<message>   /dset_channel_source &quot;RUMMOR&quot; def</message>
+</process>
+<process>
+<def entity='/document_set_metadata 100007 createEntity ' name='dset_scan_station_id'>com.dtrules.interpreter.RXmlValue@2bb514</def>
+<message>   /dset_scan_station_id &quot;12&quot; def</message>
+</process>
+<process>
+<def entity='/document_set_metadata 100007 createEntity ' name='dset_mgmt_release_ts'>com.dtrules.interpreter.RXmlValue@17d5d2a</def>
+<message>   /dset_mgmt_release_ts &quot;01-12-31T12:00:00&quot; def</message>
+</process>
+<process>
+<def entity='/document_set_metadata 100007 createEntity ' name='dset_creation_ts'>com.dtrules.interpreter.RXmlValue@16fa474</def>
+<message>   /dset_creation_ts &quot;2001-12-31T12:00:00&quot; def</message>
+</process>
+<process>
+<def entity='/document_set_metadata 100007 createEntity ' name='dset_created_by'>com.dtrules.interpreter.RXmlValue@95c083</def>
+<message>   /dset_created_by &quot;Pishing&quot; def</message>
+</process>
+</createEntity>
+<def entity='/document_set 100001 createEntity ' name='document_set_metadata'>/document_set_metadata 100007 createEntity </def>
+<message>   /document_set_metadata &quot;&quot; def</message>
+</process>
+<process>
+<process>
+<process>
+<process></process>
+<process></process>
+<process></process>
+<process></process>
+</process>
+<process>
+<process></process>
+<process>
+<process>
+<process></process>
+<process></process>
+<process></process>
+<process></process>
+<process></process>
+</process>
+<process>
+<process>
+<process></process>
+<process></process>
+</process>
+<process></process>
+<process></process>
+</process>
+</process>
+<process>
+<process>
+<process>
+<process></process>
+<process></process>
+</process>
+<process></process>
+</process>
+</process>
+<process>
+<process>
+<process>
+<process></process>
+<process></process>
+<process></process>
+</process>
+<process></process>
+</process>
+</process>
+<process>
+<process>
+<process>
+<process></process>
+<process></process>
+</process>
+<process></process>
+<process></process>
+</process>
+</process>
+<process>
+<process></process>
+<process></process>
+<process></process>
+<process></process>
+</process>
+</process>
+</process>
+<process>
+<process>
+<process></process>
+<process></process>
+<process></process>
+<process></process>
+</process>
+<process>
+<process>
+<process></process>
+<process></process>
+</process>
+<process></process>
+<process></process>
+<process></process>
+</process>
+</process>
+<process>
+<process>
+<process></process>
+<process></process>
+<process></process>
+<process></process>
+</process>
+<process>
+<process>
+<process></process>
+<process></process>
+</process>
+<process></process>
+<process></process>
+<process></process>
+</process>
+</process>
+<process>
+<process>
+<process></process>
+<process></process>
+<process></process>
+<process></process>
+</process>
+<process>
+<process>
+<process></process>
+<process></process>
+</process>
+<process></process>
+<process></process>
+<process></process>
+</process>
+</process>
+<process>
+<process>
+<process></process>
+<process></process>
+<process></process>
+<process></process>
+</process>
+<process>
+<process>
+<process></process>
+<process></process>
+</process>
+<process></process>
+</process>
+</process>
+</process>
+</createEntity>
+</process>
+</loadData>
+<context execute='{ /Verify_Documents executeTable  } document_set_metadata entitypush execute entitypop'>
+<entitypush value='document_set_metadata' id='100007'/>
+<decisiontable tID='0' name='Verify_Documents'>
+<entity_stack>
+<entity id='1'>primities</entity>
+<entity id='2'>decisiontables</entity>
+<entity id='100001'>document_set</entity>
+<entity id='100003'>constants</entity>
+<entity id='100007'>document_set_metadata</entity>
+</entity_stack>
+<initialActions></initialActions>
+<Condition n='0'r='Y'>
+<Formal>dset_ecn matches the ecn_redex</Formal>
+</Condition>
+<Condition n='1'r='N'>
+<Formal>channel_sources includes the string dset_channel_source</Formal>
+</Condition>
+<Condition n='2'r='Y'>
+<Formal>dset_scan_station_id matches the integer_redex</Formal>
+</Condition>
+<Condition n='3'r='N'>
+<Formal>dset_mgmt_release_ts matches date_regex</Formal>
+</Condition>
+<Condition n='4'r='Y'>
+<Formal>dset_creation_ts matches date_regex</Formal>
+</Condition>
+<Condition n='5'r='Y'>
+<Formal>known_users includes the string dset_created_by</Formal>
+</Condition>
+<Column n='4 2 '>
+<action n='2'>
+<formal>dset_channel_source: set attribute &quot;error&quot; = &quot;Unknown Channel Source&quot;</formal>
+<SetXmlAttribute tag='dset_channel_source' attribute='error' value='Unknown Channel Source'/>
+</action>
+<action n='4'>
+<formal>dset_mgmt_release_ts:  set attribute &quot;error&quot; = &quot;Bad Date Format&quot;</formal>
+<SetXmlAttribute tag='dset_mgmt_release_ts' attribute='error' value='Bad Date Format'/>
+</action>
+</Column>
+</decisiontable>
+<entitypop />
+</context>
+</DTRulesTrace>

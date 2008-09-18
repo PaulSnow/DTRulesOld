@@ -1,0 +1,60 @@
+<entity_data_dictionary>
+    <edd_header>
+        <edd_create_stamp>Mon, 25 Aug 2008 08:06:44 -0500</edd_create_stamp>
+        <Excel_File_Name>c:/eb/eb_dev2/XmlProcessing/edd/test_edd.xls</Excel_File_Name>
+    </edd_header>
+    <edd>
+        <entry>
+            <entity entityname='document_set' attribute='document_set_metadata' type='entity' subtype='' default='' access='r' input='main'>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='document_set' attribute='document_set_payload_data' type='entity' subtype='' default='' access='r' input='main'>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='document_set_metadata' attribute='dset_ecn' type='xmlvalue' subtype='integer' default='' access='r' input='main'>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='document_set_metadata' attribute='dset_channel_source' type='xmlvalue' subtype='string' default='' access='r' input='main'>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='document_set_metadata' attribute='dset_scan_station_id' type='xmlvalue' subtype='integer' default='' access='r' input='main'>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='document_set_metadata' attribute='dset_mgmt_release_ts' type='xmlvalue' subtype='time' default='' access='r' input='main'>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='document_set_metadata' attribute='dset_creation_ts' type='xmlvalue' subtype='time' default='' access='r' input='main'>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='document_set_metadata' attribute='dset_created_by' type='xmlvalue' subtype='string' default='' access='r' input='main'>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='constants' attribute='ecn_redex' type='string' subtype='' default='\d\d\d\d\d\d\d' access='r' input=''>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='constants' attribute='channel_sources' type='list' subtype='' default='{&quot;MAIL&quot;, &quot;FAX&quot;, &quot;PHONE&quot;}' access='r' input=''>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='constants' attribute='integer_redex' type='string' subtype='' default='(\d)+' access='r' input=''>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='constants' attribute='date_regex' type='string' subtype='' default='\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$' access='r' input=''>
+            </entity>
+        </entry>
+        <entry>
+            <entity entityname='constants' attribute='known_users' type='list' subtype='' default='{&quot;Pishing&quot;  &quot;Snow&quot; &quot;Goshorn&quot; }' access='r' input=''>
+            </entity>
+        </entry>
+    </edd>
+</entity_data_dictionary>

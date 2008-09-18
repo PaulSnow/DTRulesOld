@@ -1,0 +1,25 @@
+<mapping>
+    <XMLtoEDD>
+        <map>
+            <setattribute tag='document_set_metadata' RAttribute='document_set_metadata' enclosure='document_set' type='entity'></setattribute>
+            <setattribute tag='document_set_payload_data' RAttribute='document_set_payload_data' enclosure='document_set' type='entity'></setattribute>
+            <setattribute tag='dset_ecn' RAttribute='dset_ecn' enclosure='document_set_metadata' type='xmlvalue'></setattribute>
+            <setattribute tag='dset_channel_source' RAttribute='dset_channel_source' enclosure='document_set_metadata' type='xmlvalue'></setattribute>
+            <setattribute tag='dset_scan_station_id' RAttribute='dset_scan_station_id' enclosure='document_set_metadata' type='xmlvalue'></setattribute>
+            <setattribute tag='dset_mgmt_release_ts' RAttribute='dset_mgmt_release_ts' enclosure='document_set_metadata' type='xmlvalue'></setattribute>
+            <setattribute tag='dset_creation_ts' RAttribute='dset_creation_ts' enclosure='document_set_metadata' type='xmlvalue'></setattribute>
+            <setattribute tag='dset_created_by' RAttribute='dset_created_by' enclosure='document_set_metadata' type='xmlvalue'></setattribute>
+            <createentity entity='document_set' tag='document_set' id='id'></createentity>
+            <createentity entity='document_set_metadata' tag='document_set_metadata' id='id'></createentity>
+            <createentity entity='constants' tag='constants' id='id'></createentity>
+        </map>
+        <entities>
+            <entity name='document_set' number='*'></entity>
+            <entity name='document_set_metadata' number='*'></entity>
+            <entity name='constants' number='*'></entity>
+        </entities>
+        <initialization>
+            <initialentity entity='constants' epush='true'></initialentity>
+        </initialization>
+    </XMLtoEDD>
+</mapping>
