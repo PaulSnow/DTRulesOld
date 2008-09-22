@@ -210,7 +210,8 @@ public class RTable extends ARObject {
     }
     
     public String stringValue() {
-        return tablename.stringValue();
+        if(tablename!=null) return tablename.stringValue();
+        return "";
     }
 
     public int type() {

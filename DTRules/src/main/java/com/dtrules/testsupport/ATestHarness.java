@@ -173,10 +173,10 @@ public abstract class ATestHarness implements ITestHarness {
 
               if(Verbose()){
                  RArray entitystack = new RArray(0,false,false);
-                 for(int i=2; i< session.getState().edepth(); i++){
+                 for(int i=0; i< session.getState().edepth()-2; i++){
                      entitystack.add(session.getState().entityfetch(i));
                  }
-                 session.printEntityReport(new XMLPrinter(entityfile), false, session.getState(), "entity stack", entitystack);
+                 session.printEntityReport(new XMLPrinter(entityfile), false, session.getState(), "entitystack", entitystack);
               }
               session.getState().traceEnd();
              
