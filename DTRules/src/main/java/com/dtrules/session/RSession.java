@@ -372,11 +372,15 @@ public class RSession implements RuleSession, IRSession {
      }
  
      public void printEntityReport(IXMLPrinter rpt, boolean verbose, DTState state, String name ) {
+         IRObject obj = state.find(name);
+         printEntityReport(rpt,verbose,state,name,obj);
+     }
+     
+     public void printEntityReport(IXMLPrinter rpt, boolean verbose, DTState state, String name, IRObject obj ) {
          ArrayList<IRObject> entitypath = new ArrayList<IRObject>();
          ArrayList<IRObject> printed = null;
          if (!verbose) printed = new ArrayList<IRObject>();
          try {
-             IRObject obj = state.find(name);
              if(obj==null){
                  rpt.printdata("unknown", "object", name,null);
              }else{

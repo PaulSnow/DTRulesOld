@@ -180,7 +180,7 @@ public class EDDLoader implements IGenericXMLParser {
         
         String default_value  = (String) attribs.get("default_value");
         String attrib_name    = (String) attribs.get("name");
-        String attrib_comment = (String) attribs.get("comment");
+       // String attrib_comment = (String) attribs.get("comment");
         String access         = (String) attribs.get("access");
         String subtype        = (String) attribs.get("subtype");
 	    String type           = (String) attribs.get("type");

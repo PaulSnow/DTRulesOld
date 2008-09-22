@@ -29,6 +29,7 @@ import com.dtrules.entity.REntity;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.mapping.Mapping;
 import com.dtrules.xmlparser.IXMLPrinter;
+import com.dtrules.interpreter.IRObject;
 
 public interface IRSession {
     
@@ -80,6 +81,8 @@ public interface IRSession {
     public void printEntity(IXMLPrinter rpt, String tag, IREntity e) throws Exception ;
 
     public void printEntityReport(IXMLPrinter rpt, DTState state, String iRObjname );
+    
+    public void printEntityReport(IXMLPrinter rpt, boolean verbose, DTState state, String name, IRObject object );
     
     public void printEntityReport(IXMLPrinter rpt, boolean verbose, DTState state, String iRObjname );
     
