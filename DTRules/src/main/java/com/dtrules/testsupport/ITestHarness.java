@@ -87,7 +87,14 @@ public interface ITestHarness {
      */
     void runTests();
     /**
-     * Print reports;
+     * Print reports; Since the test harness can run multiple tests, the number of 
+     * the test having been run is passed down to printReport.  That way, if it needs
+     * to print additional reports or results, it can tag them with the appropriate
+     * run number
+     * @param runNumber the number of the test being run
+     * @param session the session of the Rules Engine to use as the basis of the report
+     * @param the result file opened by the TestHarness... Most tests need one, so we
+     * open one for you.
      */
-    void printReport(IRSession session, PrintStream out) throws RulesException;
+    void printReport(int runNumber, IRSession session, PrintStream out) throws RulesException;
 }

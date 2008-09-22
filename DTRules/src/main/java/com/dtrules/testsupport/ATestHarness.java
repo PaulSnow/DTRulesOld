@@ -166,9 +166,9 @@ public abstract class ATestHarness implements ITestHarness {
               
               session.execute(getDecisionTableName());
               
-              printReport(session, out);
+              printReport(dfcnt, session, out);
               if(Console()){
-                  printReport(session,System.out);
+                  printReport(dfcnt, session,System.out);
               }
 
               if(Verbose()){
