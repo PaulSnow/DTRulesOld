@@ -32,7 +32,7 @@ import com.dtrules.xmlparser.IGenericXMLParser;
 import com.dtrules.xmlparser.XMLPrinter;
 
 @SuppressWarnings({"unchecked"})
-public class MapGenerator implements IGenericXMLParser  {
+public class MapGenerator implements IGenericXMLParser, IMapGenerator  {
     String[]                    tagstk;
     int                         tagstkptr;
     String                      tag;
@@ -61,7 +61,16 @@ public class MapGenerator implements IGenericXMLParser  {
         }
         return false;
     }    
-        
+    
+    String entity_name;
+    String entity_access;
+    String entity_comment;
+    public void begin_entity () {
+        entity_name    = (String) attribs.get("name");
+        entity_access  = (String) attribs.get("access");
+        entity_comment = (String) attribs.get("comment");
+    }
+    
     public void end_entity(){
         String attribute = (String) attribs.get("attribute");
         String type      = (String) attribs.get("type");
@@ -147,19 +156,16 @@ public class MapGenerator implements IGenericXMLParser  {
         return true;
     }
     
+    /* (non-Javadoc)
+     * @see com.dtrules.mapping.IMapGenerator#generateMapping(java.lang.String, java.lang.String, java.lang.String)
+     */
     public void generateMapping(String mapping, String inputfile, String outputfile) throws Exception {
         FileInputStream input = new FileInputStream(inputfile);
         XMLPrinter      out   = new XMLPrinter(new FileOutputStream(outputfile));
         generateMapping(mapping,input,out);
     }
-    /**
-     * Given an EDD XML, makes a good stab at generating a Mapping file for a given
-     * mapping source.  The mapping source is specified as an input in the input column
-     * in the EDD.
-     * @param mapping
-     * @param input
-     * @param out
-     * @throws Exception
+    /* (non-Javadoc)
+     * @see com.dtrules.mapping.IMapGenerator#generateMapping(java.lang.String, java.io.InputStream, com.dtrules.xmlparser.XMLPrinter)
      */
     public void generateMapping(String mapping, InputStream input, XMLPrinter out)throws Exception {
         this.out     = out;
@@ -193,20 +199,6 @@ public class MapGenerator implements IGenericXMLParser  {
         
         out.close();
     }
-    
-
-    public static void main(String args[])throws Exception{
-        String              path    = "C:/eb/workspace/AutoAssignmentDevelopment/";
-        String              mapping = "main";
-        InputStream         input   = new FileInputStream(path+"xml/ny_eb_edd.xml");
-        MapGenerator        mg      = new MapGenerator();
-        FileOutputStream    os      = new FileOutputStream(path+"temp/gen_map.xml");
-        XMLPrinter   out = new XMLPrinter(os);
-        
-        mg.generateMapping(mapping, input, out);
-                
-    }
-
 
     /**
      * @return the entities

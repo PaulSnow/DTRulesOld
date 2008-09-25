@@ -582,6 +582,10 @@ public class RMiscOps {
         
         public void execute(DTState state) throws RulesException {
             IRObject v = state.datapop();
+            if(v.type()==iNull){
+                state.datapush(v);
+                return;
+            }
             IRObject obj = v.rIntegerValue();
             if(state.testState(DTState.TRACE)){
                 if(v.type()!= IRObject.iInteger){
@@ -602,6 +606,10 @@ public class RMiscOps {
         
         public void execute(DTState state) throws RulesException {
             IRObject v = state.datapop();
+            if(v.type()==iNull){
+                state.datapush(v);
+                return;
+            }
             IRObject obj = v.rDoubleValue();
             if(state.testState(DTState.TRACE)){
                 if(v.type()!= IRObject.iDouble){
@@ -621,7 +629,12 @@ public class RMiscOps {
         Cvb(){super("cvb");}
         
         public void execute(DTState state) throws RulesException {
-            state.datapush(state.datapop().rBooleanValue());
+            IRObject v = state.datapop();
+            if(v.type()==iNull){
+                state.datapush(v);
+                return;
+            }
+            state.datapush(v.rBooleanValue());
         }
     }
     /**
@@ -635,7 +648,11 @@ public class RMiscOps {
         
         public void execute(DTState state) throws RulesException {
         	IRObject v = state.datapop();
-        	if(v.type()==IRObject.iNull){ 
+            if(v.type()==iNull){
+                state.datapush(v);
+                return;
+            }
+           	if(v.type()==IRObject.iNull){ 
         		state.datapush(v);
         	}else{
         		state.datapush(v.rEntityValue());
@@ -652,7 +669,12 @@ public class RMiscOps {
         Cvs(){super("cvs");}
         
         public void execute(DTState state) throws RulesException {
-            state.datapush(state.datapop().rStringValue());
+            IRObject v = state.datapop();
+            if(v.type() != IRObject.iNull){
+                state.datapush(v.rStringValue());
+            }else{
+                state.datapush(v);
+            }
         }
     }
     /**
@@ -665,8 +687,12 @@ public class RMiscOps {
         Cvn(){super("cvn");}
         
         public void execute(DTState state) throws RulesException {
-            IRObject obj = state.datapop();
-            state.datapush(obj.rNameValue().getNonExecutable());
+            IRObject v = state.datapop();
+            if(v.type()==iNull){
+                state.datapush(v);
+                return;
+            }
+            state.datapush(v.rNameValue().getNonExecutable());
         }
     }
     /**
@@ -679,8 +705,12 @@ public class RMiscOps {
         Cvd(){super("cvd");}
         
         public void execute(DTState state) throws RulesException {
-            IRObject datevalue = state.datapop();
-            state.datapush(datevalue.rTimeValue());
+            IRObject v = state.datapop();
+            if(v.type()==iNull){
+                state.datapush(v);
+                return;
+            }
+            state.datapush(v.rTimeValue());
         }
     }
 

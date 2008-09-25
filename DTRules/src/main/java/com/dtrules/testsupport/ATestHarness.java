@@ -4,9 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import java.io.FileInputStream;
 import com.dtrules.interpreter.RArray;
 import com.dtrules.interpreter.RName;
 import com.dtrules.mapping.Mapping;
@@ -15,9 +14,14 @@ import com.dtrules.session.IRSession;
 import com.dtrules.session.RuleSet;
 import com.dtrules.session.RulesDirectory;
 import com.dtrules.xmlparser.XMLPrinter;
+import com.dtrules.mapping.DataMap;
 
 public abstract class ATestHarness implements ITestHarness {
  
+    DataMap datamap=null;
+    
+    public DataMap getDataMap(){ return datamap; }
+    
     /**
      * Path to the XML Directory holding all the XML files for this
      * Rule Set
@@ -160,7 +164,15 @@ public abstract class ATestHarness implements ITestHarness {
                   
               Mapping   mapping  = session.getMapping();
               
-              mapping.loadData(session, path+"/"+dataset);
+              datamap = new DataMap(null);
+              
+              datamap.loadXML(new FileInputStream(path+"/"+dataset));
+              
+              if(Verbose()){
+                  datamap.print(new FileOutputStream(getOutputDirectory()+"datamap"+dfcnt+"xml"));
+              }
+              
+              mapping.loadData(session, datamap);
               
               // Once the data is loaded, execute the rules.
               

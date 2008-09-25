@@ -347,7 +347,7 @@
 [277] strexpr ::= STRING VALUE OF operatorstatements 
 [278] strexpr ::= LPAREN STR RPAREN texpr LPAREN tablelist RPAREN 
 [279] strexpr ::= RSTRING 
-[280] strexpr ::= colonRef RSTRING 
+[280] strexpr ::= colonRef strexpr 
 [281] strexpr ::= STRING 
 [282] strexpr ::= strexpr PLUS strexpr 
 [283] strexpr ::= LPAREN STR RPAREN fexpr 

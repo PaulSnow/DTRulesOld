@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import com.dtrules.infrastructure.RulesException;
+import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RBoolean;
 import com.dtrules.interpreter.RInteger;
 import com.dtrules.interpreter.RString;
@@ -70,7 +71,8 @@ public class RDateTimeOps {
 			Newdate(){super("newdate");}
 
 			public void execute(DTState state) throws RulesException {
-				state.datapush(RTime.getRTime(java.sql.Date.valueOf(state.datapop().stringValue())));
+			    IRObject obj = state.datapop();
+				state.datapush(RTime.getRDate(obj.stringValue()));
 			}
 		} 
 

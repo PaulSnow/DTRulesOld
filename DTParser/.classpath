@@ -3,5 +3,6 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="M2_REPO/java_cup/java-cup/11a/java-cup-11a.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DTRules"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -743,7 +743,7 @@ strexpr  ::=
 			  |
 			  RSTRING:s                   {: RESULT = s+" "; :}
 			  |
-              colonRef:e1 RSTRING:s       {: RESULT = e1 +"entitypush "+s+" entitypop "; :}
+              colonRef:e1 strexpr:s       {: RESULT = e1 +"entitypush "+s+"entitypop "; :}
               |
               STRING:s                    {: RESULT = s+" "; :}
               |

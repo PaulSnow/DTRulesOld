@@ -5,7 +5,6 @@ package com.dtrules.testsupport;
 
 import java.io.PrintStream;
 
-import com.dtrules.infrastructure.RulesException;
 import com.dtrules.session.IRSession;
 
 /**
@@ -96,5 +95,5 @@ public interface ITestHarness {
      * @param the result file opened by the TestHarness... Most tests need one, so we
      * open one for you.
      */
-    void printReport(int runNumber, IRSession session, PrintStream out) throws RulesException;
+    void printReport(int runNumber, IRSession session, PrintStream out) throws Exception;
 }

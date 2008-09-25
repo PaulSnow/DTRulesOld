@@ -34,7 +34,9 @@ import com.dtrules.decisiontables.DTNode.Coordinate;
 import com.dtrules.entity.IREntity;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.RName;
+import com.dtrules.mapping.IMapGenerator;
 import com.dtrules.mapping.MapGenerator;
+import com.dtrules.mapping.MapGenerator2;
 import com.dtrules.session.EntityFactory;
 import com.dtrules.session.ICompiler;
 import com.dtrules.session.ICompilerError;
@@ -201,9 +203,36 @@ public class Excel2XML {
      * @param filename	File name for the mapping file generated
      * @throws Exception
      */
+    @Deprecated
     public void generateMap(String mapping, String filename) throws Exception {
         RuleSet        rs   = getRuleSet();
-        MapGenerator   mgen = new MapGenerator();           
+        IMapGenerator   mgen = new MapGenerator();           
+        mgen.generateMapping(
+                mapping,
+                rs.getFilepath()+rs.getEDD_XMLName(), 
+                rs.getWorkingdirectory()+"map.xml");
+    }
+    
+    /**
+     * Generates a default Mapping File.  This file is not complete, but 
+     * requires adjustments to match XML tags if they differ from the 
+     * Attribute names used in the EDD.  Also, the initial Entity Stack and
+     * frequency of Entity types must be examined and updated.
+     * 
+     * @param mapping   Version of EDD to map.
+     * @param mapping   Tag for the mapping file.  Attributes with this tag in the
+     *                  EDD will be mapped in the generated mapping
+     * @param filename  File name for the mapping file generated
+     * @throws Exception
+     */
+    public void generateMap(int version, String mapping, String filename) throws Exception {
+        RuleSet        rs   = getRuleSet();
+        IMapGenerator   mgen;
+        if(version == 1){
+            mgen = new MapGenerator();
+        }else{
+            mgen = new MapGenerator2();
+        }
         mgen.generateMapping(
                 mapping,
                 rs.getFilepath()+rs.getEDD_XMLName(), 

@@ -92,26 +92,15 @@ public class LoadDatamapData extends LoadXMLData {
         //  the regular set attribute code.
         if ((attr = (String) attribs.get("set attribute date"))!=null){         // Look and see if we have an attribute name defined.
             attribs.remove("set attribute date");
-            if(body instanceof String){
+            if(body instanceof String && body != null ){
                 String sbody = body.toString();
                 if (sbody.trim().length() > 0)
                 {
-                    Date       date;
-                    try {
-                        if(false && sbody.indexOf("7777")>=0){
-                            date = new Date(0x7FFFFFFFFFFFL);
-                        }else{
-                            date = df_in.parse(sbody);
-                        }    
-                    } catch (ParseException e) {
-                        try{
-                           date = df_out.parse(sbody);
-                        }catch (ParseException e2){
-                           date = df_out.parse("01/05/2008");
-                           //throw new RuntimeException("Bad Date encountered: ("+tag+")="+body);
-                        }   
-                    }
-                    body = df_out.format(date);
+                    Date       date = cvd(body);
+                    if(date == null){
+                        throw new RuntimeException("Bad Date encountered: ("+tag+")="+body);
+                    }   
+                    body = date;
                     attribs.put("set attribute",attr);
                 }
             }
@@ -138,7 +127,12 @@ public class LoadDatamapData extends LoadXMLData {
 					} else if (type == IRObject.iBoolean){
                         value = RBoolean.getRBoolean(body.toString());
                     } else if (type == IRObject.iTime){
-                        value = RTime.getRTime((Date)body);
+                        Date date = cvd(body);
+                        if(date != null ){
+                            value = RTime.getRTime( cvd(body) );
+                        }else{
+                            throw new RuntimeException("Bad Date encountered: ("+tag+")="+body);
+                        }
                     } else if (type == IRObject.iEntity) {
                         if(entity!=null){
                             value = entity;
@@ -164,7 +158,28 @@ public class LoadDatamapData extends LoadXMLData {
 		
 	    return;	
 	}
-
+    
+    private Date cvd(Object o){
+        if(o instanceof Date )return (Date) o;
+        String     sbody = o.toString();
+        Date       date;
+        try {
+            if(false && sbody.indexOf("7777")>=0){
+                date = new Date(0x7FFFFFFFFFFFL);
+            }else{
+                date = df_in.parse(sbody);
+            }    
+        } catch (ParseException e) {
+            try{
+               date = df_out.parse(sbody);
+            }catch (ParseException e2){
+               return null;
+            }   
+        }
+        return date;
+    }    
+    
+    
     long getLong(Object num){
         if(num.getClass()==BigDecimal.class)return ((BigDecimal)num).longValue();
         if(num.getClass()==Long.class)return ((Long)num).longValue();
