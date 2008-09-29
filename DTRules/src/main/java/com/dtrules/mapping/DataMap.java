@@ -32,6 +32,9 @@ package com.dtrules.mapping;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -115,6 +118,21 @@ public class DataMap implements IXMLPrinter{
     public DataMap(String tag, OutputStream xmlOutputStream){
         this(tag);
         this.out = xmlOutputStream;        
+    }
+    
+    /**
+     * Pull the XML representation back out from the DataMap
+     * If noSpaces == true, then the result will not be pretty
+     * printed, saving space.
+     * @param noSpaces
+     * @return
+     */
+    public String xmlPull(boolean noSpaces){
+        StringWriter sw = new StringWriter();
+        XMLPrinter xout = new XMLPrinter(sw);
+        xout.setNoSpaces(noSpaces);
+        DataMap.print(xout, null);
+        return sw.toString();
     }
     
     /**
@@ -581,4 +599,24 @@ public class DataMap implements IXMLPrinter{
         }
     }
     
+    /**
+     * Loads an XML File into a DataMap
+     * @param xml
+     */
+    public void loadXML(Reader xml) throws RulesException {
+        XmlLoader xmlLoader = new XmlLoader(this);
+        try{
+            GenericXMLParser.load(xml, xmlLoader);
+        }catch(Exception e){
+            throw new RulesException("Bad XML","loadXML",e.toString());
+        }
+    }
+    
+    /**
+     * Loads an XML String into a DataMap
+     * @param xml
+     */
+    public void loadXML(String xml) throws RulesException {
+        loadXML(new StringReader(xml));
+    }
 }

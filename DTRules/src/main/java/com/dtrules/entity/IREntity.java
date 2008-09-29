@@ -24,9 +24,20 @@ import java.util.Iterator;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RName;
+import com.dtrules.interpreter.RXmlValue;
 
 public interface IREntity extends IRObject{
 
+    /**
+     * Get XML Node
+     */
+    public RXmlValue getRXmlValue();
+    
+    /**
+     * 
+     */
+    public void setRXmlValue(RXmlValue rXmlValue);
+    
     /**
      * This is the attribute name used by DTRules to map data from 
      * XML files into Rules Engine Entitites.

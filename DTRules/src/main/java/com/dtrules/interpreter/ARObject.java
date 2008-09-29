@@ -155,15 +155,15 @@ public abstract class ARObject implements IRObject {
     /* (non-Javadoc)
      * @see com.dtrules.interpreter.IRObject#rXmlValue()
      */
-    public RXmlValue rXmlValue() throws RulesException {
-        throw new RulesException("Conversion Error","","No XmlValue value exists for "+this);
+    public IRObject rXmlValue() throws RulesException {
+        return RNull.getRNull();
     }
-
-    /* (non-Javadoc)
-     * @see com.dtrules.interpreter.IRObject#xmlTagValue()
+    
+    /**
+     * If no XMLNode exists for this object, a null is returned.
      */
     public XMLNode xmlTagValue() throws RulesException {
-        throw new RulesException("Conversion Error","","No XmlValue value exists for "+this);
+        return null;
     }    
     
 }

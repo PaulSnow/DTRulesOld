@@ -117,7 +117,7 @@ public interface IRObject {
     public boolean              booleanValue () throws RulesException;
     public RBoolean             rBooleanValue() throws RulesException;
     public HashMap              hashMapValue () throws RulesException;
-    public RXmlValue            rXmlValue ()    throws RulesException;
+    public IRObject             rXmlValue ()    throws RulesException; // Because it can return an RNull
     public IREntity             rEntityValue () throws RulesException;
     public RName                rNameValue ()   throws RulesException;
     public RTime                rTimeValue ()   throws RulesException;

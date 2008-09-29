@@ -136,9 +136,8 @@ public class LoadXMLData implements IGenericXMLParser {
     public void beginTag(String[] tagstk, int tagstkptr, String tag,
             HashMap attribs) throws IOException, Exception {
         String name = tag;                                 // We assume the tag might create an entity
-		@SuppressWarnings("unused")
-        boolean       traceopen = false;
-		EntityInfo    info  = (EntityInfo)    this.map.requests.get(name);
+		
+        EntityInfo    info  = (EntityInfo)    this.map.requests.get(name);
 		AttributeInfo aInfo = (AttributeInfo) this.map.setattributes.get(tag);
 
 			
@@ -165,8 +164,7 @@ public class LoadXMLData implements IGenericXMLParser {
 		    
 		      state.entitypush(e);
 			  if(state.testState(DTState.TRACE)){
-		          state.traceTagBegin("createEntity", "name='"+info.name+"' id='"+code+"'");
-		          traceopen = true;
+		          state.traceTagBegin("createEntity", "name='"+info.name+"' id='"+code+"'");		          
 			  }    
 		    }else{
                 

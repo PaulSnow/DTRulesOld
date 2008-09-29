@@ -39,6 +39,7 @@ import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RString;
 import com.dtrules.interpreter.operators.ROperator;
 import com.dtrules.xmlparser.IXMLPrinter;
+import com.dtrules.mapping.DataMap;
 import com.dtrules.mapping.Mapping;
 
 @SuppressWarnings("unchecked")
@@ -50,6 +51,34 @@ public class RSession implements RuleSession, IRSession {
     int                         uniqueID = 1;
     HashMap<Object,IREntity>    entityInstances = new HashMap<Object,IREntity>();
     ICompiler                   compiler = null;       
+    ArrayList<DataMap>          registeredMaps = new ArrayList<DataMap>();  
+    
+    /**
+     * Get the list of Data Maps Registered to this session.
+     * @return
+     */
+    public ArrayList<DataMap> getRegisteredMaps(){
+        return registeredMaps;
+    }
+
+    private void registerMap(DataMap datamap){
+        if(!registeredMaps.contains(datamap)){
+            registeredMaps.add(datamap);
+        }
+    }
+    
+    /**
+     * Allocate a registered data map.  If you want to map Data Objects
+     * into the Rules Engine, you need to use this call, providing the
+     * mapping which provides information about these Data Objects.
+     * @return
+     */
+    public DataMap getDataMap(Mapping map, String tag){
+        DataMap datamap = new DataMap(map,tag,null);
+        registerMap(datamap);
+        return datamap;
+    }
+    
     
     /**
      * Get the default mapping

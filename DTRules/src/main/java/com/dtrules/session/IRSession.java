@@ -20,6 +20,7 @@ package com.dtrules.session;
 
 import java.io.PrintStream;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import javax.rules.InvalidRuleSessionException;
 import javax.rules.RuleExecutionSetMetadata;
@@ -27,12 +28,28 @@ import javax.rules.RuleExecutionSetMetadata;
 import com.dtrules.entity.IREntity;
 import com.dtrules.entity.REntity;
 import com.dtrules.infrastructure.RulesException;
+import com.dtrules.mapping.DataMap;
 import com.dtrules.mapping.Mapping;
 import com.dtrules.xmlparser.IXMLPrinter;
 import com.dtrules.interpreter.IRObject;
 
 public interface IRSession {
-    
+   
+    /**
+     * Retrieve a list of all the DataMaps allocated by this session.
+     * These DataMaps may have been updated by the Rules Engine, and
+     * can be translated to XML with these modifications.
+     * @return
+     */
+    public ArrayList<DataMap> getRegisteredMaps();
+    /**
+     * Allocate a registered data map.  If you want to map Data Objects
+     * into the Rules Engine, you need to use this call, providing the
+     * mapping which provides information about these Data Objects.
+     * @return
+     */
+    public DataMap getDataMap(Mapping map, String tag);
+   
     /**
      * Returns the RulesDirectory used to create this session.
      * @return RulesDirectory

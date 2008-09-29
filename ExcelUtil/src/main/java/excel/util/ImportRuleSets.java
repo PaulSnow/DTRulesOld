@@ -25,12 +25,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -485,6 +483,9 @@ public class ImportRuleSets {
                     String initialActionComment = getComments(sheet, rowIndex);
                     out.printdata("initial_action_comment",initialActionComment);
     
+                    String requirements         = getRequirement(sheet, rowIndex);
+                    out.printdata("initial_action_requirement", requirements);
+                    
                     out.printdata("initial_action_description",initialActionDescription);
                     out.closetag();
                 }
@@ -509,7 +510,10 @@ public class ImportRuleSets {
 	        	
 	        	String conditionComment = getNumber(sheet, rowIndex);
                 out.printdata("condition_comment",conditionComment);
-
+                
+                String requirements         = getRequirement(sheet, rowIndex);
+                out.printdata("condition_requirement", requirements);
+                
                 out.printdata("condition_description",conditionDescription);
 	        	
 	        	for(int j=0; j<16;j++){
@@ -545,7 +549,10 @@ public class ImportRuleSets {
                 	
                 	String actionComment = getComments(sheet, rowIndex); 
                     out.printdata("action_comment",actionComment);
-                	
+                    
+                    String requirements         = getRequirement(sheet, rowIndex);
+                    out.printdata("initial_action_requirement", requirements);
+                    
                     out.printdata("action_description",actionDescription);
                 	
                 	for(int j=0; j<16;j++){

@@ -55,11 +55,18 @@ public class RXmlValue extends ARObject {
      * for working with RXmlValue objects
      */
     
+    public String toString(){
+        if(tag.getBody()!= null){
+            return tag.getBody().toString();
+        }else{
+            return null;
+        }
+    }
     /**
      * The string value of an XMLTag is its body value
      */
     public String stringValue() {
-        return tag.getBody().toString();
+        return toString();
     }
     public int type() {
         return iXmlValue;
@@ -77,11 +84,13 @@ public class RXmlValue extends ARObject {
 
     @Override
     public boolean booleanValue() throws RulesException {
+        if(tag.getBody()== null ) return super.booleanValue();
         return RBoolean.booleanValue(tag.getBody().toString());
     }
 
     @Override
     public double doubleValue() throws RulesException {
+        if(tag.getBody()== null ) return super.doubleValue();
         return RDouble.getDoubleValue(tag.getBody().toString());
     }
 
@@ -92,14 +101,16 @@ public class RXmlValue extends ARObject {
 
     @Override
     public int intValue() throws RulesException {
+        if(tag.getBody()== null ) return super.intValue();
         return (int)RInteger.getIntegerValue(tag.getBody().toString());
     }
 
    
     @Override
     public long longValue() throws RulesException {
-        return RInteger.getIntegerValue(tag.getBody().toString());
-          }
+        if(tag.getBody()== null ) return super.longValue();
+        return RInteger.getIntegerValue(toString());
+    }
 
     @Override
     public RBoolean rBooleanValue() throws RulesException {
@@ -122,6 +133,7 @@ public class RXmlValue extends ARObject {
     }
 
     public RString rStringValue() {
+        if(tag.getBody()==null)return RString.newRString("");
         return RString.newRString(stringValue());
     }
 

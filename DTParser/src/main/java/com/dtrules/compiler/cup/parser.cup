@@ -105,7 +105,7 @@ terminal String		ABSOLUTEVALUE, ACTION, ADD, AFTER, ALL, ALLOWING, AND, ARRAY,
 					RDECISIONTABLE, RDOUBLE, RELATIONSHIP_BETWEEN, 
 					REMOVE, RENTITY, 
 					RINVALID, RLONG, RNAME, RNULL, ROPERATOR, ROUNDED, RPAREN, 
-					RSTRING, RTABLE, RXMLVALUE, SEMI, SET, SORT, STARTS_WITH, STR, 
+					RSTRING, RTABLE, RXMLVALUE, SEMI, SET, SORT, STARTS_WITH,  
 					STRING, SUBSTRING, SUBTRACT, SUM_OF, TABLE, TABLEINFORMATION, 
 					THAN, THEN,	THENAME, THERE, THIS, TIMES, THROUGH, TO, 
 					TOBEREMOVED,
@@ -156,6 +156,7 @@ non terminal String     contextstatement;
 non terminal String     localvariables;
 non terminal String     context_for_table;
 non terminal String     datestatement;
+non terminal String     xmlvalues;
 non terminal String     xmlvaluestatements;
 non terminal String     separator;
 
@@ -457,25 +458,25 @@ left_ArrayRef         ::= RARRAY:a                          {: RESULT = left(CUP
                           colonRef:e left_ArrayRef:v        {: notlocal(CUP$DTRulesParser$stack); RESULT = e+"entitypush "+v+"entitypop ";    :} ;
 
 setstatement ::= SET left_iexpr:v    ASSIGN number:e   {:        RESULT = e+"cvi "+v; :} |
-                 SET left_fexpr:v    ASSIGN number:e   {:      RESULT = e+"cvr "+v; :} |  
-                 SET left_bexpr:v    ASSIGN bexpr:e    {:      RESULT = e+"cvb "+v; :} |
-                 SET left_eexpr:v    ASSIGN eexpr:e    {:       RESULT = e+"cve "+v; :} | 
-                 SET left_strexpr:v  ASSIGN strexpr:e  {:       RESULT = e+"cvs "+v; :} |
-                 SET left_bexpr:v    ASSIGN nexpr:e    {:     RESULT = e+"cvb "+v; :} |
-                 SET left_dexpr:v    ASSIGN dexpr:e    {:      RESULT = e+"cvd "+v; :} |   
-				 SET left_texpr:v    ASSIGN texpr:e    {:      RESULT = e+"cvd "+v; :} |
+                 SET left_fexpr:v    ASSIGN number:e   {:        RESULT = e+"cvr "+v; :} |  
+                 SET left_bexpr:v    ASSIGN bexpr:e    {:        RESULT = e+"cvb "+v; :} |
+                 SET left_eexpr:v    ASSIGN eexpr:e    {:        RESULT = e+"cve "+v; :} | 
+                 SET left_strexpr:v  ASSIGN strexpr:e  {:        RESULT = e+"cvs "+v; :} |
+                 SET left_bexpr:v    ASSIGN nexpr:e    {:        RESULT = e+"cvb "+v; :} |
+                 SET left_dexpr:v    ASSIGN dexpr:e    {:        RESULT = e+"cvd "+v; :} |   
+				 SET left_texpr:v    ASSIGN texpr:e    {:        RESULT = e+"cvd "+v; :} |
 
                  SET left_ArrayRef:v     ASSIGN eexpr:e               {:  RESULT = e+v; :} |
                  SET left_ArrayRef:v     ASSIGN strexpr:e             {:  RESULT = e+v; :} |
-                 SET left_ArrayRef:v     ASSIGN fexpr:e               {: RESULT = e+v; :} |
+                 SET left_ArrayRef:v     ASSIGN fexpr:e               {:  RESULT = e+v; :} |
                  SET left_ArrayRef:v     ASSIGN iexpr:e               {:  RESULT = e+v; :} |
-                 SET left_ArrayRef:v     ASSIGN dexpr:e               {: RESULT = e+v; :} |
-                 SET left_ArrayRef:v     ASSIGN array_expr:e          {: RESULT = e+v; :} |
+                 SET left_ArrayRef:v     ASSIGN dexpr:e               {:  RESULT = e+v; :} |
+                 SET left_ArrayRef:v     ASSIGN array_expr:e          {:  RESULT = e+v; :} |
 
-                 INCREMENT RLONG:v       {: RESULT = "/"+v+" "+v+" 1 ladd def "; :} |
-                 INCREMENT RDOUBLE:v     {: RESULT = "/"+v+" "+v+" 1 dadd def "; :} |
-                 DECREMENT RLONG:v       {: RESULT = "/"+v+" "+v+" 1 lsub def "; :} |
-                 DECREMENT RDOUBLE:v     {: RESULT = "/"+v+" "+v+" 1 dsub def "; :} 
+                 INCREMENT RLONG:v       {: RESULT = v+" 1 ladd " + left(CUP$DTRulesParser$stack);  :} |
+                 INCREMENT RDOUBLE:v     {: RESULT = v+" 1 dadd " + left(CUP$DTRulesParser$stack);  :} |
+                 DECREMENT RLONG:v       {: RESULT = v+" 1 lsub " + left(CUP$DTRulesParser$stack);  :} |
+                 DECREMENT RDOUBLE:v     {: RESULT = v+" 1 dsub " + left(CUP$DTRulesParser$stack); :} 
 	      ;
 
 
@@ -539,11 +540,11 @@ number    ::= iexpr:v           {: RESULT = v+" "; :} |
 /** Array types **/              
    
 addtodest     ::= array_expr:a                               {: RESULT = a+"swap addto ";           :} |
-				  RLONG:a                                    {: RESULT = a+" + /"    +a+" xdef ";   :} | 
- 				  RDOUBLE:a	                                 {: RESULT = a+" fadd /" +a+" xdef ";   :} ;             
+				  RLONG:a                                    {: RESULT = a+" + " +left(CUP$DTRulesParser$stack);   :} |
+ 				  RDOUBLE:a	                                 {: RESULT = a+" f+ "+left(CUP$DTRulesParser$stack);   :} ;
  
-subtodest     ::= RLONG:a                                    {: RESULT = a+" swap - /"  +a+" xdef ";     :} | 
- 				  RDOUBLE:a	                                 {: RESULT = a+" swap f- /" +a+" xdef ";     :} ;             
+subtodest     ::= RLONG:a                                    {: RESULT = a+" swap - "  +left(CUP$DTRulesParser$stack); :} | 
+ 				  RDOUBLE:a	                                 {: RESULT = a+" swap f- " +left(CUP$DTRulesParser$stack); :} ;             
  
  
 addtostatement ::=               
@@ -602,9 +603,16 @@ operatorlist ::= strexpr:s COMMA operatorlist:l    {: RESULT = l+s; :} 	|
 operatorstatements ::=
               ROPERATOR:op LPAREN operatorlist:l RPAREN     {: RESULT = l+" "+op+" "; :} ;
 
+xmlvalues ::= strexpr:v                                {: RESULT = v; :} |
+              iexpr:v                                  {: RESULT = v; :} |
+              fexpr:v                                  {: RESULT = v; :} |
+              dexpr:v                                  {: RESULT = v; :} |
+              nexpr:v                                  {: RESULT = v; :} ;
+              
               // start_date: set the attribute "error" = "Invalid blah blah" 
 xmlvaluestatements ::=
-              RXMLVALUE:t COLON SET ATTRIBUTE strexpr:s1 ASSIGN strexpr:s2 {: RESULT = t+" "+s1+s2+"setXmlAttribute "; :} ;
+              RXMLVALUE:t COLON SET ATTRIBUTE strexpr:s1 ASSIGN xmlvalues:s2 {: RESULT = t+" "+s1+s2+"setXmlAttribute "; :} |
+              eexpr:t     COLON SET ATTRIBUTE strexpr:s1 ASSIGN xmlvalues:s2 {: RESULT = t+" "+s1+s2+"setXmlAttribute "; :} ;
  
 // Array expressions
 
@@ -616,8 +624,6 @@ array_expr ::=
               colonRef:e RARRAY:v                           {: RESULT = e+"entitypush "+v+" entitypop ";  :} |
               GET COPY OF array_expr:e                      {: RESULT = e+"copyelements ";               :} | 
               COPY OF array_expr:e                          {: RESULT = e+"copyelements ";               :} | 
-              NEW ENTITY ARRAY                              {: RESULT = "/entity newtypedarray ";         :} |
-              NEW STR ARRAY                                 {: RESULT = "/string newtypedarray ";         :} |
               array_lit:l                                   {: RESULT = l;                                :} |
               ARRAY_OF_VALUES LBRACE array_list:e RBRACE    {: RESULT = "mark "+e+" arraytomark ";        :} |
               TOKENIZE strexpr:s1 BY strexpr:s2             {: RESULT = s1+s2+"tokenize ";                :} ;         
@@ -738,7 +744,7 @@ strexpr  ::=
 			  STRING VALUE OF operatorstatements:o 
 			  							  {: RESULT = o +"cvs ";                :}
               |
-			  LPAREN STR RPAREN texpr:t LPAREN tablelist:keys RPAREN 
+			  LPAREN STRING RPAREN texpr:t LPAREN tablelist:keys RPAREN 
 			  							  {: RESULT = t + " " + keys + "lookup "; :}
 			  |
 			  RSTRING:s                   {: RESULT = s+" "; :}
@@ -749,11 +755,11 @@ strexpr  ::=
               |
               strexpr:s1 PLUS strexpr:s2  {: RESULT = s1+s2+"strconcat "; :}
               |
-              LPAREN STR RPAREN fexpr:fe  {: RESULT = fe+"tostring ";   :}
+              LPAREN STRING RPAREN fexpr:fe  {: RESULT = fe+"tostring ";   :}
               |
-              LPAREN STR RPAREN iexpr:ie  {: RESULT = ie+"tostring ";   :}
+              LPAREN STRING RPAREN iexpr:ie  {: RESULT = ie+"tostring ";   :}
               |
-              LPAREN STR RPAREN dexpr:de  {: RESULT = de+"tostring ";   :}
+              LPAREN STRING RPAREN dexpr:de  {: RESULT = de+"tostring ";   :}
               |
               LPAREN strexpr:s RPAREN     {: RESULT = s;                :}
               |
@@ -777,7 +783,7 @@ strexpr  ::=
               |
               TRIM LPAREN strexpr:s RPAREN      {: RESULT = s+"strtrim "; :}
 		      | 
-			  LPAREN STR RPAREN indx_expr:ie  {: RESULT = ie +"tostring "; :}	      
+			  LPAREN STRING RPAREN indx_expr:ie  {: RESULT = ie +"tostring "; :}	      
 		      | 
 			  CHANGE strexpr:se TO LOWER_CASE {: RESULT = se +"tolowercase "; :}	      
 		      | 

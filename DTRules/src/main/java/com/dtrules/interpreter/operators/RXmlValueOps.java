@@ -33,7 +33,8 @@ public class RXmlValueOps {
 	 
 	    /**
 	     * SetXmlAttribute ( XmlValue Attribute Value --> )
-	     * Addto Operator, adds an element to an array
+	     * Overwrites the attribute in the XML node.  If the object provided
+	     * doesn't actually have an XmlValue, this becomes a no op.
 	     * @author Paul Snow
 	     *
 	     */
@@ -45,10 +46,10 @@ public class RXmlValueOps {
 				String    value     = state.datapop().stringValue();
 				String    attribute = state.datapop().stringValue();
 				XMLNode   xmlNode   = state.datapop().xmlTagValue();
-				
-				state.traceInfo("SetXmlAttribute","tag='"+xmlNode.getTag()+"' attribute='"+attribute+"' value='"+value+"'");
-				
-				xmlNode.getAttribs().put(attribute, value);
+				if(xmlNode != null){
+				    state.traceInfo("SetXmlAttribute","tag='"+xmlNode.getTag()+"' attribute='"+attribute+"' value='"+value+"'");
+				    xmlNode.getAttribs().put(attribute, value);
+				}
 			}
 		}
 		/**

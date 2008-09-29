@@ -15,7 +15,6 @@
  */ 
 package excel.util;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -32,13 +31,11 @@ import com.dtrules.compiler.decisiontables.DTCompiler;
 import com.dtrules.decisiontables.RDecisionTable;
 import com.dtrules.decisiontables.DTNode.Coordinate;
 import com.dtrules.entity.IREntity;
-import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.RName;
 import com.dtrules.mapping.IMapGenerator;
 import com.dtrules.mapping.MapGenerator;
 import com.dtrules.mapping.MapGenerator2;
 import com.dtrules.session.EntityFactory;
-import com.dtrules.session.ICompiler;
 import com.dtrules.session.ICompilerError;
 import com.dtrules.session.IRSession;
 import com.dtrules.session.RSession;
@@ -166,6 +163,15 @@ public class Excel2XML {
             while(idt.hasNext()){
                 RDecisionTable t = (RDecisionTable) dt.get(idt.next());
                 List<ICompilerError> errs = t.compile();
+                for (ICompilerError error : errs){
+                    dtcompiler.logError(
+                            t.getName().stringValue(),
+                            t.getFilename(),
+                            "validity check", 
+                            error.getMessage(), 
+                            0, 
+                            "In the "+error.getErrorType().name()+" row "+error.getIndex()+"\r\n"+error.getSource());
+                }
                 Coordinate err_RowCol = t.validate();
                 if(!t.isCompiled()  || err_RowCol!=null){
                     int column = 0;

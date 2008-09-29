@@ -18,8 +18,12 @@
   
 package com.dtrules.mapping;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -172,7 +176,20 @@ public class Mapping {
 			throw new Exception("Map failed to load due to errors!");
 		}
 	} 
-	
+	/**
+	 * Load Data into the XML from a String.  
+	 * 
+	 * @param session - The session that the data needs to be loaded into
+	 * @param Source - This is for error reporting.  What is the source of the data?
+	 * @param data - The XML data as a String.
+	 * 
+	 * @throws RulesException
+	 */
+	public void loadStringData(IRSession session, String Source, String data)throws RulesException {
+	    Reader strReader = new StringReader(data);
+	    loadData(session,strReader, Source);
+	}
+	 
 	public void loadData(IRSession session, String dataSource )throws RulesException {
 	    loadData(session, dataSource, dataSource);
 	}	      
@@ -197,8 +214,12 @@ public class Mapping {
      * @param dataSource
      * @throws RulesException
      */
-    public void loadData (IRSession session, InputStream dataSource, String source) throws RulesException {        
-        if(dataloader ==null) {
+    public void loadData (IRSession session, InputStream dataSource, String source) throws RulesException {
+       Reader dataSrc = new InputStreamReader(dataSource);
+       loadData(session, dataSrc, source);
+    }
+    public void loadData (IRSession session, Reader dataSource, String source) throws RulesException {
+            if(dataloader ==null) {
             dataloader = new LoadXMLData(this,session,session.getRuleSet().getName());
         }
         if(source==null){

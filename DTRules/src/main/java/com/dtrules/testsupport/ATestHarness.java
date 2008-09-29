@@ -164,12 +164,12 @@ public abstract class ATestHarness implements ITestHarness {
                   
               Mapping   mapping  = session.getMapping();
               
-              datamap = new DataMap(null);
+              datamap = session.getDataMap(mapping,null);
               
               datamap.loadXML(new FileInputStream(path+"/"+dataset));
               
               if(Verbose()){
-                  datamap.print(new FileOutputStream(getOutputDirectory()+"datamap"+dfcnt+"xml"));
+                  datamap.print(new FileOutputStream(getOutputDirectory()+"datamap"+dfcnt+".xml"));
               }
               
               mapping.loadData(session, datamap);

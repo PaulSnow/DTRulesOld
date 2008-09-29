@@ -28,8 +28,6 @@ public class Compile_XmlProcessing {
             
             converter.convertRuleset();
             converter.compile(5,System.out);
-            
-            converter.generateMap("main",       "map.xml");
-            
+            converter.generateMap(1,"main","map.xml");
      }
 }

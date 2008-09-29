@@ -58,11 +58,14 @@ public class LoadDatamapData extends LoadXMLData {
     
     public void endTag(String[] tagstk, int tagstkptr, XMLNode tag, Object body,
             HashMap attribs) throws Exception, IOException {
-       this.xmltag = tag;
+       xmltag = tag;
+       if(attribs.containsKey("create entity")){
+           state.entityfetch(0).setRXmlValue(new RXmlValue(state,xmltag));
+       }
        endTag(tagstk,tagstkptr,tag.getTag(),body,attribs);
+       xmltag = null;
     }
 
-    
     public void endTag(String[] tagstk, int tagstkptr, String tag, Object body,
             HashMap attribs) throws Exception, IOException 
     {

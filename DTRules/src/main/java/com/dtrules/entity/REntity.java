@@ -28,6 +28,8 @@ import com.dtrules.interpreter.ARObject;
 import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RNull;
+import com.dtrules.interpreter.RXmlValue;
+import com.dtrules.mapping.XMLNode;
 import com.dtrules.session.IRSession;
 import com.dtrules.session.RSession;
 
@@ -354,4 +356,37 @@ public class REntity extends ARObject implements IREntity {
            p.println("</entity>");
         }
     }
+    RXmlValue rXmlValue;
+    
+    /**
+     * Get XML Node for this entity
+     */
+    public RXmlValue getRXmlValue(){
+        return rXmlValue;
+    }
+    
+    /**
+     * Set the XML Node for this entity
+     */
+    public void setRXmlValue(RXmlValue rXmlValue){
+        this.rXmlValue = rXmlValue;
+    }
+
+    /**
+     * If the Entity is associated with an XML Node, that node
+     * is returned.  Otherwise, a null is returned.
+     */
+    public IRObject rXmlValue() throws RulesException {
+        if(getRXmlValue()!= null) return getRXmlValue();
+        return RNull.getRNull();
+    }
+
+    /* (non-Javadoc)
+     * @see com.dtrules.interpreter.ARObject#xmlTagValue()
+     */
+    @Override
+    public XMLNode xmlTagValue() throws RulesException {
+        return rXmlValue.xmlTagValue();
+    }
+    
 }

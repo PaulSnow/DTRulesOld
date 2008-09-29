@@ -19,6 +19,8 @@ package com.dtrules.xmlparser;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,11 +38,17 @@ import com.dtrules.interpreter.RTime;
  *
  */
 public class XMLPrinter implements IXMLPrinter {
-    ArrayList<String>  tagStack = new ArrayList<String>();
-    final PrintStream  out;
+    ArrayList<String>  tagStack    = new ArrayList<String>();
+    final PrintWriter  out;
     boolean            newline     = true;
     boolean            intextbody  = false;
     boolean            intagbody   = false;
+    boolean            noSpaces    = false;
+    
+    public void setNoSpaces(boolean v){
+        noSpaces = v;
+    }
+    
     /**
      * Returns the number of tags on the tag stack.
      */
@@ -62,6 +70,7 @@ public class XMLPrinter implements IXMLPrinter {
      * are already on a newline.
      */
     private void newline(){
+        if(noSpaces) return;
         if(!newline)out.println();
         newline = true;
     }
@@ -79,8 +88,9 @@ public class XMLPrinter implements IXMLPrinter {
      * Prints out spaces to indent
      */
     private void indent(){
+        if(noSpaces)return;
         int indent = tagStack.size();
-        for(int i=0;i<indent;i++)print("    ");
+        for(int i=0;i<indent;i++)print("\t");
     }
     /**
      * Prints a comment 
@@ -525,8 +535,13 @@ public class XMLPrinter implements IXMLPrinter {
         printdata(bodyvalue);
         closetag();
     }
+    
+    public XMLPrinter(Writer out ){
+        this.out = new PrintWriter(out,true);
+    }
+    
     public XMLPrinter(OutputStream stream ){
-        out = new PrintStream(stream);
+        out = new PrintWriter(stream,true);
     }
     /**
      * Opens an output stream, and puts out the surrounding root tag.
@@ -534,7 +549,7 @@ public class XMLPrinter implements IXMLPrinter {
      * @param stream
      */
     public XMLPrinter(String tag, OutputStream stream){
-        out = new PrintStream(stream);
+        out = new PrintWriter(stream,true);
         opentag(tag);
     }
     

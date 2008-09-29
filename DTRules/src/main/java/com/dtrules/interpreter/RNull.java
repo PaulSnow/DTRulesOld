@@ -56,7 +56,7 @@ public class RNull extends ARObject {
 	}
 
 	public String stringValue() {
-		return "null";
+		return "";
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class RNull extends ARObject {
 	 * Because we do this, we override hashcode() as well.
 	 */
 	public String toString() {
-		return "null";
+		return "";
 	}
 	
 	public int hashCode() {
