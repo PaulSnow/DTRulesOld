@@ -59,6 +59,12 @@ public abstract class ATestHarness implements ITestHarness {
      * @return
      */
     public boolean Verbose() { return true; }
+    
+    /**
+     * By default, we will trace your code.
+     */
+    public boolean Trace() { return true; }
+    
     /**
      * The name of the report file.
      * @return
@@ -157,9 +163,10 @@ public abstract class ATestHarness implements ITestHarness {
               IRSession      session    = rs.newSession();
               DTState        state      = session.getState();
               state.setOutput(tracefile, out);
-              state.setState(DTState.DEBUG | DTState.TRACE | DTState.VERBOSE);
-              state.traceStart();
-              
+              if(Trace()){
+                  state.setState(DTState.DEBUG | DTState.TRACE | DTState.VERBOSE);
+                  state.traceStart();
+              }
               // Get the XML mapping for the rule set, and load a set of data into the EDD
                   
               Mapping   mapping  = session.getMapping();
@@ -190,7 +197,10 @@ public abstract class ATestHarness implements ITestHarness {
                  }
                  session.printEntityReport(new XMLPrinter(entityfile), false, session.getState(), "entitystack", entitystack);
               }
-              session.getState().traceEnd();
+              
+              if(Trace()){
+                  session.getState().traceEnd();
+              }
              
           } catch ( Exception ex ) {
               rpt.println("An Error occurred while running the example:\n"+ex);

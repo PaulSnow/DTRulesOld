@@ -22,6 +22,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.session.DTState;
 
@@ -62,18 +65,29 @@ public class RTime extends ARObject {
     private RTime(Date t){
         time = t;
     }
+    public static Pattern [] patterns ={
+        Pattern.compile("[01]\\d/[0123]\\d/\\d\\d\\d\\d"),
+        Pattern.compile("[01]\\d-[0123]\\d-\\d\\d\\d\\d"),
+        Pattern.compile("\\d\\d\\d\\d/[01]\\d/[0123]\\d"),
+        Pattern.compile("\\d\\d\\d\\d-[01]\\d-[0123]\\d"),
+    };
     
     public static SimpleDateFormat [] formats ={
             new SimpleDateFormat("MM/dd/yyyy"),
             new SimpleDateFormat("MM-dd-yyyy"),
+            new SimpleDateFormat("yyyy/MM/dd"),
+            new SimpleDateFormat("yyyy-MM-dd"),
         };
     
     public static Date getDate(String s){
-        for(int i=0;i<formats.length;i++){
-            try {
-                Date d = formats[i].parse(s);
-                return d;
-            } catch (ParseException e) { } // Didn't work? just try again
+        for(int i=0;i<patterns.length;i++){
+            Matcher matcher = patterns[i].matcher(s);
+            if(matcher.matches()){
+                try {
+                    Date d = formats[i].parse(s);
+                    return d;
+                } catch (ParseException e) { } // Didn't work? just try again
+            }
         }
         return null;   
     }

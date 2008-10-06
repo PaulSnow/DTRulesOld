@@ -121,7 +121,7 @@ import java.io.IOException;
     
     String getheader(){
         String s = yytext();
-        s = yytext().substring(2, s.length()-4);
+        s = yytext().substring(2, s.length()-2);
         return s;
     }
     void pushstate(int state) { 

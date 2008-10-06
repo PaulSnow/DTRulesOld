@@ -131,7 +131,7 @@ public class DataMap implements IXMLPrinter{
         StringWriter sw = new StringWriter();
         XMLPrinter xout = new XMLPrinter(sw);
         xout.setNoSpaces(noSpaces);
-        DataMap.print(xout, null);
+        DataMap.print(xout, rootTag);
         return sw.toString();
     }
     

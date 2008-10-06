@@ -76,6 +76,14 @@ public interface ITestHarness {
      * @return
      */
     boolean Verbose();
+    
+    /**
+     * If you want to trace a run, this function should return true;
+     * @return
+     */
+    boolean Trace();
+
+    
     /**
      * The name of the report file.
      * @return
