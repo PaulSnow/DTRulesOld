@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Date;
 import java.io.FileInputStream;
+
+import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.RArray;
 import com.dtrules.interpreter.RName;
 import com.dtrules.mapping.Mapping;
@@ -19,8 +21,40 @@ import com.dtrules.mapping.DataMap;
 public abstract class ATestHarness implements ITestHarness {
  
     DataMap datamap=null;
+   
+    public void executeDecisionTables(IRSession session)throws RulesException{
+    	String [] decisionTables = getDecisionTableNames(); 
+    	if(decisionTables == null){
+    		decisionTables = new String[1];
+    		decisionTables[0] = getDecisionTableName();
+    	}
+    	for(String table : decisionTables){
+    		session.execute(table);
+    	}
+    	
+    };
     
-    public DataMap getDataMap(){ return datamap; }
+    /**
+     * An implementation must implement either this method, or 
+     * getDecsionTableNames().  The later is preferred. 
+     */
+    public String getDecisionTableName() {
+		return null;
+	}
+
+
+	/**
+     * By default we do not have a list of Decision Table names.  The
+     * implementation can either implement this method, or the method
+     * getDecisionTableName();
+     */
+    public String[] getDecisionTableNames() {
+		return null;
+	}
+
+
+
+	public DataMap getDataMap(){ return datamap; }
     
     /**
      * Path to the XML Directory holding all the XML files for this
@@ -183,7 +217,7 @@ public abstract class ATestHarness implements ITestHarness {
               
               // Once the data is loaded, execute the rules.
               
-              session.execute(getDecisionTableName());
+              executeDecisionTables(session);
               
               printReport(dfcnt, session, out);
               if(Console()){
