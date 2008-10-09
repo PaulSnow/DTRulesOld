@@ -172,7 +172,6 @@ non terminal String     ifcontinue,
                         left_dexpr,
                         left_ArrayRef,
                         left_texpr,
-                        usingEntityRef,
                         colonRef,
                         possessiveRef,
                         array_lit,
@@ -270,17 +269,16 @@ maximusstatements ::=
                                                       "} "+a+"for ";                            :} ;
 
                    
-
-usingblock   ::= usingEntityRef:ee        usingblock:e         {: RESULT = ee + "entitypush "+e+"entitypop "; :} |
-                 usingEntityRef:ee COMMA  usingblock:e         {: RESULT = ee + "entitypush "+e+"entitypop "; :} |
-                 block:e                                       {: RESULT = e; :} ; 
+usingblock   ::= RENTITY:ee        usingblock:e               {: RESULT = ee + "entitypush "+e+"entitypop ";  :} |
+                 RENTITY:ee COMMA  usingblock:e               {: RESULT = ee + "entitypush "+e+"entitypop ";  :} |
+                 block:e                                      {: RESULT = e; :} ; 
 
 // To make this work, the token filter has to inject a token after every possessive parsed, and
 // I chose a COMMA for that token
 possessiveRef ::= POSSESSIVE:e1 COMMA possessiveRef:e2        {: RESULT = e1 +" entitypush "+e2+"entitypop "; :} |
                   POSSESSIVE:e  COMMA                         {: RESULT = e+" ";                              :} |
                   RENTITY:e1 ARROW possessiveRef:e2           {: RESULT = e1 +" entitypush "+e2+"entitypop "; :} |
-                  RENTITY:e  ARROW                            {: RESULT = e;                                  :} | 
+                  RENTITY:e  ARROW                            {: RESULT = e+" ";                              :} | 
                   COLON RENTITY:e1 COLON possessiveRef:e2     {: RESULT = e1 +" entitypush "+e2+"entitypop "; :} |
                   COLON RENTITY:e1 COLON                      {: RESULT = e1 +" ";                            :} ;
                             
@@ -483,9 +481,9 @@ setstatement ::= SET left_iexpr:v    ASSIGN number:e   {:        RESULT = e+"cvi
  
 
 performstatement ::=  
-                RDECISIONTABLE:dt         {: RESULT = dt;   :} |
-                PERFORM RDECISIONTABLE:dt {: RESULT = dt;   :} |
-                PERFORM NAME:dt           {: RESULT = dt;   :} ;
+                RDECISIONTABLE:dt         {: RESULT = dt+" ";   :} |
+                PERFORM RDECISIONTABLE:dt {: RESULT = dt+" ";   :} |
+                PERFORM NAME:dt           {: RESULT = dt+" ";   :} ;
                 
                       
                                              
@@ -707,7 +705,7 @@ dexpr    ::=  LPAREN dexpr:e RPAREN                  {: RESULT = e+" ";         
               // the given date) I run through all the dates in the list, and keeping only the dates after
               // the given date.  The one remaining is the last one, the earliest greater than the given date.
               // I use the control stack to make the logic a bit easier to follow.
-  			  EARLIEST OF array_expr:a AFTER dexpr:d    {: RESULT = d + "dup >r { { pop pop i i } over i > if pop } "+a+"dup false sortarray for r> pop "; :} ;             
+  			  EARLIEST OF array_expr:a AFTER dexpr:d {: RESULT = d + "dup >r { { pop pop i i } over i d> if pop } "+a+"dup false sortarray for r> pop "; :} ;             
 
 // Name expressions
 nexpr    ::=  RNAME:n                     {: RESULT = n+" ";                                        :} |

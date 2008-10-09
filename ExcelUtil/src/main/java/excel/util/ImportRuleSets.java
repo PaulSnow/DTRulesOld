@@ -57,6 +57,9 @@ public class ImportRuleSets {
        return -1;
     }
   
+    private void indent(int depth){
+    	for(int j=0;j<depth;j++)System.out.print("  "); 
+    }
     /** 
      * Convert all the Excel files in the given directory, and all sub
      * directories
@@ -70,15 +73,17 @@ public class ImportRuleSets {
         File[] files = directory.listFiles();
         for(int i=0; i < files.length; i++){
             if(files[i].isDirectory()){
+            	indent(depth);
+            	System.out.println(files[i].getName());
                 if(convertFiles(files[i],out,depth+1)){
-                   for(int j=0;j<depth;j++)System.out.print(" "); 
                    xlsFound = true;
                 }   
             }else{
                 if(files[i].getName().endsWith(".xls")){ 
-                  for(int j=0;j<depth;j++)System.out.print(" "); 
-                  convertDecisionTable(files[i], out);
-                  xlsFound = true;
+                	indent(depth);
+                	System.out.println(files[i].getName());
+                	convertDecisionTable(files[i], out, depth+1);
+                	xlsFound = true;
                 }  
             }    
         }
@@ -371,7 +376,7 @@ public class ImportRuleSets {
      * @return true if at least one decision table was found in this file
      * @throws Exception
      */
-	public boolean convertDecisionTable(File file,XMLPrinter out) throws Exception{
+	public boolean convertDecisionTable(File file,XMLPrinter out, int depth) throws Exception{
 		if(! (file.getName().endsWith(".xls"))) return false; 
 		
 		InputStream input = new FileInputStream(file.getAbsolutePath());
@@ -379,7 +384,7 @@ public class ImportRuleSets {
         HSSFWorkbook wb = new HSSFWorkbook(fs);
         boolean tablefound = false;
         for(int i=0; i< wb.getNumberOfSheets(); i++){
-            tablefound |= convertOneSheet(file.getName(),wb.getSheetAt(i),out);
+            tablefound |= convertOneSheet(file.getName(),wb.getSheetAt(i),out,depth);
         }
         return tablefound;
         
@@ -392,8 +397,7 @@ public class ImportRuleSets {
      * @param sb
      * @return
      */
-    private boolean convertOneSheet(String filename, HSSFSheet sheet,XMLPrinter out){    
-        
+    private boolean convertOneSheet(String filename, HSSFSheet sheet,XMLPrinter out, int depth){    
         columns = defaultColumns;
         
         // The first row of a decision table has to provide the decision table name.  This is required!
@@ -406,6 +410,9 @@ public class ImportRuleSets {
         out.opentag("decision_table");
         
         String dtName = value.replaceAll("[\\s]+", "_");
+        
+        indent(depth);
+        System.out.println(dtName);
         
         ArrayList<String> attributes = new ArrayList<String>();
         

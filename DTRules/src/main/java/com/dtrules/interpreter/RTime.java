@@ -67,9 +67,9 @@ public class RTime extends ARObject {
     }
     public static Pattern [] patterns ={
         Pattern.compile("[01]\\d/[0123]\\d/\\d\\d\\d\\d"),
-        Pattern.compile("[01]\\d-[0123]\\d-\\d\\d\\d\\d"),
-        Pattern.compile("\\d\\d\\d\\d/[01]\\d/[0123]\\d"),
-        Pattern.compile("\\d\\d\\d\\d-[01]\\d-[0123]\\d"),
+        Pattern.compile("[01]?\\d-[0123]?\\d-\\d\\d\\d\\d"),
+        Pattern.compile("\\d\\d\\d\\d/[01]?\\d/[0123]?\\d"),
+        Pattern.compile("\\d\\d\\d\\d-[01]?\\d-[0123]?\\d"),
     };
     
     public static SimpleDateFormat [] formats ={
@@ -80,6 +80,7 @@ public class RTime extends ARObject {
         };
     
     public static Date getDate(String s){
+    	s = s.trim();
         for(int i=0;i<patterns.length;i++){
             Matcher matcher = patterns[i].matcher(s);
             if(matcher.matches()){

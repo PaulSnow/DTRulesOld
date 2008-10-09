@@ -310,8 +310,10 @@ public class RDateTimeOps {
 			Dategt(){super("d>");}
 
 			public void execute(DTState state) throws RulesException {
-				Date date2 = state.datapop().timeValue();
-				Date date1 = state.datapop().timeValue();
+				IRObject o2 = state.datapop();
+				IRObject o1 = state.datapop();
+				Date date2 = o2.timeValue();
+				Date date1 = o1.timeValue();
                 boolean test = date1.after(date2);
 				state.datapush(RBoolean.getRBoolean(test));
 			}

@@ -62,9 +62,9 @@
 [45]operatorlist [46]operatorstatements [47]contextstatement [48]localvariables [49]context_for_table 
 [50]datestatement [51]xmlvalues [52]xmlvaluestatements [53]separator [54]blist 
 [55]ifcontinue [56]left_iexpr [57]left_fexpr [58]left_bexpr [59]left_eexpr 
-[60]left_strexpr [61]left_dexpr [62]left_ArrayRef [63]left_texpr [64]usingEntityRef 
-[65]colonRef [66]possessiveRef [67]array_lit [68]array_list [69]maximusstatements 
-[70]parameterlist [71]NT$0 
+[60]left_strexpr [61]left_dexpr [62]left_ArrayRef [63]left_texpr [64]colonRef 
+[65]possessiveRef [66]array_lit [67]array_list [68]maximusstatements [69]parameterlist 
+[70]NT$0 
 
 ===== Productions =====
 [0] done ::= ACTION statement_list 
@@ -105,8 +105,8 @@
 [35] maximusstatements ::= SET ERRORCODE nexpr 
 [36] maximusstatements ::= SET ERRORCODE nexpr WITH strexpr 
 [37] maximusstatements ::= SET ERRORCODE array_expr WITH strexpr 
-[38] usingblock ::= usingEntityRef usingblock 
-[39] usingblock ::= usingEntityRef COMMA usingblock 
+[38] usingblock ::= RENTITY usingblock 
+[39] usingblock ::= RENTITY COMMA usingblock 
 [40] usingblock ::= block 
 [41] possessiveRef ::= POSSESSIVE COMMA possessiveRef 
 [42] possessiveRef ::= POSSESSIVE COMMA 
@@ -566,7 +566,7 @@
 
 ------- CUP v0.11a beta 20060608 Parser Generation Summary -------
   0 errors and 1 warning
-  162 terminals, 72 non-terminals, and 496 productions declared, 
+  162 terminals, 71 non-terminals, and 496 productions declared, 
   producing 1260 unique parse states.
   1 terminal declared but not used.
   0 non-terminal declared but not used.
