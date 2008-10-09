@@ -5,6 +5,7 @@ package com.dtrules.testsupport;
 
 import java.io.PrintStream;
 
+import com.dtrules.infrastructure.RulesException;
 import com.dtrules.session.IRSession;
 
 /**
@@ -45,10 +46,22 @@ public interface ITestHarness {
     String getDecisionTableName();
     
     /**
+     * Get a list of decision tables to execute.
+     * @return
+     */
+    String [] getDecisionTableNames();
+    
+    /**
      * Defines the name of the RuleSet we are testing
      */
     String getRuleSetName();
     
+    /**
+     * Called to execute the Decision Tables.  Some Test Harnesses might need
+     * to make multiple Decision Table Calls
+     */
+    public void executeDecisionTables(IRSession session)throws RulesException;
+
     /**
      * Specifies a directory of test files.  Directories or files that are
      * not .xml files are ignored.  Each test file is executed, and a report
@@ -76,6 +89,14 @@ public interface ITestHarness {
      * @return
      */
     boolean Verbose();
+    
+    /**
+     * If you want to trace a run, this function should return true;
+     * @return
+     */
+    boolean Trace();
+
+    
     /**
      * The name of the report file.
      * @return
