@@ -267,7 +267,7 @@ public class LoadMapping implements IGenericXMLParser {
                             value = RBoolean.getRBoolean(body.length()==0? "false" : body);
                         } else if (type == IRObject.iTime){
                             if(body.trim().length()>0){
-                              value = RTime.getRDate(body);
+                              value = RTime.getRDate(session,body);
                               if(value == null){
                                 throw new RulesException("MappingError","LoadMapping","Bad Date... Could not parse '"+body+"'");
                               }

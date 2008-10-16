@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.session.DTState;
+import com.dtrules.session.IRSession;
 
 public class RTime extends ARObject {
     final Date time;
@@ -65,33 +66,7 @@ public class RTime extends ARObject {
     private RTime(Date t){
         time = t;
     }
-    public static Pattern [] patterns ={
-        Pattern.compile("[01]\\d/[0123]\\d/\\d\\d\\d\\d"),
-        Pattern.compile("[01]?\\d-[0123]?\\d-\\d\\d\\d\\d"),
-        Pattern.compile("\\d\\d\\d\\d/[01]?\\d/[0123]?\\d"),
-        Pattern.compile("\\d\\d\\d\\d-[01]?\\d-[0123]?\\d"),
-    };
-    
-    public static SimpleDateFormat [] formats ={
-            new SimpleDateFormat("MM/dd/yyyy"),
-            new SimpleDateFormat("MM-dd-yyyy"),
-            new SimpleDateFormat("yyyy/MM/dd"),
-            new SimpleDateFormat("yyyy-MM-dd"),
-        };
-    
-    public static Date getDate(String s){
-    	s = s.trim();
-        for(int i=0;i<patterns.length;i++){
-            Matcher matcher = patterns[i].matcher(s);
-            if(matcher.matches()){
-                try {
-                    Date d = formats[i].parse(s);
-                    return d;
-                } catch (ParseException e) { } // Didn't work? just try again
-            }
-        }
-        return null;   
-    }
+   
     
     /**
      * Returns a Null if no valid RDate can be parsed from
@@ -99,8 +74,8 @@ public class RTime extends ARObject {
      * @param s
      * @return
      */
-    public static RTime getRDate(String s) throws RulesException {
-        Date d = getDate(s);
+    public static RTime getRDate(IRSession session, String s) throws RulesException {
+        Date d = session.getDateParser().getDate(s);
         if(d==null){
             throw new RulesException("Bad Date Format","getRDate","Could not parse: '"+s+"' as a Date or Time value");
         }

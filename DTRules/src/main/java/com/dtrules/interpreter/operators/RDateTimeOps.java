@@ -72,7 +72,7 @@ public class RDateTimeOps {
 
 			public void execute(DTState state) throws RulesException {
 			    IRObject obj = state.datapop();
-				state.datapush(RTime.getRDate(obj.stringValue()));
+				state.datapush(RTime.getRDate(state.getSession(), obj.stringValue()));
 			}
 		} 
 

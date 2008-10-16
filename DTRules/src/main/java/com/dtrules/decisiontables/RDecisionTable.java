@@ -74,8 +74,10 @@ public class RDecisionTable extends ARObject {
     
                          int maxcol = 1;        // The number of columns in this decision table.
                              
-    private final RuleSet ruleset;              // A decision table must belong to a particular ruleset
+    private final IRSession session;        	// We need to compile within a session, so we know how to parse dates (among other things)
 	
+    private final RuleSet ruleset;			    // A decision table must belong to a particular ruleset
+    
     public  final Map<RName,String> fields = new HashMap<RName, String>(); // Holds meta information about this decision table.
 	
 	private boolean  compiled=false;            // The decision table isn't compiled
@@ -148,7 +150,7 @@ public class RDecisionTable extends ARObject {
 
     @Override
     public IRObject clone(IRSession s) throws RulesException {
-        RDecisionTable dt = new RDecisionTable(s,ruleset, dtname.stringValue());
+        RDecisionTable dt = new RDecisionTable(s, dtname.stringValue());
         dt.numberOfRealColumns      = numberOfRealColumns;
         dt.conditiontable           = conditiontable.clone();
         dt.conditions               = conditions.clone();
@@ -201,7 +203,7 @@ public class RDecisionTable extends ARObject {
        }
        if(keep == true){
            try {
-              rcontext = RString.compile(ruleset, contextsrc, true);
+              rcontext = RString.compile(session, contextsrc, true);
            } catch (RulesException e) {
               errorlist.add(
                     new CompilerError (
@@ -253,9 +255,11 @@ public class RDecisionTable extends ARObject {
      * @throws RulesException
      */
     
-	public RDecisionTable(IRSession session, RuleSet _ruleset, String name) throws RulesException{
-        ruleset = _ruleset;
-		dtname  = RName.getRName(name,true);
+	public RDecisionTable(IRSession session, String name) throws RulesException{
+        this.session = session;
+        ruleset      = session.getRuleSet();
+		dtname       = RName.getRName(name,true);
+		
         EntityFactory ef = ruleset.getEntityFactory(session);
         RDecisionTable dttable =ef.findDecisionTable(RName.getRName(name)); 
         if(dttable != null){
@@ -276,7 +280,7 @@ public class RDecisionTable extends ARObject {
 		
 		for(int i=0; i< initialActions.length; i++){
              try {
-                 rinitialActions[i] = RString.compile(ruleset, initialActionsPostfix[i],true);
+                 rinitialActions[i] = RString.compile(session, initialActionsPostfix[i],true);
              } catch (Exception e) {
                  errorlist.add(
                          new CompilerError(
@@ -293,7 +297,7 @@ public class RDecisionTable extends ARObject {
 		 
 		for(int i=0;i<rconditions.length;i++){
 			try {
-				rconditions[i]= RString.compile(ruleset, conditionsPostfix[i],true);
+				rconditions[i]= RString.compile(session, conditionsPostfix[i],true);
 			} catch (RulesException e) {
                 errorlist.add(
                    new CompilerError(
@@ -309,7 +313,7 @@ public class RDecisionTable extends ARObject {
 		}
 		for(int i=0;i<ractions.length;i++){
 			try {
-				ractions[i]= RString.compile(ruleset, actionsPostfix[i],true);
+				ractions[i]= RString.compile(session, actionsPostfix[i],true);
 			} catch (RulesException e) {
                 errorlist.add(
                         new CompilerError(

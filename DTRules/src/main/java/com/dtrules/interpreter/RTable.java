@@ -21,6 +21,7 @@ import java.util.HashMap;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.session.DTState;
 import com.dtrules.session.EntityFactory;
+import com.dtrules.session.IRSession;
 import com.dtrules.session.RuleSet;
 
 public class RTable extends ARObject {
@@ -120,8 +121,8 @@ public class RTable extends ARObject {
      *     
      * @param values
      */
-    public void setValues(RuleSet rs, String values)throws RulesException{
-        RArray array = RString.compile(rs, values, false).rArrayValue();
+    public void setValues(IRSession session, String values)throws RulesException{
+        RArray array = RString.compile(session, values, false).rArrayValue();
         setValues(array);
     }
     /**

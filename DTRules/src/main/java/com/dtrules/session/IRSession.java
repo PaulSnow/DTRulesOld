@@ -34,7 +34,23 @@ import com.dtrules.xmlparser.IXMLPrinter;
 import com.dtrules.interpreter.IRObject;
 
 public interface IRSession {
-   
+	
+	/**
+	 * Returns an object used to parse strings that represent dates.  
+	 * This parser is used whenever a string has to be converted to a
+	 * date (either by parsing XML, or a String from the Database, 
+	 * while loading the EDD and the Decision Tables, or by Mapping
+	 * data into the Rules Engine.)
+	 * The Rules Engine comes with a default DateParser implementation.
+	 * @return
+	 */
+	public IDateParser getDateParser();
+	/**
+	 * Set a new or different Date Parser.  This parser will be used 
+	 * from this point in the processing of dates.
+	 * @param dateParser
+	 */
+	public void setDateParser(IDateParser dateParser);
     /**
      * Retrieve a list of all the DataMaps allocated by this session.
      * These DataMaps may have been updated by the Rules Engine, and

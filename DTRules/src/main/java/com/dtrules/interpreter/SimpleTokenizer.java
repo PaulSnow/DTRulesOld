@@ -20,19 +20,15 @@ package com.dtrules.interpreter;
 import java.util.Date;
 
 import com.dtrules.infrastructure.RulesException;
+import com.dtrules.session.IRSession;
 
 public class SimpleTokenizer {
-    private StringBuffer buff;
-    private int    index;
+    private StringBuffer 	buff;
+    private int    			index;
+    private final IRSession session;
     
-    static RTime t;
-    static {
-        try{
-            t = RTime.getRDate("12/31/2000");
-        }catch(RulesException e){}
-    }
-    
-    public SimpleTokenizer (String input){
+    public SimpleTokenizer (IRSession session, String input){
+    	this.session = session;
         buff  = new StringBuffer(input);
         index = 0;
     }
@@ -125,7 +121,7 @@ public class SimpleTokenizer {
             Double doubleValue = Double.parseDouble(v.replaceAll(",",""));
             return new Token(doubleValue);
         } catch (NumberFormatException e) {}
-        Date t = RTime.getDate(v);
+        Date t = session.getDateParser().getDate(v);
         if(t!=null){
            return new Token(RTime.getRTime(t));
         } 

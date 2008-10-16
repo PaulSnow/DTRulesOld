@@ -108,7 +108,7 @@ public class EntityFactory {
         if(table != null){
             session.getState().debug("Overwritting the Decision Table: "+name.stringValue());
         }
-        RDecisionTable dtTable = new RDecisionTable(session,ruleset,name.stringValue());
+        RDecisionTable dtTable = new RDecisionTable(session,name.stringValue());
         decisiontablelist.add(name);
         decisiontables.addAttribute(name, "", dtTable, false, true, IRObject.iDecisiontable,null);
         decisiontables.put(name, dtTable);
@@ -187,8 +187,8 @@ public class EntityFactory {
 		return (REntity) referenceEntities.get(name);
 	}
 	
-    public void loadedd(String filename, InputStream edd) throws RulesException {
-    	EDDLoader loader = new EDDLoader(filename, this);
+    public void loadedd(IRSession session, String filename, InputStream edd) throws RulesException {
+    	EDDLoader loader = new EDDLoader(filename, session, this);
         try {
     	   GenericXMLParser.load(edd,loader);
     	   if(loader.succeeded==false){
@@ -249,8 +249,8 @@ public class EntityFactory {
 		}
 		return buff.toString();
 	}
-	public static IRObject computeDefaultValue(EntityFactory ef, RuleSet ruleset, String defaultstr, int type) throws RulesException {
-        
+	public static IRObject computeDefaultValue(IRSession session, EntityFactory ef, String defaultstr, int type) throws RulesException {
+        		
         if(defaultstr==null ) defaultstr="";
         defaultstr = defaultstr.trim();
     	if(defaultstr.equalsIgnoreCase("null")) defaultstr="";
@@ -258,9 +258,15 @@ public class EntityFactory {
         switch(type){
             case IRObject.iArray :
                 if(defaultstr.length()==0) return new RArray(ef.getUniqueID(), true,false);
-                RArray v = (RArray) RString.compile(ruleset, defaultstr, false);     // We assume any values are 
+                RArray v = (RArray) RString.compile(session, defaultstr, false);     // We assume any values are 
                                                                                      // surrounded by brackets, and regardless make
-                RArray rval = v.get(0).getNonExecutable().rArrayValue();             // sure they are non-executable.
+                RArray rval;
+                try{
+                    rval = v.get(0).getNonExecutable().rArrayValue();             // sure they are non-executable.
+                }catch(RulesException e){
+                    throw new RulesException("ParsingError","EntityFactory.computeDefaultValue()","Bad format for an array. \r\n"+
+                            "\r\nWe tried to interpret the string \r\n'"+defaultstr+"'\r\nas an array, but could not.\r\n"+e.toString());
+                }
                 return rval;
         	case IRObject.iString :
                 if(defaultstr.length()==0)return RNull.getRNull();
@@ -295,7 +301,7 @@ public class EntityFactory {
             case IRObject.iTable : {
                 if(defaultstr.length()==0) return RNull.getRNull();
                 RTable table = RTable.newRTable(ef, null, defaultstr, -1);
-                table.setValues(ruleset, defaultstr);
+                table.setValues(session, defaultstr);
                 return table;
             }
             default: return RNull.getRNull();
