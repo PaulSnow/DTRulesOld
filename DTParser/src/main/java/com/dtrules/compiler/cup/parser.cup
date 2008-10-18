@@ -434,19 +434,19 @@ usingstatement ::= USING usingblock:ee separator {: RESULT = ee ; :} ;
  * Because we also have local variables, we let the tokenizer pick the code used to 
  * popluate the value of a left side expression.
  **/                                 
-left_iexpr     ::= RLONG:v                                  {: RESULT = left(CUP$DTRulesParser$stack);                         :} |
+left_iexpr     ::= RLONG:v                                  {: RESULT = left(CUP$DTRulesParser$stack)+" ";                     :} |
                    colonRef:e left_iexpr:v                  {: notlocal(CUP$DTRulesParser$stack); RESULT = e+"entitypush "+v+"entitypop ";        :} ;
-left_fexpr     ::= RDOUBLE:v                                {: RESULT = left(CUP$DTRulesParser$stack);                         :} |
+left_fexpr     ::= RDOUBLE:v                                {: RESULT = left(CUP$DTRulesParser$stack)+" ";                     :} |
                    colonRef:e left_fexpr:v                  {: notlocal(CUP$DTRulesParser$stack); RESULT = e+"entitypush "+v+"entitypop ";        :} ;
-left_bexpr     ::= RBOOLEAN:v                               {: RESULT = left(CUP$DTRulesParser$stack);                         :} |
+left_bexpr     ::= RBOOLEAN:v                               {: RESULT = left(CUP$DTRulesParser$stack)+" ";                     :} |
                    colonRef:e left_bexpr:v                  {: notlocal(CUP$DTRulesParser$stack); RESULT = e+"entitypush "+v+"entitypop ";        :} ;                    
-left_eexpr     ::= RENTITY:v                                {: RESULT = left(CUP$DTRulesParser$stack);                         :} |
+left_eexpr     ::= RENTITY:v                                {: RESULT = left(CUP$DTRulesParser$stack)+" ";                     :} |
                    colonRef:e left_eexpr:v                  {: notlocal(CUP$DTRulesParser$stack); RESULT = e+"entitypush "+v+"entitypop ";        :} ;
-left_strexpr   ::= RSTRING:v                                {: RESULT = left(CUP$DTRulesParser$stack);                         :} |
+left_strexpr   ::= RSTRING:v                                {: RESULT = left(CUP$DTRulesParser$stack)+" ";                     :} |
                    colonRef:e left_strexpr:v                {: notlocal(CUP$DTRulesParser$stack); RESULT = e+"entitypush "+v+"entitypop ";        :} ;
-left_dexpr     ::= RDATE:v                                  {: RESULT = left(CUP$DTRulesParser$stack);                         :} |
+left_dexpr     ::= RDATE:v                                  {: RESULT = left(CUP$DTRulesParser$stack)+" ";                     :} |
                    colonRef:e  left_dexpr:v                 {: notlocal(CUP$DTRulesParser$stack); RESULT = e+"entitypush "+v+"entitypop ";        :} ;
-left_texpr     ::= RTABLE:v                                 {: RESULT = left(CUP$DTRulesParser$stack);                         :} |
+left_texpr     ::= RTABLE:v                                 {: RESULT = left(CUP$DTRulesParser$stack)+" ";                     :} |
                    colonRef:e left_texpr:v                  {: notlocal(CUP$DTRulesParser$stack); RESULT = e+"entitypush "+v+"entitypop ";        :} ;
 
 //
@@ -462,7 +462,7 @@ setstatement ::= SET left_iexpr:v    ASSIGN number:e   {:        RESULT = e+"cvi
                  SET left_strexpr:v  ASSIGN strexpr:e  {:        RESULT = e+"cvs "+v; :} |
                  SET left_bexpr:v    ASSIGN nexpr:e    {:        RESULT = e+"cvb "+v; :} |
                  SET left_dexpr:v    ASSIGN dexpr:e    {:        RESULT = e+"cvd "+v; :} |   
-				 SET left_texpr:v    ASSIGN texpr:e    {:        RESULT = e+"cvd "+v; :} |
+				 SET left_texpr:v    ASSIGN texpr:e    {:        RESULT = e       +v; :} |
 
                  SET left_ArrayRef:v     ASSIGN eexpr:e               {:  RESULT = e+v; :} |
                  SET left_ArrayRef:v     ASSIGN strexpr:e             {:  RESULT = e+v; :} |
@@ -581,6 +581,7 @@ randomstatements ::=
               REMOVE iexpr:i   ELEMENT FROM array_expr:a ARRAY        {: RESULT = a+i+"removeat pop ";                :} |
               REMOVE EACH eexpr:e FROM array_expr:a WHERE bexpr:b     {: RESULT = a+"{ { dup 0 entityfetch remove pop } "+b+"if } over forallr pop"; :} | 
               REMOVE nexpr:i   FROM array_expr:a ARRAY                {: RESULT = a+i+"remove pop ";                  :} |
+              REMOVE strexpr:i FROM array_expr:a ARRAY                {: RESULT = a+i+"remove pop ";                  :} |
               REMOVE eexpr:i   FROM array_expr:a ARRAY                {: RESULT = a+i+"remove pop ";                  :} |
               RANDOMIZE array_expr:a                                  {: RESULT = a+"randomize ";                     :} |
               CLEAR array_expr:a                                      {: RESULT = a+"clear ";                         :} |

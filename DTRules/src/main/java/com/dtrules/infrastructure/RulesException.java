@@ -78,13 +78,13 @@ public class RulesException extends RuleException {
     public String toString() {
        
         return 
-          (decisionTable!="" ?  "\nDecision Table: "+decisionTable:"\n") +
-                                  "File name:      "+filename+"\n"+
-          ((section!= null)  ?   ("Section:        "+section + " " + number +"\n"):"")+  
-          ((postfix!= null)  ?   ("Postfix:        "+postfix+"\n"):"")+
-        	                      "Location:       '"+location+"'\n" +
-        	                      "Type:           '"+errortype+"'\n" +
-        	                      "Error:          '"+message+"'\n" ;
+          (decisionTable!="" ?  "\r\nDecision Table: "+decisionTable:"\r\n") +
+                                  "File name:      "+filename+"\r\n"+
+          ((section!= null)  ?   ("Section:        "+section + " " + number +"\r\n"):"")+  
+          ((postfix!= null)  ?   ("Postfix:        "+postfix+"\r\n"):"")+
+        	                      "Location:       '"+location+"'\r\n" +
+        	                      "Type:           '"+errortype+"'\r\n" +
+        	                      "Error:          '"+message+"'\r\n" ;
     }
 
     /**

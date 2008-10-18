@@ -142,7 +142,7 @@ public class RXmlValue extends ARObject {
     }
 
     public Date timeValue() throws RulesException {
-        return RTime.getDate(tag.getBody().toString());
+        return state.getSession().getDateParser().getDate(tag.getBody().toString());
     }
 
     /* (non-Javadoc)

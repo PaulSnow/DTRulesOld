@@ -36,7 +36,7 @@ public abstract class ARObject implements IRObject {
      * an array representation needs to implement it themselves.
      */
     public RArray rArrayValue() throws RulesException {
-       throw new RulesException("Conversion Error","ARObject","No Time value exists for "+this.stringValue());
+       throw new RulesException("Conversion Error","ARObject","No Array Value value exists for "+this.stringValue());
     }
 
     public RBoolean rBooleanValue() throws RulesException {

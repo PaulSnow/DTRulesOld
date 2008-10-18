@@ -21,6 +21,7 @@ package com.dtrules.interpreter;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.operators.ROperator;
 import com.dtrules.session.DTState;
+import com.dtrules.session.IRSession;
 import com.dtrules.session.RuleSet;
 
 /**
@@ -178,13 +179,13 @@ public class RString extends ARObject {
 	 * @return
 	 * @throws RulesException
 	 */
-	static public IRObject compile(RuleSet rs, String v, boolean executable) throws RulesException{
+	static public IRObject compile(IRSession session, String v, boolean executable) throws RulesException{
 		   
 	       if(v==null)v=""; // Allow the compiling of null strings (we just don't do anything).
            
-	       SimpleTokenizer tokenizer = new SimpleTokenizer(v);
+	       SimpleTokenizer tokenizer = new SimpleTokenizer(session, v);
             
-           IRObject result = compile(rs, tokenizer, v, executable, 0);
+           IRObject result = compile(session.getRuleSet(), tokenizer, v, executable, 0);
            return result;
     }       
     
@@ -269,8 +270,8 @@ public class RString extends ARObject {
      * @return
      * @throws RulesException
 	 */
-    public IRObject compile(RuleSet ruleset, boolean executable) throws RulesException{
-        return compile(ruleset, value,executable);
+    public IRObject compile(IRSession session, boolean executable) throws RulesException{
+        return compile(session, value,executable);
     }
     
     @Override
@@ -280,7 +281,7 @@ public class RString extends ARObject {
     
 	public void execute(DTState state) throws RulesException {
 		if(isExecutable()){
-		   IRObject o = compile(state.getSession().getRuleSet(),value,true);
+		   IRObject o = compile(state.getSession(),value,true);
 		   o.execute(state);
 		}else{
 		   state.datapush(this);	

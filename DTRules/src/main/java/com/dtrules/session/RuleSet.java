@@ -264,7 +264,7 @@ public class RuleSet {
                         System.out.println("No EDD XML found");
                       }
                 }     
-                if(s!=null) ef.loadedd(filenameused,s);
+                if(s!=null) ef.loadedd(session, filenameused,s);
 		   }
 		   Iterator<String> idts = dt_names.iterator();
 		   while(idts.hasNext()){	   

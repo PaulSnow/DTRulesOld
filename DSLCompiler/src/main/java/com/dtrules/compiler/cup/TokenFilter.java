@@ -171,7 +171,7 @@ public class TokenFilter implements Scanner{
                     RLocalType t = localtypes.get(ident.toLowerCase());
                     theType    = t.type;
                     next.local = true;
-                    next.value = t.index +" local@";
+                    next.value = t.index +" local@ ";
                 }else{
                     throw new RuntimeException("Undefined attribute '"+next.value+"'");
                 }
@@ -197,8 +197,8 @@ public class TokenFilter implements Scanner{
                     RLocalType t = localtypes.get(next.value.toString().toLowerCase());
                     theType = t.type;
                     next = new RSymbol(true, next);
-                    next.value = t.index +" local@";
-                    ((RSymbol)next).leftvalue = t.index +" local!";
+                    next.value = t.index +" local@ ";
+                    ((RSymbol)next).leftvalue = t.index +" local! ";
                 }
             }
             

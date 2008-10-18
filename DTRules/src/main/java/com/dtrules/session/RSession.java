@@ -52,8 +52,18 @@ public class RSession implements RuleSession, IRSession {
     HashMap<Object,IREntity>    entityInstances = new HashMap<Object,IREntity>();
     ICompiler                   compiler = null;       
     ArrayList<DataMap>          registeredMaps = new ArrayList<DataMap>();  
+    IDateParser					dateParser = new DateParser();
     
-    /**
+    
+    public IDateParser getDateParser() {
+		return dateParser;
+	}
+
+	public void setDateParser(IDateParser dateParser) {
+		this.dateParser = dateParser;
+	}
+
+	/**
      * Get the list of Data Maps Registered to this session.
      * @return
      */

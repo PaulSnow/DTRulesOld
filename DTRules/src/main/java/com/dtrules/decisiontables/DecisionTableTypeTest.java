@@ -36,7 +36,7 @@ public class DecisionTableTypeTest {
     
     public DecisionTableTypeTest(IRSession session, RuleSet rs) throws RulesException{
         
-        dt = new RDecisionTable(session, rs, "test");
+        dt = new RDecisionTable(session, "test");
 
         String ctable[][] = { 
                 { "y", "n", "n", "y", "d", "a" },

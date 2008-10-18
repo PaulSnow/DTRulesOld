@@ -30,14 +30,16 @@ import com.dtrules.xmlparser.IGenericXMLParser;
 @SuppressWarnings({"unchecked"})
 public class EDDLoader implements IGenericXMLParser {
 
+	final IRSession        session;
 	final EntityFactory    ef;
 	final String           filename;
     boolean                succeeded =  true;
 	String                 errorMsgs =  "";
 	int                    version   =  1;
 	
-	EDDLoader(String _filename, EntityFactory _ef){
-		ef = _ef;
+	EDDLoader(String _filename, IRSession session, EntityFactory ef){
+		this.session = session;
+		this.ef = ef;
         filename = _filename;
 	}
 	
@@ -125,7 +127,7 @@ public class EDDLoader implements IGenericXMLParser {
 			  defaultv = (String) attribs.get("cdd_default_value");
 		  }
           		  
-          defaultO = EntityFactory.computeDefaultValue(ef, ef.ruleset, defaultv, itype) ;
+          defaultO = EntityFactory.computeDefaultValue(session, ef, defaultv, itype) ;
           
 		  RName  entityRName = RName.getRName(entityname.trim(),false);
 		  RName  attributeRName = RName.getRName(attribute.trim(),false);
@@ -202,7 +204,7 @@ public class EDDLoader implements IGenericXMLParser {
       succeeded = false;
     }
                 
-    IRObject defaultO = EntityFactory.computeDefaultValue(ef, ef.ruleset, default_value, itype) ;
+    IRObject defaultO = EntityFactory.computeDefaultValue(session, ef, default_value, itype) ;
     
     RName  entityRName = RName.getRName(entityname.trim(),false);
     RName  attributeRName = RName.getRName(attrib_name.trim(),false);
