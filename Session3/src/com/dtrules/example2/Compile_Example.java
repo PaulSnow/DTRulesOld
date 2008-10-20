@@ -24,7 +24,7 @@ public class Compile_Example {
      * *****  This path is hard coded to the project where you check
      * *****  out the example.
      */
-    public static String path    = "c:/eb/workspace/Session3/" ;
+    public static String path    = "/home/paul/RulesEngine/Session3/";
     
     /**
      * Routine to compile decision tables.

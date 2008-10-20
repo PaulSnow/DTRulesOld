@@ -1,2 +1,0 @@
-paulsnow = Paul Snow <snow.paul@gmail.com>
-subversion = Subversion <snow.paul@gmail.com>

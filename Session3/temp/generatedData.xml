@@ -3,32 +3,32 @@
         <caseid>1000</caseid>
         <people>
             <person id='1001'>
+                <age>3</age>
+                <addressid>1</addressid>
+                <pregnant>false</pregnant>
                 <cin>1001</cin>
                 <xapplicant>false</xapplicant>
-                <pregnant>false</pregnant>
-                <addressid>1</addressid>
-                <dob>09/08/2008 11:37 AM</dob>
-                <age>3</age>
+                <dob>09/15/2008 10:24 PM</dob>
                 <incomes>
                     <income>
-                        <amount>300</amount>
                         <earned>true</earned>
                         <type>tips</type>
+                        <amount>300</amount>
                     </income>
                 </incomes>
             </person>
             <person id='1002'>
+                <age>24</age>
+                <addressid>1</addressid>
+                <pregnant>true</pregnant>
                 <cin>1002</cin>
                 <xapplicant>true</xapplicant>
-                <pregnant>true</pregnant>
-                <addressid>1</addressid>
-                <dob>09/08/2008 11:37 AM</dob>
-                <age>24</age>
+                <dob>09/15/2008 10:24 PM</dob>
                 <incomes>
                     <income>
-                        <amount>800</amount>
                         <earned>true</earned>
                         <type>salary</type>
+                        <amount>800</amount>
                     </income>
                 </incomes>
             </person>

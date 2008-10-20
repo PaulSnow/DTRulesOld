@@ -70,7 +70,7 @@ Compute_Eligibility
 <action_column column_value="X" column_number="1"></action_column></action_details></actions></decision_table>
 <decision_table>
 <table_name>Compute_Income_for_each_Person</table_name>
-<xls_file>2 ComputeIncomeforeachperson.xls</xls_file>
+<xls_file>1 UTAP.xls</xls_file>
 <attribute_fields>
 <purpose></purpose>
 <type>FIRST</type>
@@ -147,7 +147,7 @@ income.amount  person.total_income + /person.total_income xdef
 <action_column column_value="X" column_number="2"></action_column></action_details></actions></decision_table>
 <decision_table>
 <table_name>Compute_Income_Group</table_name>
-<xls_file>3 ComputeIncomeGroup.xls</xls_file>
+<xls_file>1 UTAP.xls</xls_file>
 <attribute_fields>
 <purpose></purpose>
 <type>ALL</type>
@@ -424,7 +424,7 @@ true cvb /person.income_group_member xdef
 <action_column column_value="X" column_number="6"></action_column></action_details></actions></decision_table>
 <decision_table>
 <table_name>Compute_Eligibility</table_name>
-<xls_file>4 Compute Eligibility.xls</xls_file>
+<xls_file>1 UTAP.xls</xls_file>
 <attribute_fields>
 <purpose></purpose>
 <type>FIRST</type>

@@ -64,7 +64,7 @@
     </decision_table>
     <decision_table>
         <table_name>Compute_Income_for_each_Person</table_name>
-        <xls_file>2 ComputeIncomeforeachperson.xls</xls_file>
+        <xls_file>1 UTAP.xls</xls_file>
         <attribute_fields>
             <purpose></purpose>
             <type>FIRST</type>
@@ -136,7 +136,7 @@
     </decision_table>
     <decision_table>
         <table_name>Compute_Income_Group</table_name>
-        <xls_file>3 ComputeIncomeGroup.xls</xls_file>
+        <xls_file>1 UTAP.xls</xls_file>
         <attribute_fields>
             <purpose></purpose>
             <type>ALL</type>
@@ -389,7 +389,7 @@
     </decision_table>
     <decision_table>
         <table_name>Compute_Eligibility</table_name>
-        <xls_file>4 Compute Eligibility.xls</xls_file>
+        <xls_file>1 UTAP.xls</xls_file>
         <attribute_fields>
             <purpose></purpose>
             <type>FIRST</type>
