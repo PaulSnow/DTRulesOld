@@ -113,12 +113,13 @@ public class SimpleTokenizer {
      * @return
      */
     Token buildToken(String v){
+        String vnum = v.replaceAll("[,\\s]","");
         try {
-            Long longValue = Long.parseLong(v.replaceAll(",", ""));
+            Long longValue = Long.parseLong(vnum);
             return new Token(longValue);
         } catch (NumberFormatException e) {}
         try {
-            Double doubleValue = Double.parseDouble(v.replaceAll(",",""));
+            Double doubleValue = Double.parseDouble(vnum);
             return new Token(doubleValue);
         } catch (NumberFormatException e) {}
         Date t = session.getDateParser().getDate(v);

@@ -32,45 +32,20 @@ import com.dtrules.session.RSession;
 
 public class RMiscOps {
     static {
-        new RError();
-        new Debug();
-        new Traceon();
-        new Traceoff();
-        new Ignore();
-        new Stringlength();
-        new Touppercase(); 
-        new Tolowercase();
-        new Trim();
-        new substring();
-        new Swap();
-        new Dup();
-        new Pop();
-        new Over();
-        new EntityName();
-        new Entitypush();
-        new Entitypop();
-        new Entityfetch();
-        new I(); new J(); new K();
-        new ToR();
-        new FromR();
-        new Def();
-        new Find();
-        new Print();
-        new Clone();
-        new Xdef();
-        new PStack();
-        new Null();
-        new Createentity();
-        new Cvi();
-        new Cvr();
-        new Cvb();
-        new Cve();
-        new Cvs();
-        new Cvn();
-        new Cvd();
-        new ActionString();
-        new GetDescription();
-        new RegexMatch();
+        new RError();       new Debug();        new Traceon();
+        new Traceoff();     new Ignore();       new Stringlength();
+        new Touppercase();  new Tolowercase();  new Trim();
+        new substring();    new Swap();         new Dup();
+        new Pop();          new Over();         new EntityName();
+        new Entitypush();   new Entitypop();    new Entityfetch();
+        new I();            new J();            new K();
+        new ToR();          new FromR();        new Def();
+        new Find();         new Print();        new Clone();
+        new Xdef();         new PStack();       new Null();
+        new Createentity(); new Cvi();          new Cvr();
+        new Cvb();          new Cve();          new Cvs();
+        new Cvn();          new Cvd();          new ActionString();
+        new GetDescription();                   new RegexMatch();
     }
 
     /**
