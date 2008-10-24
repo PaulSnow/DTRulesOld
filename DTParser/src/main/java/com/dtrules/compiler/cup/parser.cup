@@ -944,10 +944,9 @@ bexpr     ::=
 			thereis eexpr:e1 inthe eexpr:e2 WHERE bexpr:b 	
 					{: RESULT = "{ true } { false } { " + b +"} "+e1.trim()+"s "+e2+"entitypush forfirstelse entitypop "; :} |
 			thereis eexpr:e1 inthe array_expr:a WHERE bexpr:b    
-                    {: RESULT = "{ true } { false } { " + b +"} "+a+ " forfirstelse "; :} |
+                    {: RESULT = "{ true } { false } { " + b +"} "+a+ " forfirstelse ";                                    :} |
             
-			HASA eexpr:e1 WHERE bexpr:b		
-					{: RESULT = "{ true } { false } { " + b +"} "+e1.trim()+"s forfirstelse ";                            :} |
+			
 			THERE IS NO eexpr:e1 WHERE bexpr:b					
 				    {: RESULT = "{ false } { true } { " + b +"} "+e1.trim()+"s forfirstelse ";                            :} |
 			THERE IS NO eexpr:e1 inthe eexpr:e2 WHERE bexpr:b 	

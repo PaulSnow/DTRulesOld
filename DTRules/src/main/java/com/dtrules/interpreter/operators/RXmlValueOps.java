@@ -19,6 +19,7 @@
 package com.dtrules.interpreter.operators;
 
 import com.dtrules.infrastructure.RulesException;
+import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;
 import com.dtrules.mapping.XMLNode;
@@ -43,12 +44,12 @@ public class RXmlValueOps {
 
 			@Override
             public void execute(DTState state) throws RulesException {
-				String    value     = state.datapop().stringValue();
-				String    attribute = state.datapop().stringValue();
+				IRObject  value     = state.datapop();
+				IRObject  attribute = state.datapop();
 				XMLNode   xmlNode   = state.datapop().xmlTagValue();
 				if(xmlNode != null){
 				    state.traceInfo("SetXmlAttribute","tag='"+xmlNode.getTag()+"' attribute='"+attribute+"' value='"+value+"'");
-				    xmlNode.getAttribs().put(attribute, value);
+				    xmlNode.getAttribs().put(attribute.stringValue(), value.stringValue());
 				}
 			}
 		}

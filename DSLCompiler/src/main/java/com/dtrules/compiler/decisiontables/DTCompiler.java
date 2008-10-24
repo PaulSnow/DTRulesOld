@@ -16,7 +16,6 @@
 package com.dtrules.compiler.decisiontables;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,15 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import sun.misc.Sort;
-
 import com.dtrules.compiler.cup.Compiler;
-import com.dtrules.infrastructure.RulesException;
-import com.dtrules.interpreter.RName;
-import com.dtrules.session.ICompiler;
-import com.dtrules.session.RSession;
-import com.dtrules.session.RuleSet;
-import com.dtrules.session.RulesDirectory;
 import com.dtrules.xmlparser.GenericXMLParser;
 import com.dtrules.xmlparser.IGenericXMLParser;
 
