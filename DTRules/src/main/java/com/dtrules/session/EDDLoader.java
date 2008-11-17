@@ -99,21 +99,13 @@ public class EDDLoader implements IGenericXMLParser {
 		  int      itype     = -1;      // We need to convert the type to an int.
 		  IRObject defaultO  = null;    // We need to convert the default into a Rules Engine Object.
 		  
-		  //First deal with the access thing... Compute the boolean we need.
-		  if(access==null){				// Check to see if we need to handle TIERS EDD files.
-			  access = (String) attribs.get("cdd_i_c_flag");
-			  if(access!=null){
-				  writeable = access.toLowerCase().indexOf("i")<0;
-			  }
-		  }else{						// Nope?  Then handle the more rational DTRules EDD files
-			  writeable = access.toLowerCase().indexOf("w")>=0;
-			  readable  = access.toLowerCase().indexOf("r")>=0;
-			  if(!writeable && !readable){
-			      errorMsgs +="\nThe attribute "+attribute+" has to be either readable or writable\r\n";
-			      succeeded=false;
-			  }
+		  writeable = access.toLowerCase().indexOf("w")>=0;
+		  readable  = access.toLowerCase().indexOf("r")>=0;
+		  if(!writeable && !readable){
+		      errorMsgs +="\nThe attribute "+attribute+" has to be either readable or writable\r\n";
+		      succeeded=false;
 		  }
-
+		  
 		  // Now the type.  An easy thing.
           try {
 			itype = RSession.typeStr2Int(type,entityname,attribute);
@@ -122,13 +114,12 @@ public class EDDLoader implements IGenericXMLParser {
 			succeeded = false;
 		  }
 		  
-		  // Now deal with the default specified.  
-		  if (defaultv==null){			// Do we need to handle TIERS EDD files?
-			  defaultv = (String) attribs.get("cdd_default_value");
-		  }
-          		  
-          defaultO = EntityFactory.computeDefaultValue(session, ef, defaultv, itype) ;
-          
+          try{		  
+              defaultO = EntityFactory.computeDefaultValue(session, ef, defaultv, itype) ;
+          } catch (RulesException e) { 
+              errorMsgs += "Bad Default Value '"+defaultv+"' encountered on entity: '"+entityname+"' attribute: '"+attribute+"' \n";
+              succeeded = false;
+          }
 		  RName  entityRName = RName.getRName(entityname.trim(),false);
 		  RName  attributeRName = RName.getRName(attribute.trim(),false);
 		  REntity entity = ef.findcreateRefEntity(false,entityRName);
@@ -139,6 +130,7 @@ public class EDDLoader implements IGenericXMLParser {
 			errorMsgs += "Bad Type: '"+type+"' encountered on entity: '"+entityname+"' attribute: '"+attribute+"' \n";
 			succeeded = false;
 		  }
+		  
 		  String errstr  = entity.addAttribute(attributeRName,
 		                                       defaultv, 
 		                                       defaultO,

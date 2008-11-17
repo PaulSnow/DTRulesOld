@@ -95,10 +95,10 @@ terminal String		ABSOLUTEVALUE, ACTION, ADD, AFTER, ALL, ALLOWING, AND, ARRAY,
 					EARLIEST, ELEMENT, ELSE, ELSEIF, ELSEIFNONEAREFOUND, END, 
 					ENDIF, ENTITY, EQ, EQUAL, ERRORCODE, FIRST, FLOAT, FOR, 
 					FORALL, FROM, GET, GREATER, GT, GTE, HASA, HAVE, IF, IN, 
-					INCLUDE, INCLUDES, INCREMENT, INTEGER, IS, ISNOTNULL, 
-					ISNULL,	ITS, LBRACE, LCURLY, LENGTH, LESS, LOCAL, LONG, 
-					LOWER_CASE, LPAREN,  LT, LTE, MAP, MATCH, MATCHES, MEMBER, 
-					MINUS, MONTHS, 
+					INCLUDE, INCLUDES, INCREMENT, INDEX_OF, INTEGER, IS, 
+					ISNOTNULL, ISNULL,	ITS, LBRACE, LCURLY, LENGTH, LESS, 
+					LOCAL, LONG, LOWER_CASE, LPAREN,  LT, LTE, MAP, MATCH, 
+					MATCHES, MEMBER, MINUS, MONTHS, 
 					MULTIPLY, NAME, NAMEOF, NEQ, NEW, NO, NOT,  NULL, NUMBEROF,
 					OF, ON, ONE, OR, PERFORM, PLUS, POSSESSIVE, QUESTIONMARK, 
 					RANDOMIZE, RARRAY, RBOOLEAN, RBRACE, RCURLY, RDATE, 
@@ -123,7 +123,7 @@ non terminal String     number;
 non terminal String     inthe;
 non terminal String     iexpr, fexpr, bexpr, eexpr, nexpr, texpr, strexpr, indx_expr;
 non terminal String     dexpr;
-non terminal String     array_expr,
+non terminal String     array_expr, array_expr2,
                         isnull,
                         isnotnull;
 non terminal String 	includeSearch;
@@ -145,7 +145,7 @@ non terminal String     usingstatement;
 non terminal String     performstatement;
 non terminal String     debugstatement;
 non terminal String     ifstatement;
-non terminal String     addtostatement, addtodest, subtodest;
+non terminal String     addtostatement, addtodest, addtodest2, subtodest;
 non terminal String     clearstatement;    
 non terminal String     randomstatements; 
 non terminal String     commonerror;
@@ -537,29 +537,31 @@ number    ::= iexpr:v           {: RESULT = v+" "; :} |
               
 /** Array types **/              
    
-addtodest     ::= array_expr:a                               {: RESULT = a+"swap addto ";           :} |
-				  RLONG:a                                    {: RESULT = a+" + " +left(CUP$DTRulesParser$stack);   :} |
- 				  RDOUBLE:a	                                 {: RESULT = a+" f+ "+left(CUP$DTRulesParser$stack);   :} ;
- 
+addtodest2    ::= array_expr2:a                              {: RESULT = a+"swap addto ";                          :} |
+                  RLONG:a                                    {: RESULT = a+" + " +left(CUP$DTRulesParser$stack);   :} |
+                  RDOUBLE:a                                  {: RESULT = a+" f+ "+left(CUP$DTRulesParser$stack);   :} ;
+                  
+addtodest     ::= array_expr2:a                              {: RESULT = a+"swap addto ";                          :} |
+                  RLONG:a                                    {: RESULT = a+" + " +left(CUP$DTRulesParser$stack);   :} |
+ 				  RDOUBLE:a	                                 {: RESULT = a+" f+ "+left(CUP$DTRulesParser$stack);   :} |
+                  colonRef:e addtodest2:v                    {: notlocal(CUP$DTRulesParser$stack); RESULT = e+"entitypush "+v+"entitypop ";        :} ;
+                   
 subtodest     ::= RLONG:a                                    {: RESULT = a+" swap - "  +left(CUP$DTRulesParser$stack); :} | 
- 				  RDOUBLE:a	                                 {: RESULT = a+" swap f- " +left(CUP$DTRulesParser$stack); :} ;             
- 
+ 				  RDOUBLE:a	                                 {: RESULT = a+" swap f- " +left(CUP$DTRulesParser$stack); :} |             
+                  colonRef:e addtodest2:v                    {: notlocal(CUP$DTRulesParser$stack); RESULT = e+"entitypush "+v+"entitypop ";        :} ;
  
 addtostatement ::=               
 			  ADD array_expr:a1           TO array_expr:a2    {: RESULT =a1+a2+"false addarray "; :} |
 			  
-              ADD eexpr:e                 TO addtodest:a      {: RESULT =e+a;                    :} |
-              ADD eexpr:e                 TO addtodest:a AND TO addtodest:a2
-              												  {: RESULT =e+"dup "+a+a2;          :} |
-              ADD strexpr:e               TO addtodest:a      {: RESULT =e+a;                    :} |
-              ADD strexpr:e               TO addtodest:a AND TO addtodest:a2
-              											      {: RESULT =e+"dup "+a+a2;          :} |
-              ADD dexpr:e                 TO addtodest:a      {: RESULT =e+a;                    :} |
-              ADD dexpr:e                 TO addtodest:a AND TO addtodest:a2     
-              												  {: RESULT =e+"dup "+a+a2;          :} |
-              ADD number:v                TO addtodest:a      {: RESULT =v+a ;                   :} |
-              ADD number:v                TO addtodest:a AND TO addtodest:a2
-              											      {: RESULT =v+"dup "+a+a2;          :} |
+              ADD eexpr:e                 TO addtodest:a                     {: RESULT =e+a;                    :} |
+              ADD eexpr:e                 TO addtodest:a AND TO addtodest:a2 {: RESULT =e+"dup "+a+a2;          :} |
+              ADD strexpr:e               TO addtodest:a                     {: RESULT =e+a;                    :} |
+              ADD strexpr:e               TO addtodest:a AND TO addtodest:a2 {: RESULT =e+"dup "+a+a2;          :} |
+              ADD dexpr:e                 TO addtodest:a                     {: RESULT =e+a;                    :} |
+              ADD dexpr:e                 TO addtodest:a AND TO addtodest:a2 {: RESULT =e+"dup "+a+a2;          :} |
+              ADD number:v                TO addtodest:a                     {: RESULT =v+a ;                   :} |
+              ADD number:v                TO addtodest:a AND TO addtodest:a2 {: RESULT =v+"dup "+a+a2;          :} |
+
               
               SUBTRACT number:v         FROM subtodest:a      {: RESULT =v+a ;                   :} |     
               
@@ -615,19 +617,22 @@ xmlvaluestatements ::=
  
 // Array expressions
 
-array_expr ::=
-              MAP array_expr:a THROUGH texpr:t              {: RESULT = t+a+"false translate ";                     :} |
+array_expr ::= 
+              colonRef:e RARRAY:v                           {: RESULT = e+"entitypush "+v+" entitypop ";  :} |
+              array_expr2:a                                 {: RESULT = a;                                :} ; 
+              
+array_expr2 ::=
+              MAP array_expr:a THROUGH texpr:t              {: RESULT = t+a+"false translate ";           :} |
               LPAREN array_expr:a RPAREN                    {: RESULT = a;                                :} |
               RARRAY:e                                      {: RESULT = e+" ";                            :} |
               LPAREN ARRAY RPAREN NAME:n                    {: RESULT = n+" ";                            :} | 
-              colonRef:e RARRAY:v                           {: RESULT = e+"entitypush "+v+" entitypop ";  :} |
-              GET COPY OF array_expr:e                      {: RESULT = e+"copyelements ";               :} | 
-              COPY OF array_expr:e                          {: RESULT = e+"copyelements ";               :} | 
+              GET COPY OF array_expr:e                      {: RESULT = e+"copyelements ";                :} | 
+              COPY OF array_expr:e                          {: RESULT = e+"copyelements ";                :} | 
               array_lit:l                                   {: RESULT = l;                                :} |
               ARRAY_OF_VALUES LBRACE array_list:e RBRACE    {: RESULT = "mark "+e+" arraytomark ";        :} |
               TOKENIZE strexpr:s1 BY strexpr:s2             {: RESULT = s1+s2+"tokenize ";                :} ;         
 
-array_lit ::= LBRACE array_list:l RBRACE                     {: RESULT = "{ "+l+"} ";                    :} ;
+array_lit ::= LBRACE array_list:l RBRACE                     {: RESULT = "{ "+l+"} ";                     :} ;
 
 array_list ::= array_list:l COMMA strexpr:s                 {: RESULT = l+s;                             :} |
               array_list:l COMMA iexpr:s                    {: RESULT = l+s;                             :} |
@@ -895,7 +900,8 @@ iexpr     ::= iexpr:e1 PLUS iexpr:e2   {: RESULT = e1+e2+"+ "; :}
 	       NUMBEROF  array_expr:a WHERE bexpr:b  {: RESULT = "0 { { 1 ladd } "+b+"if }"+a+"forall ";   :} |
            LENGTH OF array_expr:a                {: RESULT = a+"length ";                              :} |
            LENGTH OF strexpr:s                   {: RESULT = s+"strlength ";                           :} |
-          
+           INDEX_OF strexpr:s1 IN strexpr:s2     {: RESULT = s1+s2+"indexof ";                         :} |
+           
            USING array_expr:ee number:e          {: RESULT = ee+"entitypush "+e+"entitypop "; :} |
            
            ADD TO RLONG:v number:n               {: RESULT = "/"+n+v+n+" ladd def "; :} |
@@ -1056,29 +1062,29 @@ bexpr     ::=
               |
 
 // Strings
-              strexpr:s eq blist:bl     {: RESULT = s+bl+"swap drop ";     :}
+              strexpr:s eq blist:bl      {: RESULT = s+bl+"swap drop ";        :}
               |              
-              strexpr:s1 eq  strexpr:s2 {: RESULT = s1+s2+"streq ";           :}
+              strexpr:s1 eq  strexpr:s2  {: RESULT = s1+s2+"streq ";           :}
               |
-              strexpr:s1 neq strexpr:s2 {: RESULT = s1+s2+"streq not ";       :}
+              strexpr:s1 neq strexpr:s2  {: RESULT = s1+s2+"streq not ";       :}
               |
               strexpr:s1 AT iexpr:e1 STARTS_WITH strexpr:s2
-                                        {: RESULT = e1+s1+s2+"startswith ";   :}
+                                         {: RESULT = s1+s2+e1+"startswith ";   :}
               |
               strexpr:s1 STARTS_WITH strexpr:s2
-                                        {: RESULT = "0 "+s1+s2+"startswith "; :}
+                                         {: RESULT = s1+s2+"0 startswith ";    :}
               |          
 			  strexpr:s1 IS ONE OF array_expr:a
-			                            {: RESULT = a+s1+"memberof ";         :}
+			                             {: RESULT = a+s1+"memberof ";         :}
 			  |
 			  strexpr:s1 IS NOT ONE OF array_expr:a
-			                            {: RESULT = a+s1+"memberof not ";     :}
+			                             {: RESULT = a+s1+"memberof not ";     :}
               |
               DOES bexpr:e QUESTIONMARK  {: RESULT = e; :}
               |
-              IS bexpr:e QUESTIONMARK  {: RESULT = e; :}
+              IS bexpr:e QUESTIONMARK    {: RESULT = e; :}
               |
-              WAS bexpr:e QUESTIONMARK {: RESULT = e; :}
+              WAS bexpr:e QUESTIONMARK   {: RESULT = e; :}
               |
 // String Compares
               strexpr:s1 gt strexpr:s2                      {: RESULT = s1+s2+"s> ";    :} |

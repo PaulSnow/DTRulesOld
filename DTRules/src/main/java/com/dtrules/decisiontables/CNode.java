@@ -56,6 +56,9 @@ public class CNode implements DTNode {
 	public boolean equalsNode(DTNode node) {
         if(node.getClass().equals(CNode.class)){
             CNode cnode = (CNode)node;
+            if(cnode.conditionNumber != conditionNumber){
+                return false;
+            }
             return(cnode.iffalse.equalsNode(iffalse) && 
                cnode.iftrue.equalsNode(iftrue));
         }else{
@@ -102,16 +105,18 @@ public class CNode implements DTNode {
         try {
             result = state.evaluateCondition(condition);
         } catch (RulesException e) {
+            state.traceTagBegin("Condition", "n='"+(conditionNumber+1)+"' ");
+            state.traceInfo("Condition_Text", null, dtable.conditions[conditionNumber]);
             e.setSection("Condition",conditionNumber+1);
             throw e;
         }
         if(state.testState(DTState.TRACE)){
             if(state.testState(DTState.VERBOSE)){
-                state.traceTagBegin("Condition", "n='"+conditionNumber+"'"+"r='"+(result?"Y'":"N'"));
+                state.traceTagBegin("Condition", "n='"+(conditionNumber+1)+"'"+"r='"+(result?"Y'":"N'"));
                 state.traceInfo("Formal", null,dtable.getConditions()[conditionNumber]);
                 state.traceTagEnd("Condition", "");
             }else{
-                state.traceInfo("Condition", "n='"+conditionNumber+"'"+"r='"+(result?"Y'":"N'"));
+                state.traceInfo("Condition", "n='"+(conditionNumber+1)+"'"+"r='"+(result?"Y'":"N'"));
             }
         }
 		if(result){

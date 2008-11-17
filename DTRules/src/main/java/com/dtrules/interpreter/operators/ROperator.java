@@ -51,6 +51,7 @@ public class ROperator extends ARObject {
         new RDateTimeOps();
         new RTableOps();
         new RXmlValueOps();
+        new RStringOps();
 	}
 	
 	static public IREntity getPrimitives() { 

@@ -411,8 +411,7 @@ public class RDecisionTable extends ARObject {
             }
             state.traceTagEnd("initialActions", null);
             if(decisiontree!=null)decisiontree.execute(state);
-            state.traceTagEnd  ("decisiontable",null);
-            
+            state.traceTagEnd  ("decisiontable",null);            
         }else{
             for( int i=0; rinitialActions!=null && i<rinitialActions.length; i++){
                 state.setCurrentTableSection("InitialActions", i);

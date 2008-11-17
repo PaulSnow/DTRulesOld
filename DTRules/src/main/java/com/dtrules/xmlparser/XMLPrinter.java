@@ -142,6 +142,7 @@ public class XMLPrinter implements IXMLPrinter {
      * Prints an attribute.  The value is encoded.
      */
     private void printAttribute(String name, Object value){
+        if(value==null)value="";
         name = name.replaceAll(" ", "_");
         print(" ");
         print(name);

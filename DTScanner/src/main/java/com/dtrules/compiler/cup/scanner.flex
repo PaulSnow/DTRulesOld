@@ -124,6 +124,7 @@ string     = {stringdbl}|{stringsgl}
   "name"           {return build(sym.NAME);   }
   "local"          {return build(sym.LOCAL);  }
   "substring"      {return build(sym.SUBSTRING); }
+  "index"{ws}+"of" {return build(sym.INDEX_OF); }
   "member"         {return build(sym.MEMBER); }
   "this"           {return build(sym.THIS);   }
   "context"        {return build(sym.CONTEXT); }
@@ -189,6 +190,8 @@ string     = {stringdbl}|{stringsgl}
   "the"{ws}+"name" {return build(sym.THENAME); }
   "relationship"{ws}+"between"   
                    {return build(sym.RELATIONSHIP_BETWEEN); }
+  "starts"{ws}+"with"
+                   {return build(sym.STARTS_WITH); }
   "allowing"       {return build(sym.ALLOWING); } 
   "table"          {return build(sym.TABLE); }
   "have"           {return build(sym.HAVE); }
