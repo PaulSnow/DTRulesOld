@@ -1,0 +1,16 @@
+Results from RunNumber: 1
+
+Not Approved for program = KidAid
+     Must be 18 or younger to qualify for KidAid
+client_id = 1001
+totalGroupIncome = 1200
+client_fpl = 1167
+
+
+Approved For program = KidAid
+programLevel = Free Coverage
+client_id = 1002
+totalGroupIncome = 1200
+client_fpl = 1167
+
+

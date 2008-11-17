@@ -1,0 +1,61 @@
+<job>
+   <currentdate>9/12/2008</currentdate>
+   <effectivedate>10/1/2008</effectivedate>
+   <program>KidAid</program>
+   <case>
+	  <case_id>1001</case_id>
+	  <county_cd>LO</county_cd>
+	  <clients>
+		  <client id="1001">
+				<personId>1100</personId>
+				<age>50</age>
+				<applying>true</applying>
+				<genderCode>female</genderCode>
+				<validatedCitizenship>true</validatedCitizenship>
+				<livesAtResidence>true</livesAtResidence>
+			   	<pregnant>false</pregnant>
+				<expectedChildren>0</expectedChildren>
+				<disabled>false</disabled>
+				<incomes>
+					<income>
+						<type>WA</type>
+						<amount>800</amount>
+						<earned>true</type>
+					</income>
+					<income>
+						<type>CS</type>
+						<amount>800</amount>
+						<earned>true</type>
+					</income>
+				</income>
+		  </client>
+		  <client id="1002">
+				<personId>1100</personId>
+				<age>4</age>
+				<applying>true</applying>
+				<genderCode>male</genderCode>
+				<validatedCitizenship>true</validatedCitizenship>
+				<livesAtResidence>true</livesAtResidence>
+			   	<pregnant>false</pregnant>
+				<expectedChildren>0</expectedChildren>
+				<disabled>false</disabled>
+		  </client>
+	  </clients>
+	  <relationships>
+     	 <relationship>
+			  <source id="1001"/>
+			  <target id="1002"/>
+			  <type>parent</type>
+		  </relationship>
+	      <relationship>
+			  <source id="1002"/>
+			  <target id="1001"/>
+			  <type>child</type>
+		  </relationship>
+	  </relationships>
+	</case>
+</job>
+ 
+
+
+ 

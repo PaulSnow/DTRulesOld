@@ -1,0 +1,734 @@
+<DTRulesTrace>
+<loadMapping file='sp2_map.xml'>
+<Load>&lt;mapping &gt;
+</Load>
+<Load>&lt;XMLtoEDD &gt;
+</Load>
+<Load>&lt;map &gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;job&apos;RAttribute = &apos;currentdate&apos;tag = &apos;currentdate&apos;type = &apos;date&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;job&apos;RAttribute = &apos;effectivedate&apos;tag = &apos;effectivedate&apos;type = &apos;date&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;job&apos;RAttribute = &apos;program&apos;tag = &apos;program&apos;type = &apos;string&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;case&apos;RAttribute = &apos;case_ID&apos;tag = &apos;case_ID&apos;type = &apos;string&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;case&apos;RAttribute = &apos;county_cd&apos;tag = &apos;county_cd&apos;type = &apos;string&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;client&apos;RAttribute = &apos;client_ID&apos;tag = &apos;client_ID&apos;type = &apos;string&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;client&apos;RAttribute = &apos;age&apos;tag = &apos;age&apos;type = &apos;integer&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;client&apos;RAttribute = &apos;gender&apos;tag = &apos;gender&apos;type = &apos;string&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;client&apos;RAttribute = &apos;validatedCitizenship&apos;tag = &apos;validatedCitizenship&apos;type = &apos;boolean&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;client&apos;RAttribute = &apos;livesAtResidence&apos;tag = &apos;livesAtResidence&apos;type = &apos;boolean&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;client&apos;RAttribute = &apos;pregnant&apos;tag = &apos;pregnant&apos;type = &apos;boolean&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;client&apos;RAttribute = &apos;expectedChildren&apos;tag = &apos;expectedChildren&apos;type = &apos;integer&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;client&apos;RAttribute = &apos;disabled&apos;tag = &apos;disabled&apos;type = &apos;boolean&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;client&apos;RAttribute = &apos;applying&apos;tag = &apos;applying&apos;type = &apos;boolean&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;relationship&apos;RAttribute = &apos;source&apos;tag = &apos;source&apos;type = &apos;entity&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;relationship&apos;RAttribute = &apos;target&apos;tag = &apos;target&apos;type = &apos;entity&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;relationship&apos;RAttribute = &apos;type&apos;tag = &apos;type&apos;type = &apos;string&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;income&apos;RAttribute = &apos;type&apos;tag = &apos;type&apos;type = &apos;string&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;income&apos;RAttribute = &apos;amount&apos;tag = &apos;amount&apos;type = &apos;integer&apos;&gt;
+</Load>
+<Load>&lt;setattribute enclosure = &apos;income&apos;RAttribute = &apos;earned&apos;tag = &apos;earned&apos;type = &apos;boolean&apos;&gt;
+</Load>
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;job&apos;entity = &apos;job&apos;&gt;
+</Load>
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;case&apos;entity = &apos;case&apos;&gt;
+</Load>
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;client&apos;entity = &apos;client&apos;&gt;
+</Load>
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;source&apos;entity = &apos;client&apos;&gt;
+</Load>
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;target&apos;entity = &apos;client&apos;&gt;
+</Load>
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;relationship&apos;entity = &apos;relationship&apos;&gt;
+</Load>
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;income&apos;entity = &apos;income&apos;&gt;
+</Load>
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;constants&apos;entity = &apos;constants&apos;&gt;
+</Load>
+<Load>&lt;createentity id = &apos;id&apos;tag = &apos;result&apos;entity = &apos;result&apos;&gt;
+</Load>
+<Load>&lt;entities &gt;
+</Load>
+<Load>&lt;entity name = &apos;constants&apos;number = &apos;1&apos;&gt;
+</Load>
+<Load>&lt;entity name = &apos;job&apos;number = &apos;1&apos;&gt;
+</Load>
+<Load>&lt;entity name = &apos;case&apos;number = &apos;1&apos;&gt;
+</Load>
+<Load>&lt;entity name = &apos;client&apos;number = &apos;*&apos;&gt;
+</Load>
+<Load>&lt;entity name = &apos;relationship&apos;number = &apos;*&apos;&gt;
+</Load>
+<Load>&lt;entity name = &apos;income&apos;number = &apos;*&apos;&gt;
+</Load>
+<Load>&lt;entity name = &apos;result&apos;number = &apos;*&apos;&gt;
+</Load>
+<Load>&lt;initialization &gt;
+</Load>
+<Load>&lt;initialentity epush = &apos;true&apos;entity = &apos;constants&apos;&gt;
+</Load>
+<Load>&lt;initialentity epush = &apos;true&apos;entity = &apos;job&apos;&gt;
+</Load>
+<Load>&lt;initialentity epush = &apos;true&apos;entity = &apos;case&apos;&gt;
+</Load>
+</loadMapping>
+<loadData >
+<process>
+<createEntity name='job' id=''>
+<process>
+<def entity='/job 100005 createEntity ' name='currentdate'>09/12/2008 12:00 AM</def>
+<message>   /currentdate &quot;Fri Sep 12 00:00:00 CDT 2008&quot; def</message>
+</process>
+<process>
+<def entity='/job 100005 createEntity ' name='effectivedate'>10/01/2008 12:00 AM</def>
+<message>   /effectivedate &quot;Wed Oct 01 00:00:00 CDT 2008&quot; def</message>
+</process>
+<process>
+<def entity='/job 100005 createEntity ' name='program'>&quot;KidAid&quot;</def>
+<message>   /program &quot;KidAid&quot; def</message>
+</process>
+<process>
+<createEntity name='case' id=''>
+<process></process>
+<process>
+<def entity='/case 100008 createEntity ' name='county_cd'>&quot;LO&quot;</def>
+<message>   /county_cd &quot;LO&quot; def</message>
+</process>
+<process>
+<process>
+<createEntity name='client' id='1001'>
+<process>
+<def entity='/client 100012 createEntity ' name='client_id'>&quot;1001&quot;</def>
+<message>   /client_id &quot;1001&quot; def</message>
+</process>
+<process>
+<def entity='/client 100012 createEntity ' name='age'>50</def>
+<message>   /age &quot;50&quot; def</message>
+</process>
+<process>
+<def entity='/client 100012 createEntity ' name='applying'>true</def>
+<message>   /applying &quot;true&quot; def</message>
+</process>
+<process></process>
+<process>
+<def entity='/client 100012 createEntity ' name='validatedcitizenship'>true</def>
+<message>   /validatedcitizenship &quot;true&quot; def</message>
+</process>
+<process>
+<def entity='/client 100012 createEntity ' name='livesatresidence'>true</def>
+<message>   /livesatresidence &quot;true&quot; def</message>
+</process>
+<process>
+<def entity='/client 100012 createEntity ' name='pregnant'>false</def>
+<message>   /pregnant &quot;false&quot; def</message>
+</process>
+<process>
+<def entity='/client 100012 createEntity ' name='expectedchildren'>0</def>
+<message>   /expectedchildren &quot;0&quot; def</message>
+</process>
+<process>
+<def entity='/client 100012 createEntity ' name='disabled'>false</def>
+<message>   /disabled &quot;false&quot; def</message>
+</process>
+<process>
+<process>
+<createEntity name='income' id=''>
+<process>
+<def entity='/income 100016 createEntity ' name='type'>&quot;WA&quot;</def>
+<message>   /type &quot;WA&quot; def</message>
+</process>
+<process>
+<def entity='/income 100016 createEntity ' name='amount'>1200</def>
+<message>   /amount &quot;1200&quot; def</message>
+</process>
+<process>
+<def entity='/income 100016 createEntity ' name='earned'>true</def>
+<message>   /earned &quot;true&quot; def</message>
+</process>
+</createEntity>
+</process>
+<process>
+<createEntity name='income' id=''>
+<process>
+<def entity='/income 100019 createEntity ' name='type'>&quot;CS&quot;</def>
+<message>   /type &quot;CS&quot; def</message>
+</process>
+<process>
+<def entity='/income 100019 createEntity ' name='amount'>800</def>
+<message>   /amount &quot;800&quot; def</message>
+</process>
+<process>
+<def entity='/income 100019 createEntity ' name='earned'>false</def>
+<message>   /earned &quot;false&quot; def</message>
+</process>
+</createEntity>
+</process>
+</process>
+</createEntity>
+</process>
+<process>
+<createEntity name='client' id='1002'>
+<process>
+<def entity='/client 100023 createEntity ' name='client_id'>&quot;1002&quot;</def>
+<message>   /client_id &quot;1002&quot; def</message>
+</process>
+<process>
+<def entity='/client 100023 createEntity ' name='age'>4</def>
+<message>   /age &quot;4&quot; def</message>
+</process>
+<process>
+<def entity='/client 100023 createEntity ' name='applying'>true</def>
+<message>   /applying &quot;true&quot; def</message>
+</process>
+<process></process>
+<process>
+<def entity='/client 100023 createEntity ' name='validatedcitizenship'>true</def>
+<message>   /validatedcitizenship &quot;true&quot; def</message>
+</process>
+<process>
+<def entity='/client 100023 createEntity ' name='livesatresidence'>true</def>
+<message>   /livesatresidence &quot;true&quot; def</message>
+</process>
+<process>
+<def entity='/client 100023 createEntity ' name='pregnant'>false</def>
+<message>   /pregnant &quot;false&quot; def</message>
+</process>
+<process>
+<def entity='/client 100023 createEntity ' name='expectedchildren'>0</def>
+<message>   /expectedchildren &quot;0&quot; def</message>
+</process>
+<process>
+<def entity='/client 100023 createEntity ' name='disabled'>false</def>
+<message>   /disabled &quot;false&quot; def</message>
+</process>
+</createEntity>
+</process>
+</process>
+<process>
+<process>
+<createEntity name='relationship' id=''>
+<process>
+<createEntity name='client' id='1001'></createEntity>
+<def entity='/relationship 100028 createEntity ' name='source'>/client 100012 createEntity </def>
+<message>   /source &quot;&quot; def</message>
+</process>
+<process>
+<createEntity name='client' id='1002'></createEntity>
+<def entity='/relationship 100028 createEntity ' name='target'>/client 100023 createEntity </def>
+<message>   /target &quot;&quot; def</message>
+</process>
+<process>
+<def entity='/relationship 100028 createEntity ' name='type'>&quot;parent&quot;</def>
+<message>   /type &quot;parent&quot; def</message>
+</process>
+</createEntity>
+</process>
+<process>
+<createEntity name='relationship' id=''>
+<process>
+<createEntity name='client' id='1002'></createEntity>
+<def entity='/relationship 100033 createEntity ' name='source'>/client 100023 createEntity </def>
+<message>   /source &quot;&quot; def</message>
+</process>
+<process>
+<createEntity name='client' id='1001'></createEntity>
+<def entity='/relationship 100033 createEntity ' name='target'>/client 100012 createEntity </def>
+<message>   /target &quot;&quot; def</message>
+</process>
+<process>
+<def entity='/relationship 100033 createEntity ' name='type'>&quot;child&quot;</def>
+<message>   /type &quot;child&quot; def</message>
+</process>
+</createEntity>
+</process>
+</process>
+</createEntity>
+</process>
+</createEntity>
+</process>
+</loadData>
+<decisiontable tID='0' name='Compute_Eligibility'>
+<entity_stack>
+<entity id='1'>primities</entity>
+<entity id='2'>decisiontables</entity>
+<entity id='100001'>constants</entity>
+<entity id='100005'>job</entity>
+<entity id='100008'>case</entity>
+</entity_stack>
+<initialActions></initialActions>
+<Condition n='1'r='Y'>
+<Formal>job.program == KidAid</Formal>
+</Condition>
+<Column n='1 '>
+<action n='1'>
+<formal>Perform Calculate_Individual_Income</formal>
+<context execute='{ { /Calculate_Individual_Income executeTable  } dup incomes forall pop } { dup applying true beq if } clients forall pop'>
+<decisiontable tID='1' name='Calculate_Individual_Income'>
+<entity_stack>
+<entity id='1'>primities</entity>
+<entity id='2'>decisiontables</entity>
+<entity id='100001'>constants</entity>
+<entity id='100005'>job</entity>
+<entity id='100008'>case</entity>
+<entity id='100012'>client</entity>
+<entity id='100016'>income</entity>
+</entity_stack>
+<initialActions></initialActions>
+<Condition n='1'r='Y'>
+<Formal>income.earned == true</Formal>
+</Condition>
+<Column n='1 '>
+<action n='1'>
+<formal>add income.amount to the client.totalIncome</formal>
+<def entity='/client 100012 createEntity ' name='client.totalIncome'>1200</def>
+</action>
+</Column>
+</decisiontable>
+<decisiontable tID='2' name='Calculate_Individual_Income'>
+<entity_stack>
+<entity id='1'>primities</entity>
+<entity id='2'>decisiontables</entity>
+<entity id='100001'>constants</entity>
+<entity id='100005'>job</entity>
+<entity id='100008'>case</entity>
+<entity id='100012'>client</entity>
+<entity id='100019'>income</entity>
+</entity_stack>
+<initialActions></initialActions>
+<Condition n='1'r='N'>
+<Formal>income.earned == true</Formal>
+</Condition>
+<Condition n='2'r='Y'>
+<Formal>ExcludedIncomeTypes includes the string income.type</Formal>
+</Condition>
+<Column n=''></Column>
+</decisiontable>
+</context>
+</action>
+<action n='2'>
+<formal>Perform Calculate_Group_Size</formal>
+<context execute='{ { { /Calculate_Group_Size executeTable  } dup clients forall pop } client allocate execute deallocate pop } { dup applying true beq if } clients forall pop'>
+<allocate value='client'/>
+<decisiontable tID='3' name='Calculate_Group_Size'>
+<entity_stack>
+<entity id='1'>primities</entity>
+<entity id='2'>decisiontables</entity>
+<entity id='100001'>constants</entity>
+<entity id='100005'>job</entity>
+<entity id='100008'>case</entity>
+<entity id='100012'>client</entity>
+<entity id='100012'>client</entity>
+</entity_stack>
+<initialActions></initialActions>
+<local_fetch index='0' value='client'/>
+<Condition n='1'r='Y'>
+<Formal>ThisClient == client</Formal>
+</Condition>
+<Condition n='5'r='N'>
+<Formal>the client.pregnant == true</Formal>
+</Condition>
+<Column n='12 11 10 9 7 5 3 1 '>
+<action n='1'>
+<formal>add 1 to ThisClient&apos;s IncomeGroupCount</formal>
+<local_fetch index='0' value='client'/>
+<entitypush value='client' id='100012'/>
+<def entity='/client 100012 createEntity ' name='IncomeGroupCount'>1</def>
+<entitypop />
+</action>
+<action n='3'>
+<formal>add the client.totalIncome to ThisClient&apos;s totalGroupIncome</formal>
+<local_fetch index='0' value='client'/>
+<entitypush value='client' id='100012'/>
+<def entity='/client 100012 createEntity ' name='totalGroupIncome'>1200</def>
+<entitypop />
+</action>
+</Column>
+</decisiontable>
+<decisiontable tID='4' name='Calculate_Group_Size'>
+<entity_stack>
+<entity id='1'>primities</entity>
+<entity id='2'>decisiontables</entity>
+<entity id='100001'>constants</entity>
+<entity id='100005'>job</entity>
+<entity id='100008'>case</entity>
+<entity id='100012'>client</entity>
+<entity id='100023'>client</entity>
+</entity_stack>
+<initialActions></initialActions>
+<local_fetch index='0' value='client'/>
+<Condition n='1'r='N'>
+<Formal>ThisClient == client</Formal>
+</Condition>
+<local_fetch index='0' value='client'/>
+<local_fetch index='0' value='client'/>
+<Condition n='2'r='N'>
+<Formal>the client is the parent of ThisClient</Formal>
+</Condition>
+<local_fetch index='0' value='client'/>
+<local_fetch index='0' value='client'/>
+<Condition n='3'r='N'>
+<Formal>the client is the sibling of ThisClient</Formal>
+</Condition>
+<local_fetch index='0' value='client'/>
+<local_fetch index='0' value='client'/>
+<Condition n='4'r='Y'>
+<Formal>the client is the child of ThisClient</Formal>
+</Condition>
+<Column n='12 7 '>
+<action n='1'>
+<formal>add 1 to ThisClient&apos;s IncomeGroupCount</formal>
+<local_fetch index='0' value='client'/>
+<entitypush value='client' id='100012'/>
+<def entity='/client 100012 createEntity ' name='IncomeGroupCount'>2</def>
+<entitypop />
+</action>
+<action n='3'>
+<formal>add the client.totalIncome to ThisClient&apos;s totalGroupIncome</formal>
+<local_fetch index='0' value='client'/>
+<entitypush value='client' id='100012'/>
+<def entity='/client 100012 createEntity ' name='totalGroupIncome'>1200</def>
+<entitypop />
+</action>
+</Column>
+</decisiontable>
+<allocate value='client'/>
+<decisiontable tID='5' name='Calculate_Group_Size'>
+<entity_stack>
+<entity id='1'>primities</entity>
+<entity id='2'>decisiontables</entity>
+<entity id='100001'>constants</entity>
+<entity id='100005'>job</entity>
+<entity id='100008'>case</entity>
+<entity id='100023'>client</entity>
+<entity id='100012'>client</entity>
+</entity_stack>
+<initialActions></initialActions>
+<local_fetch index='0' value='client'/>
+<Condition n='1'r='N'>
+<Formal>ThisClient == client</Formal>
+</Condition>
+<local_fetch index='0' value='client'/>
+<Condition n='2'r='Y'>
+<Formal>the client is the parent of ThisClient</Formal>
+</Condition>
+<Condition n='5'r='N'>
+<Formal>the client.pregnant == true</Formal>
+</Condition>
+<Column n='12 11 10 7 5 3 '>
+<action n='1'>
+<formal>add 1 to ThisClient&apos;s IncomeGroupCount</formal>
+<local_fetch index='0' value='client'/>
+<entitypush value='client' id='100023'/>
+<def entity='/client 100023 createEntity ' name='IncomeGroupCount'>1</def>
+<entitypop />
+</action>
+<action n='3'>
+<formal>add the client.totalIncome to ThisClient&apos;s totalGroupIncome</formal>
+<local_fetch index='0' value='client'/>
+<entitypush value='client' id='100023'/>
+<def entity='/client 100023 createEntity ' name='totalGroupIncome'>1200</def>
+<entitypop />
+</action>
+</Column>
+</decisiontable>
+<decisiontable tID='6' name='Calculate_Group_Size'>
+<entity_stack>
+<entity id='1'>primities</entity>
+<entity id='2'>decisiontables</entity>
+<entity id='100001'>constants</entity>
+<entity id='100005'>job</entity>
+<entity id='100008'>case</entity>
+<entity id='100023'>client</entity>
+<entity id='100023'>client</entity>
+</entity_stack>
+<initialActions></initialActions>
+<local_fetch index='0' value='client'/>
+<Condition n='1'r='Y'>
+<Formal>ThisClient == client</Formal>
+</Condition>
+<Condition n='5'r='N'>
+<Formal>the client.pregnant == true</Formal>
+</Condition>
+<Column n='12 11 10 9 7 5 3 1 '>
+<action n='1'>
+<formal>add 1 to ThisClient&apos;s IncomeGroupCount</formal>
+<local_fetch index='0' value='client'/>
+<entitypush value='client' id='100023'/>
+<def entity='/client 100023 createEntity ' name='IncomeGroupCount'>2</def>
+<entitypop />
+</action>
+<action n='3'>
+<formal>add the client.totalIncome to ThisClient&apos;s totalGroupIncome</formal>
+<local_fetch index='0' value='client'/>
+<entitypush value='client' id='100023'/>
+<def entity='/client 100023 createEntity ' name='totalGroupIncome'>1200</def>
+<entitypop />
+</action>
+</Column>
+</decisiontable>
+</context>
+</action>
+<action n='3'>
+<formal>Perform Evaluate_KidAid_Eligibility</formal>
+<context execute='{ { { { { { { { /Evaluate_KidAid_Eligibility executeTable  } 0 local@  3 *  allocate execute deallocate pop } 0 local@  2.5 fmul  allocate execute deallocate pop } 0 local@  2 *  allocate execute deallocate pop } 0 local@  1.75 fmul  allocate execute deallocate pop } 0 local@  1.5 fmul  allocate execute deallocate pop } 0 local@  1.25 fmul  allocate execute deallocate pop } FPL_Base FPL_PerAdditionalPerson client.IncomeGroupCount 1 -  * +  allocate execute deallocate pop } { dup applying true beq if } clients forall pop'>
+<allocate value='1167'/>
+<local_fetch index='0' value='1167'/>
+<allocate value='1458.75'/>
+<local_fetch index='0' value='1167'/>
+<allocate value='1750.5'/>
+<local_fetch index='0' value='1167'/>
+<allocate value='2042.25'/>
+<local_fetch index='0' value='1167'/>
+<allocate value='2334'/>
+<local_fetch index='0' value='1167'/>
+<allocate value='2917.5'/>
+<local_fetch index='0' value='1167'/>
+<allocate value='3501'/>
+<decisiontable tID='7' name='Evaluate_KidAid_Eligibility'>
+<entity_stack>
+<entity id='1'>primities</entity>
+<entity id='2'>decisiontables</entity>
+<entity id='100001'>constants</entity>
+<entity id='100005'>job</entity>
+<entity id='100008'>case</entity>
+<entity id='100012'>client</entity>
+</entity_stack>
+<initialActions></initialActions>
+<Condition n='1'r='Y'>
+<Formal>validatedCitizenship</Formal>
+</Condition>
+<Condition n='2'r='Y'>
+<Formal>The CoveredCounties includes the string case.county_Cd</Formal>
+</Condition>
+<Condition n='3'r='N'>
+<Formal>client.age &lt; 1</Formal>
+</Condition>
+<Condition n='4'r='N'>
+<Formal>client.age &lt; 6</Formal>
+</Condition>
+<Condition n='5'r='N'>
+<Formal>client.age &lt;= 18</Formal>
+</Condition>
+<Column n='14 '>
+<action n='5'>
+<formal>set client.eligible = false</formal>
+<def entity='/client 100012 createEntity ' name='client.eligible'>false</def>
+</action>
+<action n='9'>
+<formal>Add &quot;Must be 18 or younger to qualify for KidAid&quot; to client.notes</formal>
+<addto arrayID='100014'>&quot;Must be 18 or younger to qualify for KidAid&quot;</addto>
+</action>
+<action n='10'>
+<formal>set client_fpl = FPL</formal>
+<local_fetch index='0' value='1167'/>
+<def entity='/client 100012 createEntity ' name='client_fpl'>1167</def>
+</action>
+</Column>
+</decisiontable>
+<allocate value='1167'/>
+<local_fetch index='0' value='1167'/>
+<allocate value='1458.75'/>
+<local_fetch index='0' value='1167'/>
+<allocate value='1750.5'/>
+<local_fetch index='0' value='1167'/>
+<allocate value='2042.25'/>
+<local_fetch index='0' value='1167'/>
+<allocate value='2334'/>
+<local_fetch index='0' value='1167'/>
+<allocate value='2917.5'/>
+<local_fetch index='0' value='1167'/>
+<allocate value='3501'/>
+<decisiontable tID='8' name='Evaluate_KidAid_Eligibility'>
+<entity_stack>
+<entity id='1'>primities</entity>
+<entity id='2'>decisiontables</entity>
+<entity id='100001'>constants</entity>
+<entity id='100005'>job</entity>
+<entity id='100008'>case</entity>
+<entity id='100023'>client</entity>
+</entity_stack>
+<initialActions></initialActions>
+<Condition n='1'r='Y'>
+<Formal>validatedCitizenship</Formal>
+</Condition>
+<Condition n='2'r='Y'>
+<Formal>The CoveredCounties includes the string case.county_Cd</Formal>
+</Condition>
+<Condition n='3'r='N'>
+<Formal>client.age &lt; 1</Formal>
+</Condition>
+<Condition n='4'r='Y'>
+<Formal>client.age &lt; 6</Formal>
+</Condition>
+<Condition n='5'r='Y'>
+<Formal>client.age &lt;= 18</Formal>
+</Condition>
+<local_fetch index='0' value='1167'/>
+<Condition n='6'r='Y'>
+<Formal>totalGroupIncome &gt; FPL</Formal>
+</Condition>
+<local_fetch index='3' value='2042.25'/>
+<Condition n='9'r='N'>
+<Formal>totalGroupIncome &gt; FPL175</Formal>
+</Condition>
+<local_fetch index='4' value='2334'/>
+<Condition n='10'r='N'>
+<Formal>totalGroupIncome &gt; FPL200</Formal>
+</Condition>
+<local_fetch index='5' value='2917.5'/>
+<Condition n='11'r='N'>
+<Formal>totalGroupIncome &gt; FPL250</Formal>
+</Condition>
+<local_fetch index='3' value='2042.25'/>
+<Condition n='12'r='Y'>
+<Formal>totalGroupIncome &lt; FPL175</Formal>
+</Condition>
+<Column n='2 '>
+<action n='1'>
+<formal>set client.eligible = true</formal>
+<def entity='/client 100023 createEntity ' name='client.eligible'>true</def>
+</action>
+<action n='2'>
+<formal>set client.programLevel = FreeCoverage</formal>
+<def entity='/client 100023 createEntity ' name='client.programLevel'>&quot;Free Coverage&quot;</def>
+</action>
+<action n='10'>
+<formal>set client_fpl = FPL</formal>
+<local_fetch index='0' value='1167'/>
+<def entity='/client 100023 createEntity ' name='client_fpl'>1167</def>
+</action>
+</Column>
+</decisiontable>
+</context>
+</action>
+<action n='6'>
+<formal>Perform Evaluate_Results</formal>
+<context execute='{ /Evaluate_Results executeTable  } { dup applying true beq if } clients forall pop'>
+<decisiontable tID='9' name='Evaluate_Results'>
+<entity_stack>
+<entity id='1'>primities</entity>
+<entity id='2'>decisiontables</entity>
+<entity id='100001'>constants</entity>
+<entity id='100005'>job</entity>
+<entity id='100008'>case</entity>
+<entity id='100012'>client</entity>
+</entity_stack>
+<initialActions></initialActions>
+<Column n='1 '>
+<action n='1'>
+<formal>add a new Result entity to the context of this table</formal>
+<entitypush value='result' id='100040'/>
+</action>
+<action n='2'>
+<formal>add the result to the job.results</formal>
+<addto arrayID='100006'>/result 100040 createEntity </addto>
+</action>
+<action n='3'>
+<formal>Set Result.notes = client.notes</formal>
+<def entity='/result 100040 createEntity ' name='Result.notes'>[&quot;Must be 18 or younger to qualify for KidAid&quot; ]</def>
+</action>
+<action n='4'>
+<formal>Set Result.client_id = client.client_id</formal>
+<def entity='/result 100040 createEntity ' name='Result.client_id'>&quot;1001&quot;</def>
+</action>
+<action n='5'>
+<formal>Set Result.client = client.client</formal>
+<def entity='/result 100040 createEntity ' name='Result.client'>/client 100012 createEntity </def>
+</action>
+<action n='6'>
+<formal>Set Result.program = job.program</formal>
+<def entity='/result 100040 createEntity ' name='Result.program'>&quot;KidAid&quot;</def>
+</action>
+<action n='7'>
+<formal>Set Result.programLevel = client.programLevel</formal>
+<def entity='/result 100040 createEntity ' name='Result.programLevel'></def>
+</action>
+<action n='8'>
+<formal>Set Result.eligible = client.eligible</formal>
+<def entity='/result 100040 createEntity ' name='Result.eligible'>false</def>
+</action>
+<action n='9'>
+<formal>Set Result.client_fpl = client.client_fpl</formal>
+<def entity='/result 100040 createEntity ' name='Result.client_fpl'>1167</def>
+</action>
+<action n='10'>
+<formal>Set Result.totalGroupIncome = client.totalGroupIncome</formal>
+<def entity='/result 100040 createEntity ' name='Result.totalGroupIncome'>1200</def>
+</action>
+</Column>
+</decisiontable>
+<decisiontable tID='10' name='Evaluate_Results'>
+<entity_stack>
+<entity id='1'>primities</entity>
+<entity id='2'>decisiontables</entity>
+<entity id='100001'>constants</entity>
+<entity id='100005'>job</entity>
+<entity id='100008'>case</entity>
+<entity id='100023'>client</entity>
+</entity_stack>
+<initialActions></initialActions>
+<Column n='1 '>
+<action n='1'>
+<formal>add a new Result entity to the context of this table</formal>
+<entitypush value='result' id='100043'/>
+</action>
+<action n='2'>
+<formal>add the result to the job.results</formal>
+<addto arrayID='100006'>/result 100043 createEntity </addto>
+</action>
+<action n='3'>
+<formal>Set Result.notes = client.notes</formal>
+<def entity='/result 100043 createEntity ' name='Result.notes'>[]</def>
+</action>
+<action n='4'>
+<formal>Set Result.client_id = client.client_id</formal>
+<def entity='/result 100043 createEntity ' name='Result.client_id'>&quot;1002&quot;</def>
+</action>
+<action n='5'>
+<formal>Set Result.client = client.client</formal>
+<def entity='/result 100043 createEntity ' name='Result.client'>/client 100023 createEntity </def>
+</action>
+<action n='6'>
+<formal>Set Result.program = job.program</formal>
+<def entity='/result 100043 createEntity ' name='Result.program'>&quot;KidAid&quot;</def>
+</action>
+<action n='7'>
+<formal>Set Result.programLevel = client.programLevel</formal>
+<def entity='/result 100043 createEntity ' name='Result.programLevel'>&quot;Free Coverage&quot;</def>
+</action>
+<action n='8'>
+<formal>Set Result.eligible = client.eligible</formal>
+<def entity='/result 100043 createEntity ' name='Result.eligible'>true</def>
+</action>
+<action n='9'>
+<formal>Set Result.client_fpl = client.client_fpl</formal>
+<def entity='/result 100043 createEntity ' name='Result.client_fpl'>1167</def>
+</action>
+<action n='10'>
+<formal>Set Result.totalGroupIncome = client.totalGroupIncome</formal>
+<def entity='/result 100043 createEntity ' name='Result.totalGroupIncome'>1200</def>
+</action>
+</Column>
+</decisiontable>
+</context>
+</action>
+</Column>
+</decisiontable>
+</DTRulesTrace>

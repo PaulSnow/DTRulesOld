@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DSLCompiler"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DTParser"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DTRules"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DTScanner"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ExcelUtil"/>
+	<classpathentry kind="lib" path="/DTParser/lib/java-cup-11a.jar"/>
+	<classpathentry kind="lib" path="/DTScanner/lib/JFlex.jar"/>
+	<classpathentry kind="lib" path="/DTRules/lib/jsr94.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
