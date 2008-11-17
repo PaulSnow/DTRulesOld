@@ -128,7 +128,7 @@ public abstract class ATestHarness implements ITestHarness {
              // the Entity Description Dictionary (the EDD, or schema) assumed by those tables, and
              // A Mapping file that maps data into this EDD.
              
-             RulesDirectory rd       = new RulesDirectory(getRulesDirectoryPath(),getRulesDirectoryFile());
+             RulesDirectory rd       = new RulesDirectory(getPath(),getRulesDirectoryFile());
              
              // Select a particular rule set and create a session to load the data and evaluate
              // that data against the rules within this ruleset.  

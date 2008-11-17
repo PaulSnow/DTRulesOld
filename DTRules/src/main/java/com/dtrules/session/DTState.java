@@ -140,7 +140,10 @@ public class DTState {
        traceTagBegin("DTRulesTrace",null);
    }
    public void traceEnd() throws RulesException {
-       traceTagEnd("DTRulesTrace",null);
+
+       while(tagstk.size()>0){ //Close all tags.
+           traceTagEnd(tagstk.get(tagstk.size()-1),null);
+       }
        clearState(TRACE);
    }
 

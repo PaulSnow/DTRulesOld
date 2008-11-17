@@ -290,7 +290,15 @@ public class RSession implements RuleSession, IRSession {
      * @see com.dtrules.session.IRSession#execute(java.lang.String)
      */
 	public void execute(String s) throws RulesException {
-		RString.newRString(s,true).execute(dtstate);
+		try {
+            RString.newRString(s,true).execute(dtstate);
+        } catch (RulesException e) {
+            if(getState().testState(DTState.TRACE)){
+                getState().traceInfo("Error", null, e.toString());
+                getState().traceEnd();
+            }
+            throw e;
+        }
 		return;
 	}
 	/**

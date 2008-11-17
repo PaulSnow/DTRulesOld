@@ -33,9 +33,8 @@ import com.dtrules.session.RSession;
 public class RMiscOps {
     static {
         new RError();       new Debug();        new Traceon();
-        new Traceoff();     new Ignore();       new Stringlength();
-        new Touppercase();  new Tolowercase();  new Trim();
-        new substring();    new Swap();         new Dup();
+        new Traceoff();     new Ignore();       new Swap();         
+        new Dup();
         new Pop();          new Over();         new EntityName();
         new Entitypush();   new Entitypop();    new Entityfetch();
         new I();            new J();            new K();
@@ -45,7 +44,7 @@ public class RMiscOps {
         new Createentity(); new Cvi();          new Cvr();
         new Cvb();          new Cve();          new Cvs();
         new Cvn();          new Cvd();          new ActionString();
-        new GetDescription();                   new RegexMatch();
+        new GetDescription();                   
     }
 
     /**
@@ -171,82 +170,6 @@ public class RMiscOps {
         }
     }
 
-    /**
-     * ( string -- length ) returns the length of the given string
-     * @author paul snow
-     *
-     */
-    static class Stringlength extends ROperator {
-        Stringlength(){super("strlength");}
-
-        public void execute(DTState state) throws RulesException {
-            String   str = state.datapop().stringValue();
-            RInteger len = RInteger.getRIntegerValue(str.length());
-            state.datapush(len);
-        }
-    }
-
-    /**
-     * ( String -- String ) converts the string to uppercase.
-     * @author paul snow
-     *
-     */
-    static class Touppercase extends ROperator {
-        Touppercase(){super("touppercase");}
-
-        public void execute(DTState state) throws RulesException {
-            String   str  = state.datapop().stringValue();
-            String   str2 = str.toUpperCase();
-            state.datapush(RString.newRString(str2));
-        }
-    }
-
-    /**
-     * ( String -- String ) converts the string to lowercase
-     * @author paul snow
-     *
-     */
-    static class Tolowercase extends ROperator {
-        Tolowercase(){super("tolowercase");}
-
-        public void execute(DTState state) throws RulesException {
-            String   str  = state.datapop().stringValue();
-            String   str2 = str.toLowerCase();
-            state.datapush(RString.newRString(str2));
-        }
-    }
-
-    /**
-     * ( string -- string ) Trims the string, per trim in Java
-     * @author paul snow
-     *
-     */
-    static class Trim extends ROperator {
-        Trim(){super("trim");}
-
-        public void execute(DTState state) throws RulesException {
-            String   str  = state.datapop().stringValue();
-            String   str2 = str.trim();
-            state.datapush(RString.newRString(str2));
-         }
-    }
-
-    /**
-     * (endindex beginindex string -- substring ) Returns the substring
-     * @author paul snow
-     *
-     */
-    static class substring extends ROperator {
-        substring(){super("substring");}
-
-        public void execute(DTState state) throws RulesException {
-            String   str  = state.datapop().stringValue();
-            int      b    = state.datapop().intValue();
-            int      e    = state.datapop().intValue();
-            String   str2 = str.substring(b,e);
-            state.datapush(RString.newRString(str2));
-         }
-    }
 
     /**
      * ( obj1 obj2 -- obj2 obj1 ) swaps the top two elements on the data stack
@@ -727,21 +650,5 @@ public class RMiscOps {
             state.datapush( RString.newRString(description));
         }
     }
-    /**
-     * ( regex String -- boolean ) Returns true if the given string is matched
-     * by the given regular expression.
-     * 
-     * @author Paul Snow
-     *
-     */
-    static class  RegexMatch   extends ROperator {
-        RegexMatch(){super("regexmatch");}
-        
-        public void execute(DTState state) throws RulesException {
-            String string = state.datapop().stringValue();
-            String regex  = state.datapop().stringValue();
-            boolean b = string.matches(regex);
-            state.datapush( RBoolean.getRBoolean(b));
-        }
-    }
+   
 }

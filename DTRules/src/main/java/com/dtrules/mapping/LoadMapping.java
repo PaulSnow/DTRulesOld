@@ -317,8 +317,12 @@ public class LoadMapping implements IGenericXMLParser {
             case AttributeInfo.XMLVALUE_CODE :
                 attribs.put("set attribute",attrib.rAttribute);
                 break;
-			default:    
-				throw new RuntimeException("Bad Type Code "+attrib.type+" in com.dtrules.mapping.AttributeInfo: "+attrib.rAttribute);
+			default:
+			    String type = "(Unknown Code: "+attrib.type+")";
+			    try{
+			        type = RSession.typeInt2Str(attrib.type);
+			    }catch(RulesException e){} // Ignore errors.
+				throw new RuntimeException("Bad Type Code "+type+" in com.dtrules.mapping.AttributeInfo: "+attrib.rAttribute);
 		}
 	}
 	

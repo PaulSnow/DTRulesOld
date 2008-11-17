@@ -258,11 +258,11 @@ public class EntityFactory {
         switch(type){
             case IRObject.iArray :
                 if(defaultstr.length()==0) return new RArray(ef.getUniqueID(), true,false);
-                RArray v = (RArray) RString.compile(session, defaultstr, false);     // We assume any values are 
-                                                                                     // surrounded by brackets, and regardless make
                 RArray rval;
                 try{
-                    rval = v.get(0).getNonExecutable().rArrayValue();             // sure they are non-executable.
+                     RArray v = (RArray) RString.compile(session, defaultstr, false);     // We assume any values are surrounded by brackets, and regardless make
+                     
+                     rval = v.get(0).getNonExecutable().rArrayValue();             // sure they are non-executable.
                 }catch(RulesException e){
                     throw new RulesException("ParsingError","EntityFactory.computeDefaultValue()","Bad format for an array. \r\n"+
                             "\r\nWe tried to interpret the string \r\n'"+defaultstr+"'\r\nas an array, but could not.\r\n"+e.toString());

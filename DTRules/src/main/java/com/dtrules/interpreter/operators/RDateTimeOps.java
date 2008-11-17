@@ -139,13 +139,13 @@ public class RDateTimeOps {
             public void execute(DTState state) throws RulesException {
                 Date  date = state.datapop().timeValue();
                 state.calendar.setTime(date);
-                state.calendar.set(
-                        Calendar.DAY_OF_MONTH, 
-                        state.calendar.getActualMaximum(Calendar.MONTH));
+                int maxdays = state.calendar.getActualMaximum(Calendar.DAY_OF_MONTH); 
+                state.calendar.set( Calendar.DAY_OF_MONTH, maxdays );
                 state.calendar.set(Calendar.HOUR, 0);
                 state.calendar.set(Calendar.MINUTE, 0);
                 state.calendar.set(Calendar.MILLISECOND, 0);  
-                state.datapush(RTime.getRTime(state.calendar.getTime()));
+                Date result = state.calendar.getTime();
+                state.datapush(RTime.getRTime(result));
             }
         } 
         /**

@@ -57,6 +57,7 @@ public class RBooleanOps {
 			new SEqualIgnoreCase();
 			new SConcat();
 			new Strremove();
+			new Startswith();
 			new Req();
 		}
 		
@@ -377,6 +378,22 @@ public class RBooleanOps {
 			}
 		}		
 
+		 /**
+         * startswith ( string1 string2 index -- boolean )
+         * returns true if string1 begins with string2
+         */
+        static class Startswith extends ROperator {
+            Startswith(){super("startswith");}
+
+            public void execute(DTState state) throws RulesException {
+                int    index   = state.datapop().intValue();
+                String string2 = state.datapop().stringValue();
+                String string1 = state.datapop().stringValue();
+                state.datapush(RBoolean.getRBoolean(string1.startsWith(string2,index)));
+            }
+        }
+        
+        
 	    /**
 	     * Strremove( String1 String2 -- String3 )
 	     * Strremove Operator, removes string2 from string1 and returns string3
