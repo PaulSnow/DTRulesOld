@@ -312,8 +312,23 @@ public class RDateTimeOps {
 			public void execute(DTState state) throws RulesException {
 				IRObject o2 = state.datapop();
 				IRObject o1 = state.datapop();
-				Date date2 = o2.timeValue();
-				Date date1 = o1.timeValue();
+				Date date1=null, date2=null;
+				try{
+				  date1 = o1.timeValue();  
+				  date2 = o2.timeValue();
+				}catch(RulesException e){
+				  if(date1==null) {
+				      e.addToMessage("The First Parameter is null");
+    				  try{
+    				      date2 = o2.timeValue();
+    				  }catch(RulesException e2){
+    				      e.addToMessage("The Second Parameter is also null");    
+    				  }
+				  }else{
+				      e.addToMessage("The Second Parameter is null");
+				  }
+				  throw e;
+				}
                 boolean test = date1.after(date2);
 				state.datapush(RBoolean.getRBoolean(test));
 			}

@@ -257,23 +257,28 @@ public class RuleSet {
 		   Iterator<String> iedds = edd_names.iterator();
 		   while(iedds.hasNext()){
 			   String filename = iedds.next();
-               String filenameused = "";
-			   InputStream s= openfile(filename);
+               InputStream s= openfile(filename);
 			   if(s==null){
                       if(s==null){
-                        System.out.println("No EDD XML found");
-                      }
+                        System.out.println("No EDD XML found.  " +
+                        		"\r\n   Looking for:      "+filename+
+                        		"\r\n   WorkingDirectory: "+session.getRuleSet().getWorkingdirectory()+
+                                "\r\n   ResourcePath:     "+session.getRuleSet().getResourcepath()+
+                        		"\r\n   SystemDirecotry:  "+session.getRuleSet().getSystemPath());
+                      }                 
                 }     
-                if(s!=null) ef.loadedd(session, filenameused,s);
+                if(s!=null) ef.loadedd(session, filename,s);
 		   }
 		   Iterator<String> idts = dt_names.iterator();
 		   while(idts.hasNext()){	   
                String filename = idts.next();
           	   InputStream s = openfile(filename);
 				if(s==null){
-					if(s==null){
-                      System.out.println("No Decision Table XML found");
-                     }
+                      System.out.println("No Decision Table XML found" +
+                              "\r\n   Looking for:      "+filename+
+                              "\r\n   WorkingDirectory: "+session.getRuleSet().getWorkingdirectory()+
+                              "\r\n   ResourcePath:     "+session.getRuleSet().getResourcepath()+
+                              "\r\n   SystemDirecotry:  "+session.getRuleSet().getSystemPath());
 				}
 				if(s!=null) ef.loaddt(session, s);
 		   }

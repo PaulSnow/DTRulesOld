@@ -143,7 +143,14 @@ public abstract class ATestHarness implements ITestHarness {
              if(Verbose()){
                  /** Print out the balanced tables **/
                  PrintStream btables = new PrintStream(getOutputDirectory()+"balanced.txt");
-                 IRSession s = rs.newSession();
+                 IRSession s=null;
+                 try {
+                    s = rs.newSession();
+                 } catch (RulesException e) {
+                    System.out.println("SystemPath: "+getPath());
+                    System.out.println("RulesDirectoryFile: "+getRulesDirectoryFile());
+                    throw e;
+                 }
                  s.printBalancedTables(btables);
              }
              
@@ -192,8 +199,7 @@ public abstract class ATestHarness implements ITestHarness {
               
               out        = new PrintStream     (getOutputDirectory()+"results"   +dfcnt+ ".xml");
               tracefile  = new FileOutputStream(getOutputDirectory()+"trace_"    +dfcnt+ ".xml");
-              entityfile = new FileOutputStream(getOutputDirectory()+"entities_" +dfcnt+ ".xml");
-     
+             
               IRSession      session    = rs.newSession();
               DTState        state      = session.getState();
               state.setOutput(tracefile, out);
@@ -209,11 +215,18 @@ public abstract class ATestHarness implements ITestHarness {
               
               datamap.loadXML(new FileInputStream(path+"/"+dataset));
               
+              mapping.loadData(session, datamap);
+              
               if(Verbose()){
                   datamap.print(new FileOutputStream(getOutputDirectory()+"datamap"+dfcnt+".xml"));
+                  
+                  entityfile = new FileOutputStream(getOutputDirectory()+"entities_before_" +dfcnt+ ".xml");
+                  RArray entitystack = new RArray(0,false,false);
+                  for(int i=0; i< session.getState().edepth()-2; i++){
+                      entitystack.add(session.getState().entityfetch(i));
+                  }
+                  session.printEntityReport(new XMLPrinter(entityfile), false, session.getState(), "entitystack", entitystack);
               }
-              
-              mapping.loadData(session, datamap);
               
               // Once the data is loaded, execute the rules.
               
@@ -225,6 +238,7 @@ public abstract class ATestHarness implements ITestHarness {
               }
 
               if(Verbose()){
+                 entityfile = new FileOutputStream(getOutputDirectory()+"entities_after_" +dfcnt+ ".xml");
                  RArray entitystack = new RArray(0,false,false);
                  for(int i=0; i< session.getState().edepth()-2; i++){
                      entitystack.add(session.getState().entityfetch(i));

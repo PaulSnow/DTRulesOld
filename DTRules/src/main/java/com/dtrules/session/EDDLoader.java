@@ -93,6 +93,11 @@ public class EDDLoader implements IGenericXMLParser {
 		  String subtype    = (String) attribs.get("subtype");
 		  String access     = (String) attribs.get("access");
 		  String defaultv   = (String) attribs.get("default");
+		  String comment    = (String) attribs.get("comment");
+		  String input      = (String) attribs.get("input");
+		  
+		  if(comment==null)comment = "";
+		  if(input == null)input   = "";
 		  
 		  boolean  writeable = true; 	// We need to convert access to a boolean
 		  boolean  readable  = true;    // Make an assumption of r/w
@@ -137,7 +142,9 @@ public class EDDLoader implements IGenericXMLParser {
 		                                       writeable,
 		                                       readable,
 		                                       intType,
-		                                       subtype);
+		                                       subtype,
+		                                       comment,
+		                                       input);
 		  if(errstr!=null){
 		      succeeded = false;
 		      errorMsgs += errstr;
@@ -170,15 +177,18 @@ public class EDDLoader implements IGenericXMLParser {
                            String   body, 
                            HashMap  attribs) throws Exception, IOException {
         if(!tag.equals("field")) return;
-        
-        
+             
         String default_value  = (String) attribs.get("default_value");
         String attrib_name    = (String) attribs.get("name");
-       // String attrib_comment = (String) attribs.get("comment");
         String access         = (String) attribs.get("access");
         String subtype        = (String) attribs.get("subtype");
 	    String type           = (String) attribs.get("type");
-	    
+	    String comment        = (String) attribs.get("comment");
+        String input          = (String) attribs.get("input");
+          
+        if(comment==null)comment = "";
+        if(input == null)input   = "";
+    	    
 	    boolean writeable = access.toLowerCase().indexOf("w")>=0;
         boolean readable  = access.toLowerCase().indexOf("r")>=0;
         if(!writeable && !readable){
@@ -186,38 +196,41 @@ public class EDDLoader implements IGenericXMLParser {
             succeeded=false;
         }
         
-    int itype=-1;
+        int itype=-1;
 
-    // Now the type.  An easy thing.
-    try {
-      itype = RSession.typeStr2Int(type,entityname,attrib_name);
-    } catch (RulesException e1) {
-      errorMsgs+= e1.getMessage()+"\n";
-      succeeded = false;
-    }
+        // Now the type.  An easy thing.
+        try {
+          itype = RSession.typeStr2Int(type,entityname,attrib_name);
+        } catch (RulesException e1) {
+          errorMsgs+= e1.getMessage()+"\n";
+          succeeded = false;
+        }
                 
-    IRObject defaultO = EntityFactory.computeDefaultValue(session, ef, default_value, itype) ;
-    
-    RName  entityRName = RName.getRName(entityname.trim(),false);
-    RName  attributeRName = RName.getRName(attrib_name.trim(),false);
-    REntity entity = ef.findcreateRefEntity(false,entityRName);
-    int    intType = -1;
-    try {
-      intType = RSession.typeStr2Int(type,entityname,attrib_name);
-    } catch (RulesException e) { 
-      errorMsgs += "Bad Type: '"+type+"' encountered on entity: '"+entityname+"' attribute: '"+attrib_name+"' \n";
-      succeeded = false;
-    }
-    String errstr  = entity.addAttribute(attributeRName,
-                                         default_value, 
-                                         defaultO,
-                                         writeable,
-                                         readable,
-                                         intType,
-                                         subtype);
-    if(errstr!=null){
-        succeeded = false;
-        errorMsgs += errstr;
+        IRObject defaultO = EntityFactory.computeDefaultValue(session, ef, default_value, itype) ;
+        
+        RName  entityRName = RName.getRName(entityname.trim(),false);
+        RName  attributeRName = RName.getRName(attrib_name.trim(),false);
+        REntity entity = ef.findcreateRefEntity(false,entityRName);
+        int    intType = -1;
+
+        try {
+          intType = RSession.typeStr2Int(type,entityname,attrib_name);
+        } catch (RulesException e) { 
+          errorMsgs += "Bad Type: '"+type+"' encountered on entity: '"+entityname+"' attribute: '"+attrib_name+"' \n";
+          succeeded = false;
+        }
+        String errstr  = entity.addAttribute(attributeRName,
+                                             default_value, 
+                                             defaultO,
+                                             writeable,
+                                             readable,
+                                             intType,
+                                             subtype,
+                                             comment,
+                                             input);
+        if(errstr!=null){
+            succeeded = false;
+            errorMsgs += errstr;
     }
     }
 	

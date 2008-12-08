@@ -75,7 +75,7 @@ public class ROperator extends ARObject {
     protected static void alias (IRObject o ,String n) {
         try {
             RName rn = RName.getRName(n);
-            primitives.addAttribute(rn, "", o, false, true, o.type(),null);
+            primitives.addAttribute(rn, "", o, false, true, o.type(),null,"operator","");
             primitives.put(rn,o);
         } catch (RulesException e) {
             throw new RuntimeException("An Error occured in alias building the primitives Entity: "+n);
@@ -102,7 +102,7 @@ public class ROperator extends ARObject {
     public ROperator(String _name){
       name = RName.getRName(_name,true);
       try {
-         primitives.addAttribute(name, "", this,false, true,iOperator,null);
+         primitives.addAttribute(name, "", this,false, true,iOperator,null,"operator","");
 	     primitives.put(name,this);
 	  } catch (RulesException e) {
 		 throw new RuntimeException("An Error occured building the primitives Entity: "+name);

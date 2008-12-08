@@ -48,7 +48,8 @@ public class REntityEntry {
     public  int       index;			    // Index into the values array to get the current
                                             //   value for this attribute.
     public String     typeValue; 
-    
+    public String     comment;              // A comment associated with this attribute
+    public String     input;                // These are the mapping sources which populate this attribute
     /**
      * Allows the insertion of the REntityEntry into an Entity after the
      * fact.
@@ -63,11 +64,14 @@ public class REntityEntry {
             RName    _attribute,
             String   _defaulttxt,
             IRObject _defaultvalue, 
-    		boolean _writable,
-    		boolean _readable,
-    		int     _type,
-    		String  _subtype,
-    		int     _index){
+    		boolean  _writable,
+    		boolean  _readable,
+    		int      _type,
+    		String   _subtype,
+    		int      _index,
+    		String   comment,
+    		String   input){
+        
         attribute    = _attribute;
         defaulttxt   = _defaulttxt;
     	defaultvalue = _defaultvalue;
@@ -76,6 +80,8 @@ public class REntityEntry {
     	type         = _type;
     	subtype      = _subtype;
     	index        = _index;
+    	setComment(comment);
+    	setInput(input);
     }
    
     @Override
@@ -189,6 +195,55 @@ public class REntityEntry {
      */
     public String getSubtype() {
         return subtype;
+    }
+
+    /**
+     * @return the readable
+     */
+    public boolean isReadable() {
+        return readable;
+    }
+
+    /**
+     * @param readable the readable to set
+     */
+    public void setReadable(boolean readable) {
+        this.readable = readable;
+    }
+
+    /**
+     * @return the comment
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * @param comment the comment to set
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    /**
+     * @param subtype the subtype to set
+     */
+    public void setSubtype(String subtype) {
+        this.subtype = subtype;
+    }
+
+    /**
+     * @return the input
+     */
+    public String getInput() {
+        return input;
+    }
+
+    /**
+     * @param input the input to set
+     */
+    public void setInput(String input) {
+        this.input = input;
     }
     
     

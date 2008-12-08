@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -43,6 +44,7 @@ import com.dtrules.interpreter.RString;
 import com.dtrules.interpreter.RTable;
 import com.dtrules.interpreter.RTime;
 import com.dtrules.xmlparser.GenericXMLParser;
+import com.dtrules.xmlparser.XMLPrinter;
 
 @SuppressWarnings({"unchecked"})
 public class EntityFactory {
@@ -110,7 +112,7 @@ public class EntityFactory {
         }
         RDecisionTable dtTable = new RDecisionTable(session,name.stringValue());
         decisiontablelist.add(name);
-        decisiontables.addAttribute(name, "", dtTable, false, true, IRObject.iDecisiontable,null);
+        decisiontables.addAttribute(name, "", dtTable, false, true, IRObject.iDecisiontable,null,"","");
         decisiontables.put(name, dtTable);
         return dtTable;
     }
@@ -249,6 +251,50 @@ public class EntityFactory {
 		}
 		return buff.toString();
 	}
+    
+    
+    
+    public void writeAttributes(XMLPrinter xout) throws RulesException {
+       RName entities[]= new RName[0];
+       entities = referenceEntities.keySet().toArray(entities); 
+       Arrays.sort(entities);
+       for ( RName key : entities ){
+           IREntity entity = referenceEntities.get(key);
+           {
+               String access  = entity.isReadOnly()?"r":"rw";
+               String comment = entity.getComment();
+               String name    = key.stringValue();
+               xout.opentag("entity","name",name,"access",access,"comment",comment);
+           }
+           RName attributes [] = new RName[0];
+           attributes = entity.getAttributeSet().toArray(attributes);
+           Arrays.sort(attributes);
+           for (RName attribute : attributes){
+               REntityEntry entry = entity.getEntry(attribute);
+               
+               String name          = attribute.stringValue();
+               String type          = entry.getTypeValue();
+               String subtype       = entry.getSubtype();
+               String access        = (entry.readable ? "r":"") + (entry.writable ? "w":"");
+               String input         = entry.getInput();
+               String default_value = entry.getDefaulttxt();
+               String comment       = entry.getComment();
+               
+               xout.opentag("field",
+                       "name",name,
+                       "type",type,
+                       "subtype",subtype,
+                       "access",access,
+                       "input",input,
+                       "default_value",default_value,
+                       "comment",comment);
+               xout.closetag();
+           }
+           xout.closetag();
+       }
+    }
+    
+    
 	public static IRObject computeDefaultValue(IRSession session, EntityFactory ef, String defaultstr, int type) throws RulesException {
         		
         if(defaultstr==null ) defaultstr="";

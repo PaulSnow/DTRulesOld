@@ -20,6 +20,7 @@ package com.dtrules.entity;
 
 import java.io.PrintStream;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.IRObject;
@@ -79,7 +80,7 @@ public interface IREntity extends IRObject{
      * @param type
      * @return Error string if the add failed, or a null on success.
      */
-    public String addAttribute( RName attributeName, String defaulttxt, IRObject defaultvalue,boolean writable, boolean readable, int type, String subtype);
+    public String addAttribute( RName attributeName, String defaulttxt, IRObject defaultvalue,boolean writable, boolean readable, int type, String subtype, String comment, String input);
   
     /**
      * Returns the name of this entity. 
@@ -166,4 +167,21 @@ public interface IREntity extends IRObject{
      * @param p printstream to which the XML representation of this Entity is written.
      */
     public void writeXML(PrintStream p) throws RulesException;
+    
+    /**
+     * Provides a set of keys for the attributes defined by this entity.
+     * @return
+     */
+    public Set<RName> getAttributeSet();
+    
+    /**
+     * Get the comment on this entity
+     * @return
+     */
+    public String getComment();
+    
+    /*
+     * Set the comment on this entity
+     */
+    public void setComment(String comment);
 }

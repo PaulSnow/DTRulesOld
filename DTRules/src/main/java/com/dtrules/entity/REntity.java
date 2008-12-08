@@ -22,6 +22,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.ARObject;
@@ -60,7 +61,28 @@ public class REntity extends ARObject implements IREntity {
     
     HashMap<RName,REntityEntry>     attributes; 
 	ArrayList<IRObject>             values       = new ArrayList<IRObject>();
+	String                          comment      = "";
+	
+	
     
+	/**
+     * @return the comment
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * @param comment the comment to set
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Set<RName> getAttributeSet(){
+	    return attributes.keySet();
+	}
+	
     /**
      * A readonly entity cannot be modified at run time.
      */
@@ -128,8 +150,8 @@ public class REntity extends ARObject implements IREntity {
         readonly   = _readonly;
 		name       = _name;
         attributes = new HashMap<RName,REntityEntry>();
-        this.addAttribute(_name, "", this, false, true, type(),null);  // Add a reference to self!
-        this.addAttribute(mappingKey,"",RNull.getRNull(),false, true, iString,null);
+        this.addAttribute(_name, "", this, false, true, type(),null,"Self Reference","");  // Add a reference to self!
+        this.addAttribute(mappingKey,"",RNull.getRNull(),false, true, iString,null,"Mapping Key","");
 	}
 
 	/* (non-Javadoc)
@@ -181,7 +203,9 @@ public class REntity extends ARObject implements IREntity {
 	        boolean  writable,
 	        boolean  readable,
 	        int      type,
-	        String   subtype ){
+	        String   subtype,
+	        String   comment,
+	        String   input){
         REntityEntry entry = getEntry(attributeName);
         if(entry==null){
     		int index = values.size();
@@ -190,8 +214,18 @@ public class REntity extends ARObject implements IREntity {
             }else{
                 values.add(defaultvalue);
             }
-    		REntityEntry newEntry = new REntityEntry(this,attributeName,defaulttxt, defaultvalue,writable,readable,type,subtype,index);
-            
+    		REntityEntry newEntry = new REntityEntry(
+    		        this,
+    		        attributeName,
+    		        defaulttxt, 
+    		        defaultvalue,
+    		        writable,
+    		        readable,
+    		        type,
+    		        subtype,
+    		        index,
+    		        comment,
+    		        input);
     		attributes.put(attributeName,newEntry);
             return null;
         }

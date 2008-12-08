@@ -278,11 +278,11 @@ class LoadMap implements IGenericXMLParser {
 		_attribs   = (HashMap<String,String>)attribs;
 
         if(state.testState(DTState.VERBOSE)){
-            String data = "<"+tag+" ";
+            String data = "";
             for(Object v : attribs.keySet()){
                 data += v+" = '"+attribs.get(v)+"'";
             }
-            state.traceInfo("Load",null,data+">\n");
+            state.traceTagBegin(tag, data);
         }
         
         try {
@@ -307,7 +307,9 @@ class LoadMap implements IGenericXMLParser {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public void endTag(String[] tagstk, int tagstkptr, String tag, String body, HashMap attribs) throws Exception, IOException {
-		
+	    if(state.testState(DTState.VERBOSE)){
+            state.traceTagEnd(tag, null);
+        }
 		
 	}
     /**

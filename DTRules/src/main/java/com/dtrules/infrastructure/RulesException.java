@@ -110,6 +110,14 @@ public class RulesException extends RuleException {
     public int getNumber() {
         return number;
     }
-
+    
+    /**
+     * This method allows us to add information to the message we have
+     * about the context in which an error is thrown.
+     * @param s
+     */
+    public void addToMessage(String s){
+        message = message + "\r\n" + s;
+    }
     
 }

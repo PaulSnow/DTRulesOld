@@ -26,7 +26,7 @@ import com.dtrules.infrastructure.RulesException;
 import com.dtrules.session.DTState;
 
 @SuppressWarnings({"unchecked"})
-public class RName extends ARObject {
+public class RName extends ARObject implements Comparable<RName>{
 	
 	final RName   entity;
 	final String  name;
@@ -99,7 +99,19 @@ public class RName extends ARObject {
         }
 		return getRName(null, _name, executable);
 	}
-	/**
+	
+	/* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(RName o) {
+        try{
+            return this.compare(o);
+        }catch(RulesException e){
+            return 0;
+        }
+    }
+    /**
 	 * We cache the creation of RNames so as to not create new copies
 	 * of RNames that we don't have to create. (RNames are reusable)
 	 * <br><br>

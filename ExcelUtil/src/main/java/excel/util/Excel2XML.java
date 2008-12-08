@@ -103,7 +103,7 @@ public class Excel2XML {
      */
     public void convertRuleset() throws Exception {        
         ImportRuleSets dt = new ImportRuleSets();
-        dt.convertEDD           (ruleSet.getSystemPath()+"/"+ruleSet.getExcel_edd(),     ruleSet.getFilepath()+ruleSet.getEDD_XMLName());
+        dt.convertEDDs          (ruleSet, ruleSet.getSystemPath()+"/"+ruleSet.getExcel_edd(),     ruleSet.getFilepath()+ruleSet.getEDD_XMLName());
         dt.convertDecisionTables(ruleSet.getSystemPath()+"/"+ruleSet.getExcel_dtfolder(),ruleSet.getFilepath()+UDTFilename);
         copyFile(ruleSet.getFilepath()+UDTFilename,ruleSet.getFilepath()+ruleSet.getDT_XMLName());
         reset();

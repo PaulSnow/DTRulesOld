@@ -36,10 +36,14 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
+import com.dtrules.session.EntityFactory;
+import com.dtrules.session.RuleSet;
 import com.dtrules.xmlparser.XMLPrinter;
 
 public class ImportRuleSets {
 	
+    String tmpEDD = "tmpEDD.xml";
+    
     String defaultColumns[]={"number","comments","dsl","table"};
     
     // These are the default columns for the decision tables.
@@ -145,21 +149,40 @@ public class ImportRuleSets {
         }
         return -1;
     }
-    
-    public void convertEDD(String excelFileName, String outputXMLName) throws Exception {
-        InputStream  input = new FileInputStream(new File(excelFileName));
-        OutputStream xstrm = new FileOutputStream(outputXMLName);
+    /**
+     * Converts a single file or an folder of files into a single EDD xml file.
+     * @param excelName
+     * @param outputXMLName
+     * @throws Exception
+     */
+    public void convertEDDs(RuleSet rs, String excelName, String outputXMLName) throws Exception {
+        File         excel = new File(excelName);
         
+        EntityFactory ef = new EntityFactory(rs);
+        if(excel.isDirectory()){
+            File files[] = excel.listFiles();
+            for(File file : files){
+                String filename = file.getName().toLowerCase();
+                if( !file.isDirectory() && (filename.endsWith(".xls")||filename.endsWith(".xml"))){
+                    convertEDD(ef, rs,file.getAbsolutePath());
+                }
+            }
+        }else{
+            convertEDD(ef,rs,excelName);
+        }
+        XMLPrinter   xptr  = new XMLPrinter(new FileOutputStream(outputXMLName));
+        xptr.opentag("entity_data_dictionary","version","2","xmlns:xs","http://www.w3.org/2001/XMLSchema");
+        ef.writeAttributes(xptr);
+        xptr.close();
+    }
+    
+    public void convertEDD(EntityFactory ef, RuleSet rs, String excelFileName ) throws Exception {
+        InputStream  input = new FileInputStream(new File(excelFileName));
+       
         // If the EDD is an XML file, We assume no conversion is necessary.
         if(excelFileName.endsWith(".xml")){
+            ef.loadedd(rs.newSession(), excelFileName, input);
             // Transfer bytes from in to out
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = input.read(buf)) > 0) {
-                xstrm.write(buf, 0, len);
-            }
-            input.close();
-            xstrm.close();
             return;
             
         }else if(! (excelFileName.endsWith(".xls"))) throw new Exception("EDD Excel File name is invalid"); 
@@ -169,9 +192,9 @@ public class ImportRuleSets {
         HSSFSheet sheet = wb.getSheetAt(0);
 
         // Open the EDD.xml output file
+        String     tmpEDDfilename = rs.getWorkingdirectory()+tmpEDD;
+        XMLPrinter xout = new XMLPrinter(new FileOutputStream(tmpEDDfilename));
         
-        XMLPrinter   xout = new XMLPrinter("entity_data_dictionary", xstrm);
-                
         // Write out a header in the EDD xml file.
         xout.opentag("edd_header");
            xout.printdata("edd_create_stamp",
@@ -220,7 +243,8 @@ public class ImportRuleSets {
                         "subtype"           , getCellValue(sheet,row,subtypeIndex),
                         "default"           , getCellValue(sheet,row,defaultIndex),
                         "access"            , getCellValue(sheet,row,accessIndex),
-                        "input"             , getCellValue(sheet,row,inputIndex)
+                        "input"             , getCellValue(sheet,row,inputIndex),
+                        "comment"           , getCellValue(sheet,row,commentIndex) 
                 );
                 xout.closetag();
                 if(comment.length()>0)xout.printdata("comment",getCellValue(sheet,row,commentIndex));
@@ -230,6 +254,7 @@ public class ImportRuleSets {
         }
         xout.closetag();
         xout.close();
+        convertEDD(ef,rs, tmpEDDfilename);
     }
     /**
      * Pulls the ATTRIBUTE name out of the next cell.  The assumption is that

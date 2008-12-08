@@ -277,16 +277,17 @@ public class Mapping {
      */
     void processTag(XMLNode tag) throws Exception {
         if(tag.type()== XMLNode.Type.TAG){
+            state.traceTagBegin(tag.getTag()==null?"process":tag.getTag(),null);
             tagstk[tagstkptr++] = tag.getTag();
             dataloader.beginTag(tagstk, tagstkptr, tag.getTag(), tag.getAttribs());
             for(XMLNode nextTag : tag.getTags()){
-                state.traceTagBegin("process", null);
+                
                 processTag(nextTag);
-                state.traceTagEnd("process", null);
             }
             ((LoadDatamapData)dataloader).endTag(tagstk, tagstkptr, tag, tag.getBody(), tag.getAttribs());
             tagstkptr--;
             tagstk[tagstkptr]= null;
+            state.traceTagEnd(tag.getTag()==null?"process":tag.getTag(), null);
         }
     }
 
