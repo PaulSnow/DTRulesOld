@@ -20,9 +20,12 @@ package com.dtrules.interpreter.operators;
 
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.IRObject;
+import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;
+import com.dtrules.interpreter.RXmlValue;
 import com.dtrules.mapping.XMLNode;
+import com.dtrules.mapping.XMLTag;
 import com.dtrules.session.DTState;
 
 @SuppressWarnings("unchecked")
@@ -30,8 +33,24 @@ public class RXmlValueOps {
 	    static {
 	    	new SetXmlAttribute();
 	    	new GetXmlAttribute();
+	    	new NewXmlAttribute();
 	    }
 	 
+	    /**
+	     * ( Name --> xmlValue)
+	     * Creates a new XmlValue of the given name.
+	     */
+	    static class NewXmlAttribute extends ROperator {
+	        NewXmlAttribute(){super("newxmlattribute"); }
+	        @Override
+            public void execute(DTState state) throws RulesException {
+                RName     name      = state.datapop().rNameValue();
+                XMLTag    xmlNode   = new XMLTag(name.stringValue(),null);
+                RXmlValue xmlValue  = new RXmlValue(state,xmlNode);
+                
+                state.datapush(xmlValue);
+            }
+	    }
 	    /**
 	     * SetXmlAttribute ( XmlValue Attribute Value --> )
 	     * Overwrites the attribute in the XML node.  If the object provided
@@ -48,7 +67,7 @@ public class RXmlValueOps {
 				IRObject  attribute = state.datapop();
 				XMLNode   xmlNode   = state.datapop().xmlTagValue();
 				if(xmlNode != null){
-				    state.traceInfo("SetXmlAttribute","tag='"+xmlNode.getTag()+"' attribute='"+attribute+"' value='"+value+"'");
+				    state.traceInfo("SetXmlAttribute","tag",xmlNode.getTag(),"attribute",attribute.stringValue(),"value",value.stringValue(), null);
 				    xmlNode.getAttribs().put(attribute.stringValue(), value.stringValue());
 				}
 			}
@@ -56,7 +75,8 @@ public class RXmlValueOps {
 		/**
          * GetXmlAttribute ( XmlValue Attribute --> Value )
          * Get the value of the given attribute from this XmlValue.
-         * If the attribute is not defined, a null is returned.
+         * If the attribute is not defined, or an Entity is found
+         * with no XMLValue, a null is returned.
          * @author Paul Snow
          *
          */
@@ -67,14 +87,18 @@ public class RXmlValueOps {
             public void execute(DTState state) throws RulesException {
                 String    attribute = state.datapop().stringValue();
                 XMLNode   xmlNode    = state.datapop().xmlTagValue();
-                
+                if(xmlNode == null) {
+                    state.datapush(RNull.getRNull());
+                    state.traceInfo("GetXmlAttribute","tag",xmlNode.getTag(),"attribute",attribute,"value","null",null);
+                    return;
+                }
                 String    value     = (String) xmlNode.getAttribs().get(attribute);
                 if(value != null ){
                    state.datapush(RString.newRString(value)); 
-                   state.traceInfo("GetXmlAttribute","tag='"+xmlNode.getTag()+"' attribute='"+attribute+"' value='"+value+"'");
+                   state.traceInfo("GetXmlAttribute","tag",xmlNode.getTag(),"attribute",attribute,"value",value,null);
                 }else{
                    state.datapush(RNull.getRNull()); 
-                   state.traceInfo("GetXmlAttribute","tag='"+xmlNode.getTag()+"' attribute='"+attribute+"' null='true'");
+                   state.traceInfo("GetXmlAttribute","tag",xmlNode.getTag(),"attribute",attribute,"null","true",null);
                 }
             }
         }

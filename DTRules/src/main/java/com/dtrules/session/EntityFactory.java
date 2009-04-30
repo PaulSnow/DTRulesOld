@@ -302,7 +302,16 @@ public class EntityFactory {
     	if(defaultstr.equalsIgnoreCase("null")) defaultstr="";
     	
         switch(type){
-            case IRObject.iArray :
+            case IRObject.iEntity : {
+                if(defaultstr.length()==0)return RNull.getRNull();
+                IREntity e = ef.findcreateRefEntity(false,RName.getRName(defaultstr));
+                if(e==null)throw new RulesException(
+                        "ParsingError",
+                        "EntityFactory.computeDefaultValue()",
+                        "Entity Factory does not define an entity '"+defaultstr+"'");
+                return e;
+            }
+            case IRObject.iArray : {
                 if(defaultstr.length()==0) return new RArray(ef.getUniqueID(), true,false);
                 RArray rval;
                 try{
@@ -314,6 +323,7 @@ public class EntityFactory {
                             "\r\nWe tried to interpret the string \r\n'"+defaultstr+"'\r\nas an array, but could not.\r\n"+e.toString());
                 }
                 return rval;
+            }
         	case IRObject.iString :
                 if(defaultstr.length()==0)return RNull.getRNull();
         		return RString.newRString(defaultstr);

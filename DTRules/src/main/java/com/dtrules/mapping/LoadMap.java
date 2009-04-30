@@ -148,11 +148,7 @@ class LoadMap implements IGenericXMLParser {
 		if(number.equals("1") || number.equals("+") || number.equals("*")){
 			this.map.entityinfo.put(entity,number);
 		}else{
-            
-            try {
-                state.traceInfo("error", null,
-                        "Number value must be '1', '*', or '+'.  Encounterd: "+number);
-            } catch (RulesException e) {} // Ignore because we are going to throw an exception anyway.
+            state.traceInfo("error","Number value must be '1', '*', or '+'.  Encounterd: "+number);
 			throw new RuntimeException("Number value must be '1', '*', or '+'.  Encounterd: "+number);
 		}
 	}
@@ -208,7 +204,7 @@ class LoadMap implements IGenericXMLParser {
             IREntity theentity = ef.findRefEntity(RName.getRName(entity));
             if(theentity==null)throw new Exception();
         } catch (Exception e) {
-            System.out.println("\nThe Entity "+entity+" isn't defined by the EDD");
+            System.out.println("\nThe Entity found in the Map File => "+entity+" <= isn't defined by the EDD.");
             loadSuccessful = false;
         }
         
@@ -237,7 +233,9 @@ class LoadMap implements IGenericXMLParser {
 		String        rattribute = (String) _attribs.get("RAttribute");     // This is the Entity Attribute name 
 
 		if(rattribute == null)rattribute = tag;                             // If no rattribute name is specified, default to the tag.
-	    	    
+	   
+		if(enclosure!=null)enclosure = enclosure.toLowerCase();
+		
  	    AttributeInfo info = (AttributeInfo) this.map.setattributes.get(tag);
 	    if(info==null){
 	   		info = new AttributeInfo();
@@ -278,11 +276,7 @@ class LoadMap implements IGenericXMLParser {
 		_attribs   = (HashMap<String,String>)attribs;
 
         if(state.testState(DTState.VERBOSE)){
-            String data = "";
-            for(Object v : attribs.keySet()){
-                data += v+" = '"+attribs.get(v)+"'";
-            }
-            state.traceTagBegin(tag, data);
+            state.traceTagBegin(tag, attribs);
         }
         
         try {
@@ -308,7 +302,7 @@ class LoadMap implements IGenericXMLParser {
 	@SuppressWarnings({"unchecked"})
 	public void endTag(String[] tagstk, int tagstkptr, String tag, String body, HashMap attribs) throws Exception, IOException {
 	    if(state.testState(DTState.VERBOSE)){
-            state.traceTagEnd(tag, null);
+            state.traceTagEnd();
         }
 		
 	}

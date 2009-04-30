@@ -160,7 +160,7 @@ public class RSession implements RuleSession, IRSession {
         } catch (RulesException e) {
             throw new RulesException("Initialization Error", 
                     "RSession", 
-                    "Failed to initialize dtstate in init()");
+                    "Failed to initialize dtstate in init(): "+e.toString());
         }
     }
     
@@ -173,9 +173,9 @@ public class RSession implements RuleSession, IRSession {
     public void dump(REntity e) throws RulesException {
 
         if(!dtstate.testState(DTState.DEBUG))return;    // Leave if nothing to do.
-        dtstate.traceTagBegin("entity", "name='"+e.getName().stringValue()+"' id='"+e.getID()+"'");
+        dtstate.traceTagBegin("entity", "name",e.getName().stringValue(),"id=",e.getID()+"");
         dump(e,1); 
-        dtstate.traceTagEnd("entity", null);
+        dtstate.traceTagEnd();
     }
     
     private HashMap<REntity,ArrayList> boundries = new HashMap<REntity,ArrayList>(); // Track printing Entity from Entity boundries to stop recursive printing.
@@ -198,16 +198,16 @@ public class RSession implements RuleSession, IRSession {
                 RName        aname = anames.next();
                 IRObject     value = e.get(aname);
                 
-                dtstate.traceTagBegin("attribute", "name='"+aname.stringValue()+"' type='"+getType(e,aname)+"'");
+                dtstate.traceTagBegin("attribute", "name",aname.stringValue(),"type",getType(e,aname));
                 switch(e.getEntry(aname).type){
                    case IRObject.iEntity: {
                       if(value.type()==IRObject.iNull){
-                          dtstate.traceInfo("value","type ='null' value='null'");
+                          dtstate.traceInfo("value","type","null","value","null",null);
                           break;
                       }
                       dtstate.traceTagBegin("entity", 
-                              "name='"+((REntity)value).getName().stringValue()+
-                              "' id='"+((REntity)value).getID()+"'");
+                              "name",   ((REntity)value).getName().stringValue(),
+                              "id",     ((REntity)value).getID()+"");
                       
                       if(!(boundries.get(e)!= null && boundries.get(e).contains(value))){
                           dtstate.debug(" recurse\n");
@@ -216,7 +216,7 @@ public class RSession implements RuleSession, IRSession {
                           boundries.get(e).add(value);
                           dump((REntity)value, depth+1);
                       }
-                      dtstate.traceTagEnd("entity", null);
+                      dtstate.traceTagEnd();
                       break;
                    }   
                    case IRObject.iArray: {
@@ -227,16 +227,16 @@ public class RSession implements RuleSession, IRSession {
                           if(v.type()==IRObject.iEntity){
                               dump((REntity)v,depth+2);
                           }else{
-                              dtstate.traceInfo("value","v='"+v.stringValue()+"'");
+                              dtstate.traceInfo("value","v",v.stringValue(),null);
                           }
                       }
                       break;
                    }
                    default : {
-                       dtstate.traceInfo("value","v='"+value.stringValue()+"'");
+                       dtstate.traceInfo("value","v",value.stringValue(),null);
                    }
                 }
-                dtstate.traceTagEnd("attribute",null);
+                dtstate.traceTagEnd();
             } catch (RulesException e1) {
                 dtstate.debug("Rules Engine Exception\n");
                 e1.printStackTrace(dtstate.getErrorOut());
@@ -294,7 +294,7 @@ public class RSession implements RuleSession, IRSession {
             RString.newRString(s,true).execute(dtstate);
         } catch (RulesException e) {
             if(getState().testState(DTState.TRACE)){
-                getState().traceInfo("Error", null, e.toString());
+                getState().traceInfo("Error", e.toString());
                 getState().traceEnd();
             }
             throw e;

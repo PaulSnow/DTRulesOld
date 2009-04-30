@@ -310,4 +310,15 @@ public class RString extends ARObject {
 	public boolean equals(IRObject o) throws RulesException {
 		return value.equals(o.stringValue());
 	}
+
+    /* (non-Javadoc)
+     * @see com.dtrules.interpreter.ARObject#rTimeValue()
+     */
+    @Override
+    public RTime rTimeValue() throws RulesException {
+        // TODO Auto-generated method stub
+        return super.rTimeValue();
+    }
+	
+	
 }

@@ -166,6 +166,7 @@ string     = {stringdbl}|{stringsgl}
   "on"             {return build(sym.ON); } 
   "using"          {return build(sym.USING); }
   "copy"           {return build(sym.COPY); }
+  "deep"{ws}+"copy" {return build(sym.DEEPCOPY); }
   "get"            {return build(sym.GET); }
   "sort"           {return build(sym.SORT); }
   "by"             {return build(sym.BY); }
@@ -174,13 +175,16 @@ string     = {stringdbl}|{stringsgl}
   "entity"         {return build(sym.ENTITY); }
   "debug"          {return build(sym.DEBUG); }
   "clear"          {return build(sym.CLEAR); }
+  "clone"          {return build(sym.CLONE); }
   "for"            {return build(sym.FOR); }
   "randomize"      {return build(sym.RANDOMIZE); }
   "was"            {return build(sym.WAS); }
   "one"            {return build(sym.ONE); }
   "does"           {return build(sym.DOES); }
   "day"("s")?      {return build(sym.DAYS); }
-  "null"           {return build(sym.NULL); }
+  "is"{ws}+"null"  {return build(sym.ISNULL); }
+  "is"{ws}+"not"{ws}+"null"
+                   {return build(sym.ISNOTNULL); }
   "between"        {return build(sym.BETWEEN); }
   "before"         {return build(sym.BEFORE); }
   "after"          {return build(sym.AFTER); }
@@ -201,8 +205,13 @@ string     = {stringdbl}|{stringsgl}
   "to"{ws}+"be"{ws}+"removed"  
                    {return build(sym.TOBEREMOVED); }
   "table"{ws}+"information"
-		       {return build(sym.TABLEINFORMATION); }
+		           {return build(sym.TABLEINFORMATION); }
   "with"           {return build(sym.WITH); }
+  "with"{ws}*"in"  {return build(sym.WITHIN); }
+  "percent"{ws}+"of" 
+                   {return build(sym.PERCENTOF); }
+  "plus"{ws}+"or"{ws}+"minus"
+                   {return build(sym.PLUSORMINUS); }
   "match"          {return build(sym.MATCH); }
   "matches"        {return build(sym.MATCHES); }
 
@@ -216,16 +225,8 @@ string     = {stringdbl}|{stringsgl}
   "else"{ws}+"if"                   {return build(sym.ELSEIF);  }
   "where"|"whose"|"which"|"while"   {return build(sym.WHERE); }     
   "map"                             {return build(sym.MAP); }
-  "through"                         {return build(sym.THROUGH); }            
-                   
-  /***
-   *** MAXIMUS example tokens
-   ***
-   ***/
-   
-  "print"   {return build(sym.MAXPRINT); }
-                   
-                   
+  "mapping"{ws}+"key"               {return build(sym.MAPPINGKEY); }
+  "through"                         {return build(sym.THROUGH); }                                        
                    
   "//"[^\r\n]*     { }             //   //        comments
   "/*"([^/]|("/"[^*]))*"*/" { }    //   /* ... */ comments

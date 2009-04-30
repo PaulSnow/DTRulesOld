@@ -18,23 +18,27 @@
   
 package com.dtrules.interpreter.operators;
 
+import java.util.Date;
+
 import com.dtrules.decisiontables.RDecisionTable;
 import com.dtrules.entity.IREntity;
+import com.dtrules.entity.REntity;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RBoolean;
-import com.dtrules.interpreter.RInteger;
 import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;
+import com.dtrules.interpreter.RTime;
 import com.dtrules.session.DTState;
 import com.dtrules.session.RSession;
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.RtMethodGenerator;
 
 public class RMiscOps {
     static {
         new RError();       new Debug();        new Traceon();
         new Traceoff();     new Ignore();       new Swap();         
-        new Dup();
+        new Dup();			new Get();
         new Pop();          new Over();         new EntityName();
         new Entitypush();   new Entitypop();    new Entityfetch();
         new I();            new J();            new K();
@@ -236,11 +240,18 @@ public class RMiscOps {
         Entitypush(){super("entitypush");}
 
         public void execute(DTState state) throws RulesException {
-            IREntity e = state.datapop().rEntityValue();
-            if(state.testState(DTState.TRACE)){
-               state.traceInfo("entitypush", "value='"+e.stringValue()+"' id='"+e.getID()+"'");
+            IRObject o = state.datapop();
+            IREntity e;
+            try{
+               e = o.rEntityValue(); 
+            }catch(RulesException ex){
+               ex.addToMessage("Could not convert a "+RSession.typeInt2Str(o.type())+" to an Entity"); 
+               throw ex;
             }
-            state.entitypush(e);
+            state.entitypush(e);            
+            if(state.testState(DTState.TRACE)){
+               state.traceInfo("entitypush", "value",e.stringValue(),"id",e.getID()+"",null);
+            }
         }
     }
 
@@ -262,6 +273,22 @@ public class RMiscOps {
     }
 
     /**
+     * Gets the given value from the given entity and pushes it on the entity stack.
+     * ( entity attribute -- value ) 
+     * @author Paul Snow
+     *
+     */
+    static class Get    extends ROperator {
+        Get(){super("get");}
+        public void execute(DTState state) throws RulesException {
+        	RName    n = state.datapop().rNameValue();
+            IREntity e = state.datapop().rEntityValue();
+            IRObject v = e.get(n);
+            state.datapush(v);
+        }
+    }
+
+    /**
      * Pushes a copy of the top entity on the entity stack on to the
      * data stack.
      * ( index -- element ) 
@@ -275,7 +302,7 @@ public class RMiscOps {
             state.datapush(state.entityfetch(i));
         }
     }
-
+    
     /**
      * Returns the top element from the control stack.
      * @author paul snow
@@ -390,7 +417,7 @@ public class RMiscOps {
      *
      */    
     static class  Print   extends ROperator {
-        Print(){super("print"); alias("debug"); }
+        Print(){super("print"); }
 
         public void execute(DTState state) throws RulesException {
             state.debug(state.datapop().toString());
@@ -470,7 +497,8 @@ public class RMiscOps {
     }
     
     /**
-     * ( Object -- Integer ) Converts to an Integer.
+     * ( Object -- Integer ) Converts to an Integer.  Returns a null if no valid integer
+     * value exists for the object.
      * 
      * @author paul snow
      *
@@ -479,46 +507,36 @@ public class RMiscOps {
         Cvi(){super("cvi");}
         
         public void execute(DTState state) throws RulesException {
-            IRObject v = state.datapop();
-            if(v.type()==iNull){
-                state.datapush(v);
-                return;
-            }
-            IRObject obj = v.rIntegerValue();
-            if(state.testState(DTState.TRACE)){
-                if(v.type()!= IRObject.iInteger){
-                    state.traceInfo("cvi", "value='"+v+"'",obj.stringValue());
-                }
-            }
-            state.datapush(obj);
+            IRObject o = state.datapop();
+            IRObject v = RNull.getRNull();
+            try{
+                v = o.rIntegerValue();
+            }catch(Exception e){}
+            state.datapush(v); 
         }
     }
     /**
-     * ( Object -- Double ) Converts to an Double.
+     * ( Object -- Double ) Converts to an Double.  Returns a null if no valid double
+     * value exists for the object
      * 
      * @author paul snow
      *
      */
     static class  Cvr   extends ROperator {
-        Cvr(){super("cvr"); alias("cvd");}
+        Cvr(){super("cvr"); }
         
         public void execute(DTState state) throws RulesException {
-            IRObject v = state.datapop();
-            if(v.type()==iNull){
-                state.datapush(v);
-                return;
-            }
-            IRObject obj = v.rDoubleValue();
-            if(state.testState(DTState.TRACE)){
-                if(v.type()!= IRObject.iDouble){
-                    state.traceInfo("cvr", "value='"+v+"'",obj.stringValue());
-                }
-            }
-            state.datapush(obj);
+            IRObject o = state.datapop();
+            IRObject v = RNull.getRNull();
+            try{
+                v = o.rDoubleValue();
+            }catch(Exception e){}
+            state.datapush(v); 
         }
     }
     /**
-     * ( Object -- Boolean ) Converts to an Boolean.
+     * ( Object -- Boolean ) Converts to an Boolean.  Pushes a null if the
+     * object cannot be converted to a boolean value.
      * 
      * @author paul snow
      *
@@ -527,12 +545,12 @@ public class RMiscOps {
         Cvb(){super("cvb");}
         
         public void execute(DTState state) throws RulesException {
-            IRObject v = state.datapop();
-            if(v.type()==iNull){
-                state.datapush(v);
-                return;
-            }
-            state.datapush(v.rBooleanValue());
+            IRObject o = state.datapop();
+            IRObject v = RNull.getRNull();
+            try{
+                v = o.rBooleanValue();
+            }catch(Exception e){}
+            state.datapush(v);    
         }
     }
     /**
@@ -545,20 +563,16 @@ public class RMiscOps {
         Cve(){super("cve");}
         
         public void execute(DTState state) throws RulesException {
-        	IRObject v = state.datapop();
-            if(v.type()==iNull){
-                state.datapush(v);
-                return;
-            }
-           	if(v.type()==IRObject.iNull){ 
-        		state.datapush(v);
-        	}else{
-        		state.datapush(v.rEntityValue());
-        	}
+            IRObject o = state.datapop();
+            IRObject v = RNull.getRNull();
+            try{
+                v = o.rEntityValue();
+            }catch(Exception e){}
+            state.datapush(v); 
         }
     }
     /**
-     * ( Object -- String ) Converts to a String.
+     * ( Object -- String ) Converts to a String. If the object is a null, nothing is done.
      * 
      * @author paul snow
      *
@@ -567,16 +581,17 @@ public class RMiscOps {
         Cvs(){super("cvs");}
         
         public void execute(DTState state) throws RulesException {
-            IRObject v = state.datapop();
-            if(v.type() != IRObject.iNull){
-                state.datapush(v.rStringValue());
+            IRObject o = state.datapop();
+            if(o.type() == iNull){
+                state.datapush(o);
             }else{
-                state.datapush(v);
+                state.datapush(RString.newRString(o.stringValue()));
             }
         }
     }
     /**
-     * ( Object -- String ) Converts to a Name.
+     * ( Object -- String ) Converts to a Name.  Returns a null if no valid
+     * name object exists for the value.
      * 
      * @author paul snow
      *
@@ -585,16 +600,17 @@ public class RMiscOps {
         Cvn(){super("cvn");}
         
         public void execute(DTState state) throws RulesException {
-            IRObject v = state.datapop();
-            if(v.type()==iNull){
-                state.datapush(v);
-                return;
-            }
-            state.datapush(v.rNameValue().getNonExecutable());
+            IRObject o = state.datapop();
+            IRObject v = RNull.getRNull();
+            try{
+                v = o.rNameValue();
+            }catch(Exception e){}
+            state.datapush(v); 
         }
     }
     /**
-     * ( Object -- Date ) Converts to an Date.
+     * ( Object -- Date ) Converts to an Date.  Returns null if no valid Date
+     * representation exists for the Object.
      * 
      * @author paul snow
      *
@@ -603,12 +619,17 @@ public class RMiscOps {
         Cvd(){super("cvd");}
         
         public void execute(DTState state) throws RulesException {
-            IRObject v = state.datapop();
-            if(v.type()==iNull){
-                state.datapush(v);
-                return;
+            IRObject o = state.datapop();
+            IRObject v = RNull.getRNull();
+            try{
+                v = o.rTimeValue();
+            }catch(Exception e){
+                Date d =    state.getSession().getDateParser().getDate(o.stringValue());
+                if(d!=null){
+                    v = RTime.getRTime(d);
+                }
             }
-            state.datapush(v.rTimeValue());
+            state.datapush(v);    
         }
     }
 

@@ -31,6 +31,7 @@ import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RXmlValue;
 import com.dtrules.mapping.XMLNode;
+import com.dtrules.session.DTState;
 import com.dtrules.session.IRSession;
 import com.dtrules.session.RSession;
 
@@ -126,17 +127,19 @@ public class REntity extends ARObject implements IREntity {
         name       = entity.name;
         attributes = entity.attributes;
         values     = new ArrayList<IRObject>(entity.values);
+        
+        put(name,this);                         //Patch up the self reference to point to self.
+        put(mappingKey,RNull.getRNull());       //Clear the mapping Key
+
         for(int i=0;i<values.size();i++){
             IRObject value     = values.get(i);
-            if(value.type()!=iEntity){          // Entities are copied by reference.            
-                values.set(i,value.clone(s));
+            if(value == this){          // make a clone of everything one level down, but don't clone ourselves.            
+                values.set(i,value);    // The clone references the same entity
             }else{
-                values.set(i,value);            // The clone references the same entity
+                values.set(i,value.clone(s));
             }
         }
-        put(name,this);                       //Patch up the self reference to point to self.
-        put(mappingKey,RNull.getRNull());   //
-    }
+   }
     
     /**
      * Regular Constructor.  This should only be called when building the EntityFactory.
@@ -248,7 +251,7 @@ public class REntity extends ARObject implements IREntity {
 	/* (non-Javadoc)
      * @see com.dtrules.entity.IREntity#put(com.dtrules.interpreter.RName, com.dtrules.interpreter.IRObject)
      */
-	public void put(RName attrib, IRObject value) throws RulesException {
+	public void put( RName attrib, IRObject value) throws RulesException {
 		REntityEntry entry = (REntityEntry)attributes.get(attrib);
 		if(entry==null)throw new RulesException("Undefined", "REntity.put()", "Undefined Attribute "+attrib+" in Entity: "+name);
 		if(value.type()!= iNull && entry.type != value.type()){

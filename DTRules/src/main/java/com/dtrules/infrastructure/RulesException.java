@@ -25,6 +25,7 @@ public class RulesException extends RuleException {
 	String location;
     String message;
     String decisionTable="";
+    String formal       = null;
     String postfix      = null;    
     String filename     = null;
     String section      = null;
@@ -36,6 +37,12 @@ public class RulesException extends RuleException {
         }
     }
    
+    public void setFormal(String s){
+        if(formal == null){
+            formal = s;
+        }
+    }
+    
     public String getPostfix(){
         return postfix;
     }
@@ -82,6 +89,7 @@ public class RulesException extends RuleException {
                                   "File name:      "+filename+"\r\n"+
           ((section!= null)  ?   ("Section:        "+section + " " + number +"\r\n"):"")+  
           ((postfix!= null)  ?   ("Postfix:        "+postfix+"\r\n"):"")+
+          ((formal != null)  ?   ("Formal:         "+formal+"\r\n"):"")+
         	                      "Location:       '"+location+"'\r\n" +
         	                      "Type:           '"+errortype+"'\r\n" +
         	                      "Error:          '"+message+"'\r\n" ;

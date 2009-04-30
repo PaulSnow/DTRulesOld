@@ -114,45 +114,44 @@ public class ANode implements DTNode {
 	public void execute(DTState state) throws RulesException {
         Iterator<Integer> inum = anumbers.iterator();
         if(state.testState(DTState.TRACE)){
-            state.traceTagBegin("Column", "n='"+prtColumns(columns)+"'");
+            state.traceTagBegin("Column", "n",prtColumns(columns));
         }
-        for(IRObject v : action){
-            int num = inum.next().intValue();
+        int num = 0;
+        try {
             if(state.testState(DTState.TRACE)){
-                state.traceTagBegin("action","n='"+(num+1)+"'");
-                state.traceTagBegin("formal",null);
-                state.traceTagEnd("formal",dtable.getActions()[num]);
-                int d = state.ddepth();
-                
-                try {
-                    String section = state.getCurrentTableSection();
-                    int    numhld  = state.getNumberInSection();
-                    state.setCurrentTableSection("Action",num);
-                    state.evaluate(v);
-                    state.setCurrentTableSection(section, numhld);
-                } catch (RulesException e) {
-                    e.setSection("Action",num+1);
-                    throw e;
+                for(IRObject v : action){
+                    num = inum.next().intValue();
+                    state.traceTagBegin("action","n",(num+1)+"");
+                        state.traceInfo("formal",dtable.getActions()[num]);
+                        int d = state.ddepth();                
+                        String section = state.getCurrentTableSection();
+                        int    numhld  = state.getNumberInSection();
+                        state.setCurrentTableSection("Action",num);
+                        state.evaluate(v);
+                        state.setCurrentTableSection(section, numhld);
+                        if(d!=state.ddepth()){
+                            throw new RulesException("data stack unbalanced","ANode Execute","Action "+(num+1)+" in table "+dtable.getDtname());
+                        }
+                    state.traceTagEnd();
                 }
-                if(d!=state.ddepth()){
-                    throw new RulesException("data stack unbalanced","ANode Execute","Action "+(num+1)+" in table "+dtable.getDtname());
-                }
-                state.traceTagEnd("action",null);
             }else{
-                try {
+                for(IRObject v : action){
+                    num = inum.next().intValue();
                     String section = state.getCurrentTableSection();
                     int    numhld  = state.getNumberInSection();
                     state.setCurrentTableSection("Action",num);
                     state.evaluate(v);
                     state.setCurrentTableSection(section, numhld);
-                } catch (RulesException e) {
-                    e.setSection("Action",num+1);
-                    throw e;
-                }
-            }  
-		}
+                }  
+            }
+        } catch (RulesException e) {
+            e.setSection("Action",num+1);
+            e.setFormal(dtable.getActions()[num]);
+            throw e;
+        }
+
         if(state.testState(DTState.TRACE)){
-            state.traceTagEnd("Column", null);
+            state.traceTagEnd();
         }
 	}
 

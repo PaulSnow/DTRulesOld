@@ -88,21 +88,21 @@ parser code {:
 terminal String		ABSOLUTEVALUE, ACTION, ADD, AFTER, ALL, ALLOWING, AND, ARRAY, 
 					ARRAY_OF_VALUES, ARROW, ASCENDINGORDER, ASSIGN, ATTRIBUTE,
 					AT, BEFORE, 
-					BETWEEN, BOOL_FUNCTION, BOOLEAN, BY, CACHE, CHANGE, CLEAR, 
+					BETWEEN, BOOL_FUNCTION, BOOLEAN, BY, CHANGE, CLEAR, 
 					CLONE, COLON, CONTEXT, COMMA, CONDITION, COPY, CURRENT_DATE, 
-					CURRENT_TIMESTAMP, DATE, DAYS, DEBUG, DECIMAL_PLACES, 
-					DECREMENT, DESCENDINGORDER, DIVIDE, DOES, DOUBLE, EACH, 
-					EARLIEST, ELEMENT, ELSE, ELSEIF, ELSEIFNONEAREFOUND, END, 
-					ENDIF, ENTITY, EQ, EQUAL, ERRORCODE, FIRST, FLOAT, FOR, 
+					CURRENT_TIMESTAMP, CVS, DATE, DAYS, DEBUG, DECIMAL_PLACES, 
+					DECREMENT, DEEPCOPY, DESCENDINGORDER, DIVIDE, DOES, DOUBLE, 
+					EACH, EARLIEST, ELEMENT, ELSE, ELSEIF, ELSEIFNONEAREFOUND, 
+					END, ENDIF, ENTITY, EQ, EQUAL, ERRORCODE, FIRST, FLOAT, FOR, 
 					FORALL, FROM, GET, GREATER, GT, GTE, HASA, HAVE, IF, IN, 
 					INCLUDE, INCLUDES, INCREMENT, INDEX_OF, INTEGER, IS, 
 					ISNOTNULL, ISNULL,	ITS, LBRACE, LCURLY, LENGTH, LESS, 
-					LOCAL, LONG, LOWER_CASE, LPAREN,  LT, LTE, MAP, MATCH, 
-					MATCHES, MEMBER, MINUS, MONTHS, 
-					MULTIPLY, NAME, NAMEOF, NEQ, NEW, NO, NOT,  NULL, NUMBEROF,
-					OF, ON, ONE, OR, PERFORM, PLUS, POSSESSIVE, QUESTIONMARK, 
-					RANDOMIZE, RARRAY, RBOOLEAN, RBRACE, RCURLY, RDATE, 
-					RDECISIONTABLE, RDOUBLE, RELATIONSHIP_BETWEEN, 
+					LOCAL, LONG, LOWER_CASE, LPAREN,  LT, LTE, MAP, MAPPINGKEY, MATCH, 
+					MATCHES, MEMBER, MINUS, MONTHS, MULTIPLY, NAME, 
+					NAMEOF, NEQ, NEW, NO, NOT, NUMBEROF, OF, ON, ONE, 
+					OR, PERCENTOF, PERFORM, PLUS, PLUSORMINUS, POSSESSIVE, 
+					QUESTIONMARK, RANDOMIZE, RARRAY, RBOOLEAN, RBRACE, RCURLY, 
+					RDATE, RDECISIONTABLE, RDOUBLE, RELATIONSHIP_BETWEEN, 
 					REMOVE, RENTITY, 
 					RINVALID, RLONG, RNAME, RNULL, ROPERATOR, ROUNDED, RPAREN, 
 					RSTRING, RTABLE, RXMLVALUE, SEMI, SET, SORT, STARTS_WITH,  
@@ -110,7 +110,7 @@ terminal String		ABSOLUTEVALUE, ACTION, ADD, AFTER, ALL, ALLOWING, AND, ARRAY,
 					THAN, THEN,	THENAME, THERE, THIS, TIMES, THROUGH, TO, 
 					TOBEREMOVED,
 					TOKENIZE, TRIM, UMINUS, UNDEFINED, UPPER_CASE, USING, VALUE, 
-					WAS, WHERE, WITH, WITH_BOUNDRY, YEARS, YEAROF; 
+					WAS, WHERE, WITH, WITHIN, WITH_BOUNDRY, YEARS, YEAROF; 
  
 terminal String		IDENT; 	// This one is used by the Lexical Analyzer, so it is 
 							// unreferrenced in the parser.  We still need it.
@@ -119,13 +119,11 @@ terminal String		IDENT; 	// This one is used by the Lexical Analyzer, so it is
 non terminal String     eq, neq, gt,gte,lt,lte;
 
 non terminal String     done, statement_list, statement;
-non terminal String     number;
+non terminal String     number; 
 non terminal String     inthe;
 non terminal String     iexpr, fexpr, bexpr, eexpr, nexpr, texpr, strexpr, indx_expr;
 non terminal String     dexpr;
-non terminal String     array_expr, array_expr2,
-                        isnull,
-                        isnotnull;
+non terminal String     array_expr, array_expr2;
 non terminal String 	includeSearch;
 
 
@@ -182,7 +180,6 @@ non terminal String     ifcontinue,
  ** Maximus Example Terminal and non terminal Declarations
  **
  **/ 
-terminal     String     MAXPRINT; 
 non terminal String		maximusstatements,
 					    parameterlist;
 
@@ -243,19 +240,7 @@ statement ::=  setstatement:e       separator {: RESULT = e;         :} |
                xmlvaluestatements:e separator {: RESULT = e;         :} |
                separator                      {: RESULT = "";        :} ;  // Allow the null statement
 
-parameterlist ::=
-		 AND parameterlist:l              {: RESULT = l;                              :} |
-   		 strexpr:s COMMA parameterlist:l  {: RESULT = s+l+"strconcat ";				  :} |
-		 iexpr:i   COMMA parameterlist:l  {: RESULT = i+l+"strconcat "; 			  :} |
-		 fexpr:f   COMMA parameterlist:l  {: RESULT = f+l+"strconcat "; 		      :} |
-		 eexpr:e   COMMA parameterlist:l  {: RESULT = e+"entityname "+l+"strconcat "; :} |
-		 strexpr:s 				   		  {: RESULT = s;   							  :} |
-		 iexpr:i   				          {: RESULT = i;   							  :} |
-		 fexpr:f     				      {: RESULT = f;   							  :} |
-		 eexpr:e   				          {: RESULT = e+"entityname "; 				  :} ;
-
 maximusstatements ::=
-		 MAXPRINT  parameterlist:l        {: RESULT = l+"printmessage ";                    :}  |
 		 SET ERRORCODE nexpr:n            {: RESULT = "/actioncomment getdescription def " +
 		                                              "/errorcode "+n+"def set_error_code "; :} |
 		 SET ERRORCODE nexpr:n WITH strexpr:s     
@@ -294,37 +279,37 @@ context_for_table ::= forallctl:ctl 		{: RESULT = ctl+"pop "; 			 :} |
 					  
 localvariables ::=
             LOCAL ENTITY UNDEFINED:v                  {: RESULT = parser.newLocal(v, parser.iEntity, null);                     :} | 
-			LOCAL ENTITY UNDEFINED:v ASSIGN eexpr:e   {: RESULT = parser.newLocal(v, parser.iEntity, e);                        :} |
+			LOCAL ENTITY UNDEFINED:v ASSIGN eexpr:e   {: RESULT = parser.newLocal(v, parser.iEntity, e + "cve ");               :} |
 			LOCAL ENTITY RENTITY:v                    {: if(true)throw new RuntimeException(
 			                                        "The variable '"+rv(CUP$DTRulesParser$stack)+"' is already defined"); :} |
 			                                        		  
             LOCAL LONG   UNDEFINED:v                  {: RESULT = parser.newLocal(v, parser.iInteger, null);                    :} | 
-            LOCAL LONG   UNDEFINED:v ASSIGN number:e  {: RESULT = parser.newLocal(v, parser.iInteger, e);                       :} |
+            LOCAL LONG   UNDEFINED:v ASSIGN number:e  {: RESULT = parser.newLocal(v, parser.iInteger, e + "cvi ");              :} |
             LOCAL LONG   RLONG:v                      {: if(true)throw new RuntimeException(
                                                     "The variable '"+rv(CUP$DTRulesParser$stack)+"' is already defined"); :} |          
 
             LOCAL DOUBLE UNDEFINED:v                  {: RESULT = parser.newLocal(v, parser.iDouble, null);                     :} | 
-            LOCAL DOUBLE UNDEFINED:v ASSIGN number:e  {: RESULT = parser.newLocal(v, parser.iDouble, e);                        :} |
+            LOCAL DOUBLE UNDEFINED:v ASSIGN number:e  {: RESULT = parser.newLocal(v, parser.iDouble, e + "cvr ");               :} |
             LOCAL DOUBLE RDOUBLE:v                    {: if(true)throw new RuntimeException(
                                                     "The variable '"+rv(CUP$DTRulesParser$stack)+"' is already defined"); :} |
                                                     
             LOCAL BOOLEAN UNDEFINED:v                 {: RESULT = parser.newLocal(v, parser.iBoolean, null);                    :} | 
-            LOCAL BOOLEAN UNDEFINED:v ASSIGN bexpr:e  {: RESULT = parser.newLocal(v, parser.iBoolean, e);                       :} |
+            LOCAL BOOLEAN UNDEFINED:v ASSIGN bexpr:e  {: RESULT = parser.newLocal(v, parser.iBoolean, e + "cvb ");              :} |
             LOCAL BOOLEAN RBOOLEAN:v                  {: if(true)throw new RuntimeException(
                                                     "The variable '"+rv(CUP$DTRulesParser$stack)+"' is already defined"); :} |
 
             LOCAL DATE UNDEFINED:v                    {: RESULT = parser.newLocal(v, parser.iTime, null);                       :} | 
-            LOCAL DATE UNDEFINED:v ASSIGN dexpr:e     {: RESULT = parser.newLocal(v, parser.iTime, e);                          :} |
+            LOCAL DATE UNDEFINED:v ASSIGN dexpr:e     {: RESULT = parser.newLocal(v, parser.iTime, e + "cvd ");                 :} |
             LOCAL DATE RDATE:v                        {: if(true)throw new RuntimeException(
                                                     "The variable '"+rv(CUP$DTRulesParser$stack)+"' is already defined"); :} |
                                                     
-            LOCAL ARRAY UNDEFINED:v                     {: RESULT = parser.newLocal(v, parser.iArray, null);                       :} | 
-            LOCAL ARRAY UNDEFINED:v ASSIGN array_expr:e {: RESULT = parser.newLocal(v, parser.iArray, e);                          :} |
+            LOCAL ARRAY UNDEFINED:v                     {: RESULT = parser.newLocal(v, parser.iArray, null);                    :} | 
+            LOCAL ARRAY UNDEFINED:v ASSIGN array_expr:e {: RESULT = parser.newLocal(v, parser.iArray, e);                       :} |
             LOCAL ARRAY RARRAY:v                        {: if(true)throw new RuntimeException(
                                                     "The variable '"+rv(CUP$DTRulesParser$stack)+"' is already defined"); :} |
 
             LOCAL STRING UNDEFINED:v                  {: RESULT = parser.newLocal(v, parser.iString, null);                     :} | 
-            LOCAL STRING UNDEFINED:v ASSIGN strexpr:e {: RESULT = parser.newLocal(v, parser.iString, e);                        :} |
+            LOCAL STRING UNDEFINED:v ASSIGN strexpr:e {: RESULT = parser.newLocal(v, parser.iString, e + "cvs ");               :} |
             LOCAL STRING RSTRING:v                    {: if(true)throw new RuntimeException(
                                                     "The variable '"+rv(CUP$DTRulesParser$stack)+"' is already defined"); :} ;          
 
@@ -460,6 +445,10 @@ setstatement ::= SET left_iexpr:v    ASSIGN number:e   {:        RESULT = e+"cvi
                  SET left_bexpr:v    ASSIGN bexpr:e    {:        RESULT = e+"cvb "+v; :} |
                  SET left_eexpr:v    ASSIGN eexpr:e    {:        RESULT = e+"cve "+v; :} | 
                  SET left_strexpr:v  ASSIGN strexpr:e  {:        RESULT = e+"cvs "+v; :} |
+                 SET left_strexpr:v  ASSIGN number:e   {:        RESULT = e+"cvs "+v; :} |
+                 SET left_strexpr:v  ASSIGN dexpr:e    {:        RESULT = e+"cvs "+v; :} |
+                 SET left_strexpr:v  ASSIGN nexpr:e    {:        RESULT = e+"cvs "+v; :} |
+                 SET left_strexpr:v  ASSIGN texpr:e    {:        RESULT = e+"cvs "+v; :} |
                  SET left_bexpr:v    ASSIGN nexpr:e    {:        RESULT = e+"cvb "+v; :} |
                  SET left_dexpr:v    ASSIGN dexpr:e    {:        RESULT = e+"cvd "+v; :} |   
 				 SET left_texpr:v    ASSIGN texpr:e    {:        RESULT = e       +v; :} |
@@ -531,7 +520,6 @@ basictype ::=
 number    ::= iexpr:v           {: RESULT = v+" "; :} |
               fexpr:v           {: RESULT = v+" "; :} 
               ;
-
    
               
               
@@ -587,7 +575,6 @@ randomstatements ::=
               REMOVE eexpr:i   FROM array_expr:a ARRAY                {: RESULT = a+i+"remove pop ";                  :} |
               RANDOMIZE array_expr:a                                  {: RESULT = a+"randomize ";                     :} |
               CLEAR array_expr:a                                      {: RESULT = a+"clear ";                         :} |
-              REMOVE  eexpr:i FROM CACHE                              {: RESULT = i+"flushbyid ";                     :} |
               SORT array_expr:a IN ASCENDINGORDER BY nexpr:f          {: RESULT = a+f+"true sortentities ";           :} |
               SORT array_expr:a IN DESCENDINGORDER BY nexpr:f         {: RESULT = a+f+"false sortentities ";          :} ;
                                                                      
@@ -613,7 +600,10 @@ xmlvalues ::= strexpr:v                                {: RESULT = v; :} |
               // start_date: set the attribute "error" = "Invalid blah blah" 
 xmlvaluestatements ::=
               RXMLVALUE:t COLON SET ATTRIBUTE strexpr:s1 ASSIGN xmlvalues:s2 {: RESULT = t+" "+s1+s2+"setXmlAttribute "; :} |
-              eexpr:t     COLON SET ATTRIBUTE strexpr:s1 ASSIGN xmlvalues:s2 {: RESULT = t+" "+s1+s2+"setXmlAttribute "; :} ;
+              eexpr:t     COLON SET ATTRIBUTE strexpr:s1 ASSIGN xmlvalues:s2 {: RESULT = t+" "+s1+s2+"setXmlAttribute "; :} |
+              // Add attribute adds a comma delimited value to a possibly existing value for that attribute
+              RXMLVALUE:t COLON ADD ATTRIBUTE strexpr:s1 ASSIGN xmlvalues:s2 {: RESULT = t+" "+s1+s2+"setXmlAttribute "; :} |
+              eexpr:t     COLON ADD ATTRIBUTE strexpr:s1 ASSIGN xmlvalues:s2 {: RESULT = t+" "+s1+s2+"setXmlAttribute "; :} ;
  
 // Array expressions
 
@@ -628,6 +618,8 @@ array_expr2 ::=
               LPAREN ARRAY RPAREN NAME:n                    {: RESULT = n+" ";                            :} | 
               GET COPY OF array_expr:e                      {: RESULT = e+"copyelements ";                :} | 
               COPY OF array_expr:e                          {: RESULT = e+"copyelements ";                :} | 
+              GET DEEPCOPY OF array_expr:e                  {: RESULT = e+"deepcopy ";                    :} |
+              DEEPCOPY OF array_expr:e                      {: RESULT = e+"deepcopy ";                    :} | 
               array_lit:l                                   {: RESULT = l;                                :} |
               ARRAY_OF_VALUES LBRACE array_list:e RBRACE    {: RESULT = "mark "+e+" arraytomark ";        :} |
               TOKENIZE strexpr:s1 BY strexpr:s2             {: RESULT = s1+s2+"tokenize ";                :} ;         
@@ -682,8 +674,8 @@ datestatement ::=
 
 dexpr    ::=  LPAREN dexpr:e RPAREN                  {: RESULT = e+" ";                              :} |
 			  RDATE:e                                {: RESULT = e+" ";                              :} |
-              LPAREN DATE RPAREN strexpr:s           {: RESULT = s+"newdate ";                       :} |
-              DATE LPAREN strexpr:s RPAREN           {: RESULT = s+"newdate ";                       :} | 
+              LPAREN DATE RPAREN strexpr:s           {: RESULT = s+"cvd ";                       :} |
+              DATE LPAREN strexpr:s RPAREN           {: RESULT = s+"cvd ";                       :} | 
 			  LPAREN DATE RPAREN indx_expr:ie        {: RESULT = ie;                                 :} |
 			  LPAREN DATE RPAREN RARRAY:ra LBRACE iexpr:ie1 RBRACE {: RESULT = ra+" "+ie1+"getat ";  :} |
 		      USING eexpr:ee  LPAREN dexpr:e RPAREN  {: RESULT = ee + "entitypush "+e+"entitypop ";  :} |
@@ -694,12 +686,18 @@ dexpr    ::=  LPAREN dexpr:e RPAREN                  {: RESULT = e+" ";         
 			  LPAREN DATE RPAREN RTABLE:t LPAREN tablelist:keys RPAREN 
 			  							             {: RESULT = t + " " + keys + "lookup ";         :} |
 			  SUBTRACT number:i YEARS  FROM dexpr:v  {: RESULT = v +" "+i +"negate addyears ";       :} |
-              SUBTRACT number:i MONTHS FROM RDATE:v  {: RESULT = v +" "+ i +"negate addmonths ";     :} | 
-              SUBTRACT number:i DAYS   FROM RDATE:v  {: RESULT = v +" "+ i +"negate adddays ";       :} | 
-              ADD      number:i YEARS  TO   RDATE:v  {: RESULT = v +" "+ i +"addyears ";             :} | 
-              ADD      number:i MONTHS TO   RDATE:v  {: RESULT = v +" "+ i +"addmonths ";            :} | 
-              ADD      number:i DAYS   TO   RDATE:v  {: RESULT = v +" "+ i +"adddays ";              :} |
+              SUBTRACT number:i MONTHS FROM dexpr:v  {: RESULT = v +" "+ i +"negate addmonths ";     :} | 
+              SUBTRACT number:i DAYS   FROM dexpr:v  {: RESULT = v +" "+ i +"negate adddays ";       :} | 
+              ADD      number:i YEARS  TO   dexpr:v  {: RESULT = v +" "+ i +"addyears ";             :} | 
+              ADD      number:i MONTHS TO   dexpr:v  {: RESULT = v +" "+ i +"addmonths ";            :} | 
+              ADD      number:i DAYS   TO   dexpr:v  {: RESULT = v +" "+ i +"adddays ";              :} |
 			  
+              dexpr:v MINUS  number:i YEARS           {: RESULT = v +" "+ i +"negate addyears ";     :} |
+              dexpr:v MINUS  number:i MONTHS          {: RESULT = v +" "+ i +"negate addmonths ";    :} | 
+              dexpr:v MINUS  number:i DAYS            {: RESULT = v +" "+ i +"negate adddays ";      :} | 
+              dexpr:v PLUS   number:i YEARS           {: RESULT = v +" "+ i +"addyears ";            :} | 
+              dexpr:v PLUS   number:i MONTHS          {: RESULT = v +" "+ i +"addmonths ";           :} | 
+              dexpr:v PLUS   number:i DAYS            {: RESULT = v +" "+ i +"adddays ";             :} |
 			  							             
 //We match MONTHS and YEARS to both plural and singular 	
               FIRST OF YEARS OF dexpr:d              {: RESULT = d + "firstofyear ";                 :} |
@@ -735,7 +733,12 @@ texpr    ::=  RTABLE:t                    {: RESULT = t+" ";                :} |
 			  							  {: /**c**/ :};
 
 strexpr  ::=  
-              RXMLVALUE:s                 {: RESULT = s+" cvs ";                :}
+              ATTRIBUTE strexpr:s OF eexpr:e
+                                          {: RESULT = e+s+"getXmlAttribute "; :}
+              |
+              MAPPINGKEY                  {: RESULT = "\"mapping*key\" cvn execute "; :}
+              |
+              RXMLVALUE:s                 {: RESULT = s+" cvs ";                    :}
               |  
               RXMLVALUE:t COLON GET ATTRIBUTE strexpr:s                
                                           {: RESULT = t+s+"getXmlAttributeValue "; :}
@@ -765,13 +768,13 @@ strexpr  ::=
               |
               LPAREN STRING RPAREN dexpr:de  {: RESULT = de+"tostring ";   :}
               |
+              CVS LPAREN bexpr:b RPAREN      {: RESULT = b+"tostring ";   :}
+              |
               LPAREN strexpr:s RPAREN     {: RESULT = s;                :}
               |
               strexpr:s PLUS iexpr:e      {: RESULT = s+e+"strconcat "; :}
               |
               strexpr:s PLUS fexpr:e      {: RESULT = s+e+"strconcat "; :}
-              |
-              strexpr:s PLUS bexpr:e      {: RESULT = s+e+"strconcat "; :}
               |
               strexpr:s PLUS nexpr:e      {: RESULT = s+e+"strconcat "; :}
               |
@@ -809,7 +812,9 @@ fexpr    ::=  FLOAT:n                     {: RESULT = n+" "; :}
               | 
               RDOUBLE:e1                  {: RESULT = e1+" "; :}
               |
-              LPAREN DOUBLE RPAREN strexpr:e1 {: RESULT = e1+" "; :}
+              LPAREN DOUBLE RPAREN strexpr:e1 {: RESULT = e1+"cvr "; :}
+              |
+              LPAREN DOUBLE RPAREN iexpr:e1   {: RESULT = e1+"cvr "; :}
               |
               LPAREN DOUBLE RPAREN RTABLE:t LPAREN tablelist:keys RPAREN {: RESULT = t + " " + keys + "lookup ";         :} 
               |
@@ -913,7 +918,7 @@ iexpr     ::= iexpr:e1 PLUS iexpr:e2   {: RESULT = e1+e2+"+ "; :}
            USING eexpr:ee  LPAREN iexpr:e RPAREN {: RESULT = ee + "entitypush "+e+"entitypop "; :} |
            DAYS   FROM dexpr:d1 TO dexpr:d2      {: RESULT = d1+d2+"daysbetween ";              :} |
            MONTHS FROM dexpr:d1 TO dexpr:d2      {: RESULT = d1+d2+"monthsbetween ";            :} |
-           YEARS  FROM dexpr:d1 TO dexpr:d2      {: RESULT = d2+d1+"yearsbetween ";             :} |
+           YEARS  FROM dexpr:d1 TO dexpr:d2      {: RESULT = d1+d2+"yearsbetween ";             :} |
            GET YEAROF dexpr:d1                   {: RESULT = d1+"yearof ";                      :} |
            LONG VALUE OF operatorstatements:e    {: RESULT = e;                                 :} |
            SUM_OF iexpr:i IN array_expr:a        {: RESULT = "0 { "+i+"ladd } "+a+"forall ";    :} ;
@@ -933,7 +938,7 @@ thereis  ::=  THERE IS |
 blist     ::= strexpr:s COMMA  blist:bl    {: RESULT = "dup "+s+"streq { pop "+bl+"} over not if "; :} |
               OR strexpr:s                 {: RESULT = "dup "+s+"streq ";                           :} ;	            
      
-bexpr     ::= 			
+bexpr     ::= 		
 			// Complicated Tests
 			// array does not include integer/string/float/entity
 			array_expr:a DOES NOT INCLUDE includeSearch:e {: RESULT = a+e+"memberof not "; 				:}  |
@@ -991,6 +996,12 @@ bexpr     ::=
 				    			
 				    			
 // Numbers
+              fexpr:n1 IS WITHIN number:percent PERCENTOF fexpr:n2     
+                      {: RESULT = n2+n1+percent+"100.0 f/ over f* swap >r >r >r i j f- k f< r> r> f+ r> f> and ";   :}
+              |
+              fexpr:n1 IS PLUSORMINUS number:err OF fexpr:n2           
+                      {: RESULT = n2+err+n1+                          ">r >r >r i j f- k f< r> r> f+ r> f> and ";   :}
+              |
               iexpr:e1 eq iexpr:e2     {: RESULT = e1+e2+"== "; :}
               |
               fexpr:e1 eq iexpr:e2     {: RESULT = e1+e2+"f== "; :}
@@ -1109,21 +1120,29 @@ bexpr     ::=
               |
               
 // Null Tests              
-              dexpr:s isnull                        {: RESULT = s+" isnull "; :}
+              bexpr:s ISNULL                        {: RESULT = s+" isnull "; :}
               |
-              array_expr:s isnull                   {: RESULT = s+" isnull "; :}
+              bexpr:s ISNOTNULL                     {: RESULT = s+" isnull not "; :}
               |
-              strexpr:s isnull                      {: RESULT = s+" isnull "; :}
+              number:s ISNULL                       {: RESULT = s+" isnull "; :}
               |
-              eexpr:s isnull                        {: RESULT = s+" isnull "; :}
+              number:s ISNOTNULL                    {: RESULT = s+" isnull not "; :}
               |
-              dexpr:s isnotnull                     {: RESULT = s+" isnull not "; :}
+              dexpr:s ISNULL                        {: RESULT = s+" isnull "; :}
               |
-              array_expr:s isnotnull                {: RESULT = s+" isnull not "; :}
+              array_expr:s ISNULL                   {: RESULT = s+" isnull "; :}
               |
-              strexpr:s isnotnull                   {: RESULT = s+" isnull not "; :}
+              strexpr:s ISNULL                      {: RESULT = s+" isnull "; :}
               |
-              eexpr:s isnotnull                     {: RESULT = s+" isnull not "; :}
+              eexpr:s ISNULL                        {: RESULT = s+" isnull "; :}
+              |
+              dexpr:s ISNOTNULL                     {: RESULT = s+" isnull not "; :}
+              |
+              array_expr:s ISNOTNULL                {: RESULT = s+" isnull not "; :}
+              |
+              strexpr:s ISNOTNULL                   {: RESULT = s+" isnull not "; :}
+              |
+              eexpr:s ISNOTNULL                     {: RESULT = s+" isnull not "; :}
               |
               USING eexpr:ee LPAREN bexpr:e RPAREN  {: RESULT = ee + "entitypush "+e+"entitypop "; :}
               |
@@ -1131,7 +1150,9 @@ bexpr     ::=
               |
 		      LPAREN BOOLEAN RPAREN indx_expr:ie    {: RESULT = ie; :}	      
 //              |
-//		      LPAREN BOOLEAN RPAREN anytype:ie      {: RESULT = ie; :}	      
+//		      LPAREN BOOLEAN RPAREN anytype:ie      {: RESULT = ie; :}
+              |
+              LPAREN BOOLEAN RPAREN strexpr:s       {: RESULT = s+"cvb "; :}	      
               |
                    
 			  BOOLEAN RARRAY:ra LBRACE iexpr:ie1 RBRACE {: RESULT = ra+" "+ie1+"getat "; :}
@@ -1164,5 +1185,3 @@ gte   ::=     GTE | IS GREATER THAN OR EQUAL TO | GREATER THAN OR EQUAL TO ;
 lt    ::=     LT  | IS LESS THAN                | LESS THAN ;
 lte   ::=     LTE | IS LESS THAN OR EQUAL TO    | LESS THAN OR EQUAL TO ;
 
-isnull    ::= ISNULL | IS NULL ;  
-isnotnull ::= ISNOTNULL | IS NOT NULL ;

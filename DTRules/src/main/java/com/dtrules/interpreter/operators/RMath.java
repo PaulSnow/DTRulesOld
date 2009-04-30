@@ -273,7 +273,9 @@ public class RMath {
         FMul(){super("f*");alias("fmul");}
 
         public void execute(DTState state) throws RulesException {
-            state.datapush(RDouble.getRDoubleValue(state.datapop().doubleValue()*state.datapop().doubleValue()));
+            IRObject d2 = state.datapop();
+            IRObject d1 = state.datapop();
+            state.datapush(RDouble.getRDoubleValue(d1.doubleValue()*d2.doubleValue()));
         }
     }
 

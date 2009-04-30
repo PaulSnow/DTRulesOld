@@ -22,7 +22,6 @@ import com.dtrules.infrastructure.RulesException;
 import com.dtrules.session.DTState;
 import com.dtrules.session.EntityFactory;
 import com.dtrules.session.IRSession;
-import com.dtrules.session.RuleSet;
 
 public class RTable extends ARObject {
     private final int     resultType;

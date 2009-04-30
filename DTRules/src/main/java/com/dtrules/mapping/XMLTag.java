@@ -47,7 +47,23 @@ public class XMLTag implements XMLNode {
         }
         return r;
     }
-
+    
+    /* (non-Javadoc)
+     * @see com.dtrules.mapping.XMLNode#addChild(com.dtrules.mapping.XMLNode)
+     */
+    @Override
+    public void addChild(XMLNode node) {
+       tags.add(node);
+    }
+    
+    /* (non-Javadoc)
+     * @see com.dtrules.mapping.XMLNode#remove(com.dtrules.mapping.XMLNode)
+     */
+    @Override
+    public void remove(XMLNode node){
+        tags.remove(node);
+    }
+    
     /**
      * @return the tag
      */
@@ -101,6 +117,9 @@ public class XMLTag implements XMLNode {
      * @param parent the parent to set
      */
     public void setParent(XMLTag parent) {
+        if(this.parent != null){
+            this.parent.remove(this);
+        }
         this.parent = parent;
     }
 

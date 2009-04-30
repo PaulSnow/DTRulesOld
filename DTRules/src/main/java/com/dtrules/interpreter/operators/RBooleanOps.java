@@ -261,7 +261,14 @@ public class RBooleanOps {
 			Booleanequal(){super("b="); alias("beq");}
 
 			public void execute(DTState state) throws RulesException {
-				state.datapush(RBoolean.getRBoolean(state.datapop().booleanValue()==state.datapop().booleanValue()));
+			    IRObject o2 = state.datapop();
+			    IRObject o1 = state.datapop();
+			    boolean r = false;
+			    try{
+			        r = o1.booleanValue() == o2.booleanValue();
+			    }catch(RulesException e){}   // Ignore any failures, and simply fail.
+			    
+				state.datapush(RBoolean.getRBoolean(r)  );
 			}
 		}		
 

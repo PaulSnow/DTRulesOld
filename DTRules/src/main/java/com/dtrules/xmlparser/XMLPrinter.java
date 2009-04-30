@@ -44,6 +44,16 @@ public class XMLPrinter implements IXMLPrinter {
     boolean            intextbody  = false;
     boolean            intagbody   = false;
     boolean            noSpaces    = false;
+    String             indentStr   = "\t";
+    
+    public void setSpaceCnt(int cnt){
+        if(cnt>=0){
+            indentStr = "";
+            for(int i=0;i<cnt;i++)indentStr += " ";
+        }else{
+            indentStr = "\t";
+        }
+    }
     
     public void setNoSpaces(boolean v){
         noSpaces = v;
@@ -87,10 +97,11 @@ public class XMLPrinter implements IXMLPrinter {
     /**
      * Prints out spaces to indent
      */
-    private void indent(){
+    private void indent(){ indent(0);}
+    private void indent(int mod){
         if(noSpaces)return;
-        int indent = tagStack.size();
-        for(int i=0;i<indent;i++)print("\t");
+        int indent = tagStack.size()+mod;
+        for(int i=0;i<indent;i++)print(indentStr);
     }
     /**
      * Prints a comment 
@@ -167,7 +178,7 @@ public class XMLPrinter implements IXMLPrinter {
      */
     public void opentag(String tag, HashMap<String,Object> attribs){
         halfopentag(tag);
-        for(String key : attribs.keySet()){
+        if(attribs != null) for(String key : attribs.keySet()){
             Object o = attribs.get(key);
             if(o!=null){
                printAttribute(key, o);
@@ -373,9 +384,9 @@ public class XMLPrinter implements IXMLPrinter {
      */ 
     public void closetag(){
         int lastIndex = tagStack.size()-1;
-        if(!intextbody){
+        if(intagbody){
             newline();
-            for(int i=0;i<lastIndex;i++)print("    ");
+            indent(-1);
         }
         if(tagStack.size()<=0){
             throw new RuntimeException("No Enclosing Tag to close");
@@ -562,7 +573,6 @@ public class XMLPrinter implements IXMLPrinter {
         for(int i = tagStack.size()-1; i>=0;i--){
             closetag();
         }
-        out.close();
     }
     
     /**

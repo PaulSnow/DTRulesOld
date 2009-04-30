@@ -18,17 +18,11 @@
   
 package com.dtrules.interpreter.operators;
 
-import com.dtrules.decisiontables.RDecisionTable;
-import com.dtrules.entity.IREntity;
 import com.dtrules.infrastructure.RulesException;
-import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RBoolean;
 import com.dtrules.interpreter.RInteger;
-import com.dtrules.interpreter.RName;
-import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;
 import com.dtrules.session.DTState;
-import com.dtrules.session.RSession;
 
 public class RStringOps {
     static {
@@ -45,6 +39,7 @@ public class RStringOps {
     static class Stringlength extends ROperator {
         Stringlength(){super("strlength");}
 
+        @Override
         public void execute(DTState state) throws RulesException {
             String   str = state.datapop().stringValue();
             RInteger len = RInteger.getRIntegerValue(str.length());
@@ -60,6 +55,7 @@ public class RStringOps {
     static class Touppercase extends ROperator {
         Touppercase(){super("touppercase");}
 
+        @Override
         public void execute(DTState state) throws RulesException {
             String   str  = state.datapop().stringValue();
             String   str2 = str.toUpperCase();
@@ -75,6 +71,7 @@ public class RStringOps {
     static class Tolowercase extends ROperator {
         Tolowercase(){super("tolowercase");}
 
+        @Override
         public void execute(DTState state) throws RulesException {
             String   str  = state.datapop().stringValue();
             String   str2 = str.toLowerCase();
@@ -90,6 +87,7 @@ public class RStringOps {
     static class Trim extends ROperator {
         Trim(){super("trim");}
 
+        @Override
         public void execute(DTState state) throws RulesException {
             String   str  = state.datapop().stringValue();
             String   str2 = str.trim();
@@ -105,6 +103,7 @@ public class RStringOps {
     static class substring extends ROperator {
         substring(){super("substring");}
 
+        @Override
         public void execute(DTState state) throws RulesException {
             String   str  = state.datapop().stringValue();
             int      b    = state.datapop().intValue();
@@ -124,6 +123,7 @@ public class RStringOps {
     static class  RegexMatch   extends ROperator {
         RegexMatch(){super("regexmatch");}
         
+        @Override
         public void execute(DTState state) throws RulesException {
             String string = state.datapop().stringValue();
             String regex  = state.datapop().stringValue();
@@ -141,6 +141,7 @@ public class RStringOps {
     static class  Indexof   extends ROperator {
         Indexof(){super("indexof");}
         
+        @Override
         public void execute(DTState state) throws RulesException {
             String string2 = state.datapop().stringValue();
             String string1 = state.datapop().stringValue();

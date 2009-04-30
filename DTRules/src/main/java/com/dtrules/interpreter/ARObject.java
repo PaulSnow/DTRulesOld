@@ -28,6 +28,7 @@ import com.dtrules.infrastructure.RulesException;
 import com.dtrules.mapping.XMLNode;
 import com.dtrules.session.DTState;
 import com.dtrules.session.IRSession;
+import com.dtrules.session.RSession;
 
 public abstract class ARObject implements IRObject {
 
@@ -52,7 +53,7 @@ public abstract class ARObject implements IRObject {
     }
 
     public Date timeValue() throws RulesException {
-        throw new RulesException("Undefined","Conversion Error","No Time value exists for: "+this);
+        throw new RulesException("Undefined","Conversion Error","No Time value exists for: "+RSession.typeInt2Str(this.type()));
     }
 
 	public void execute(DTState state) throws RulesException {
@@ -90,43 +91,43 @@ public abstract class ARObject implements IRObject {
 	/** Conversion Methods.  Default is to throw a RulesException **/
 	
     public int intValue() throws RulesException {
-        throw new RulesException("Undefined","Conversion Error","No Integer value exists for "+this);
+        throw new RulesException("Undefined","Conversion Error","No Integer value exists for "+RSession.typeInt2Str(this.type()));
     }
 
 	public ArrayList<IRObject> arrayValue() throws RulesException {
-        throw new RulesException("Undefined","Conversion Error","No Array value exists for "+this);
+        throw new RulesException("Undefined","Conversion Error","No Array value exists for "+RSession.typeInt2Str(this.type()));
 	}
 
 	public boolean booleanValue() throws RulesException {
-        throw new RulesException("Undefined","Conversion Error","No Boolean value exists for "+this);
+        throw new RulesException("Undefined","Conversion Error","No Boolean value exists for "+RSession.typeInt2Str(this.type()));
 	}
 
 	public double doubleValue() throws RulesException {
-        throw new RulesException("Undefined","Conversion Error","No double value exists for "+this);
+        throw new RulesException("Undefined","Conversion Error","No double value exists for "+RSession.typeInt2Str(this.type()));
 	}
 
 	public IREntity rEntityValue() throws RulesException {
-        throw new RulesException("Undefined","Conversion Error","No Entity value exists for "+this);
+        throw new RulesException("Undefined","Conversion Error","No Entity value exists for "+RSession.typeInt2Str(this.type()));
 	}
 	@SuppressWarnings({"unchecked"})
 	public HashMap hashMapValue() throws RulesException {
-        throw new RulesException("Undefined","Conversion Error","No Integer value exists for "+this);
+        throw new RulesException("Undefined","Conversion Error","No HashMap value exists for "+RSession.typeInt2Str(this.type()));
 	}
 
 	public long longValue() throws RulesException {
-        throw new RulesException("Undefined","Conversion Error","No Long value exists for "+this);
+        throw new RulesException("Undefined","Conversion Error","No Long value exists for "+RSession.typeInt2Str(this.type()));
 	}
 
 	public RName rNameValue() throws RulesException {
-        throw new RulesException("Undefined","Conversion Error","No Integer value exists for "+this);
+        throw new RulesException("Undefined","Conversion Error","No Name value exists for "+RSession.typeInt2Str(this.type()));
 	}
 
 	public RInteger rIntegerValue() throws RulesException {
-        throw new RulesException("Undefined","Conversion Error","No Integer value exists for "+this);
+        throw new RulesException("Undefined","Conversion Error","No Integer value exists for "+RSession.typeInt2Str(this.type()));
 	}
 
 	public int compare(IRObject irObject) throws RulesException {
-        throw new RulesException("Undefined","No Supported","Compared Not suppoted for this object"+this);
+        throw new RulesException("Undefined","No Supported",RSession.typeInt2Str(this.type())+" Objects do not support Compare");
 	}
 
     /**
@@ -141,7 +142,7 @@ public abstract class ARObject implements IRObject {
      * @see com.dtrules.interpreter.IRObject#rTableValue()
      */
     public RTable rTableValue() throws RulesException {
-        throw new RulesException("Undefined","Not Supported","No Table value exists for "+this);
+        throw new RulesException("Undefined","Not Supported","No Table value exists for "+RSession.typeInt2Str(this.type()));
     }
 
     /* (non-Javadoc)
@@ -149,7 +150,7 @@ public abstract class ARObject implements IRObject {
      */
     @SuppressWarnings({"unchecked"})
     public HashMap tableValue() throws RulesException {
-        throw new RulesException("Undefined","Not Supported","No Table value exists for "+this);
+        throw new RulesException("Undefined","Not Supported","No Table value exists for "+RSession.typeInt2Str(this.type()));
     }
 
     /* (non-Javadoc)

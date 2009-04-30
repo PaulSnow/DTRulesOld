@@ -21,7 +21,7 @@ import com.dtrules.mapping.DataMap;
 public abstract class ATestHarness implements ITestHarness {
  
     DataMap datamap=null;
-   
+    
     public void executeDecisionTables(IRSession session)throws RulesException{
     	String [] decisionTables = getDecisionTableNames(); 
     	if(decisionTables == null){
@@ -54,8 +54,13 @@ public abstract class ATestHarness implements ITestHarness {
 
 
 
-	public DataMap getDataMap(){ return datamap; }
-    
+	public DataMap getDataMap() { 
+	    return datamap; 
+	}
+	
+    public  void   setDataMap(DataMap datamap){ 
+        this.datamap = datamap; 
+    }
     /**
      * Path to the XML Directory holding all the XML files for this
      * Rule Set
@@ -184,11 +189,24 @@ public abstract class ATestHarness implements ITestHarness {
          } catch ( Exception ex ) {
              rpt.println("An Error occurred while running the example:\n"+ex);
              rpt.print("<-ERR  ");
+             if(Console()){
+                 System.out.print(ex);
+             }
          }
          
          rpt.close();
      }
      
+     public void loadData(IRSession session, String path, String dataset)throws Exception {
+         Mapping   mapping  = session.getMapping();
+         
+         datamap = session.getDataMap(mapping,null);
+         
+         datamap.loadXML(new FileInputStream(path+"/"+dataset));
+         
+         mapping.loadData(session, datamap);
+     }
+    
      public void runfile(RulesDirectory rd, RuleSet rs,  int dfcnt, String path, String dataset) {
          
          PrintStream    out          = null;
@@ -198,8 +216,9 @@ public abstract class ATestHarness implements ITestHarness {
          try {
               
               out        = new PrintStream     (getOutputDirectory()+"results"   +dfcnt+ ".xml");
-              tracefile  = new FileOutputStream(getOutputDirectory()+"trace_"    +dfcnt+ ".xml");
-             
+              if(Trace()){
+                tracefile  = new FileOutputStream(getOutputDirectory()+"trace_"    +dfcnt+ ".xml");
+              }
               IRSession      session    = rs.newSession();
               DTState        state      = session.getState();
               state.setOutput(tracefile, out);
@@ -209,13 +228,7 @@ public abstract class ATestHarness implements ITestHarness {
               }
               // Get the XML mapping for the rule set, and load a set of data into the EDD
                   
-              Mapping   mapping  = session.getMapping();
-              
-              datamap = session.getDataMap(mapping,null);
-              
-              datamap.loadXML(new FileInputStream(path+"/"+dataset));
-              
-              mapping.loadData(session, datamap);
+              loadData(session, path, dataset);
               
               if(Verbose()){
                   datamap.print(new FileOutputStream(getOutputDirectory()+"datamap"+dfcnt+".xml"));
@@ -229,22 +242,45 @@ public abstract class ATestHarness implements ITestHarness {
               }
               
               // Once the data is loaded, execute the rules.
+              RulesException ex = null;
+              try{
+                  executeDecisionTables(session);
+              }catch(RulesException e){
+                  ex = e;
+              }
               
-              executeDecisionTables(session);
+              // Then if asked, dump the entities.
+              if(Verbose()){
+                  entityfile = new FileOutputStream(getOutputDirectory()+"entities_after_" +dfcnt+ ".xml");
+                  RArray entitystack = new RArray(0,false,false);
+                  for(int i=0; i< session.getState().edepth()-2; i++){
+                      entitystack.add(session.getState().entityfetch(i));
+                  }
+                  session.printEntityReport(new XMLPrinter(entityfile), false, session.getState(), "entitystack", entitystack);
+               }
               
-              printReport(dfcnt, session, out);
+              if(ex!=null)throw ex;
+              
+              // Print the report
+              try{
+                 printReport(dfcnt, session, out);
+              }catch(Throwable e){
+                 if(!Console()){                    // If we are going to the console, assume the same
+                                                    // error will get thrown, so don't print twice.    
+                     System.out.println(e.toString());
+                 }
+              }
+              
+              // If asked, print the report again to the console.
               if(Console()){
-                  printReport(dfcnt, session,System.out);
+                  try{
+                      printReport(dfcnt, session,System.out);
+                  }catch(Throwable e){
+                      System.out.println(e.toString());
+                   }
               }
 
-              if(Verbose()){
-                 entityfile = new FileOutputStream(getOutputDirectory()+"entities_after_" +dfcnt+ ".xml");
-                 RArray entitystack = new RArray(0,false,false);
-                 for(int i=0; i< session.getState().edepth()-2; i++){
-                     entitystack.add(session.getState().entityfetch(i));
-                 }
-                 session.printEntityReport(new XMLPrinter(entityfile), false, session.getState(), "entitystack", entitystack);
-              }
+             
               
               if(Trace()){
                   session.getState().traceEnd();
@@ -253,9 +289,19 @@ public abstract class ATestHarness implements ITestHarness {
           } catch ( Exception ex ) {
               rpt.println("An Error occurred while running the example:\n"+ex);
               System.out.print("<-ERR  ");
+              if(Console()){
+                  System.out.print(ex);
+              }
+
           }
       }
     
-    
-    
+     public String referenceRulesDirectoryFile ()       { return null; }; 
+     public String referencePath ()                     { return null; };
+     public void   changeReportXML(OutputStream report){
+         ChangeReport cr = new ChangeReport(
+                 getRuleSetName(), 
+                 getPath(),getRulesDirectoryFile(),"development",
+                 referencePath(),referenceRulesDirectoryFile(),"deployed");
+     }
 }

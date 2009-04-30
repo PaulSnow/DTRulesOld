@@ -23,6 +23,7 @@ import com.dtrules.entity.REntity;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RName;
+import com.dtrules.session.DTState;
 import com.dtrules.session.IRSession;
 
 import java_cup.runtime.*;
@@ -32,12 +33,13 @@ public class TokenFilter implements Scanner{
     Scanner                     scanner;
     HashMap<RName, RType>       types;
     IRSession                   session;
-    
+    DTState                     state;
     boolean                     EOF         = false;
     RSymbol                     lastToken   = null;
     RSymbol                     unget       = null;
     ArrayList<String>           tokens      = new ArrayList<String>();
     HashMap<String,RLocalType>  localtypes  = null;
+    String						possessive  = null;
     
     public ArrayList<String> getParsedTokens(){
         return tokens;
@@ -47,6 +49,7 @@ public class TokenFilter implements Scanner{
         this.types      = types;
         this.scanner    = scanner;
         this.session    = session;
+        this.state      = session.getState();
         this.localtypes = localtypes;
     }
     /**
@@ -62,7 +65,9 @@ public class TokenFilter implements Scanner{
               defined = false;
               for(REntity rEntity : type.getEntities()){
                   if(entity.equalsIgnoreCase(rEntity.getName().stringValue())){
-                      defined = true;
+                      if(rEntity.containsAttribute(RName.getRName(ident))){
+                          defined = true;
+                      }
                       break;
                   }
               }
@@ -166,6 +171,7 @@ public class TokenFilter implements Scanner{
             if(theType!= IRObject.iEntity && theType != -1 ){
                 throw new RuntimeException("Invalid Possessive. "+ident+" is not an Entity");
             }
+            
             if(theType == -1){
                 if(localtypes.containsKey(ident.toLowerCase())){
                     RLocalType t = localtypes.get(ident.toLowerCase());

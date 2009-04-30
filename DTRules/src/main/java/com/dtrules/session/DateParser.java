@@ -22,9 +22,10 @@ public class DateParser implements IDateParser {
 	            new SimpleDateFormat("yyyy-MM-dd"),
 	        };
 	    
-	    /* (non-Javadoc)
-		 * @see com.dtrules.session.IDateParser#getDate(com.dtrules.session.IRSession, java.lang.String)
-		 */
+	    /**
+	     * Attempts to convert the string to a date.  If it fails, it returns a 
+	     * null.
+	     */
 	    public  Date getDate( String s){
 	    	s = s.trim();
 	        for(int i=0;i<patterns.length;i++){

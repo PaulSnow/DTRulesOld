@@ -3,9 +3,9 @@
   <comment>SDC Parent POM</comment>
   <projects>
     <project>DSLCompiler</project>
+    <project>DTScanner</project>
     <project>DTRules</project>
     <project>DTParser</project>
-    <project>DTScanner</project>
   </projects>
   <buildSpec>
     <buildCommand>

@@ -73,10 +73,8 @@ public class LoadXMLData implements IGenericXMLParser {
     	try{	// Cache the def operator.  
     	   def = session.getState().find(RName.getRName("def"));
     	}catch(Exception e){
-            try {
-                state.traceInfo("error", null,"General Rules Engine Failure");
-            } catch (RulesException e1) { } // Ignore since we are going to throw anyway...
-    		throw new RuntimeException(e);
+           state.traceInfo("error","General Rules Engine Failure");
+           throw new RuntimeException(e);
     	}
     	
     	for(RName ename : this.map.entities.keySet()){
@@ -84,10 +82,8 @@ public class LoadXMLData implements IGenericXMLParser {
 			  IREntity e     = findEntity(ename.stringValue().toLowerCase(),null,null);
 			  state.entitypush(e);
 		   } catch (RulesException e) {
-              try {
-                 state.traceInfo("error", null,"Failed to initialize the Entity Stack (Failed on "+ename+")\n"+e);
-              } catch (RulesException e1) { } // Ignore since we are going to throw anyway...
-    		  throw new RuntimeException(e);  
+              state.traceInfo("error","Failed to initialize the Entity Stack (Failed on "+ename+")\n"+e);
+              throw new RuntimeException(e);  
 		}
     	}
     }
@@ -135,6 +131,7 @@ public class LoadXMLData implements IGenericXMLParser {
 	
     public void beginTag(String[] tagstk, int tagstkptr, String tag,
             HashMap attribs) throws IOException, Exception {
+        
         String name = tag;                                 // We assume the tag might create an entity
 		
         EntityInfo    info  = (EntityInfo)    this.map.requests.get(name);
@@ -164,11 +161,11 @@ public class LoadXMLData implements IGenericXMLParser {
 		    
 		      state.entitypush(e);
 			  if(state.testState(DTState.TRACE)){
-		          state.traceTagBegin("createEntity", "name='"+info.name+"' id='"+code+"'");		          
+		          state.traceTagBegin("createEntity", "name",info.name,"id",code+"");		          
 			  }    
 		    }else{
                 
-		      state.traceInfo("error", null, "The Mapping defines '"+info.entity+"', but this entity isn't defined in the EDD");
+		      state.traceInfo("error","The Mapping defines '"+info.entity+"', but this entity isn't defined in the EDD");
 		      throw new Exception("The Mapping defines '"+info.entity+"', but this entity isn't defined in the EDD");
 		    }
 		} 
@@ -184,8 +181,8 @@ public class LoadXMLData implements IGenericXMLParser {
 			AttributeInfo.Attrib attrib;
 			{                                                   // Not only do you have to match the attribute name,
 			    int i=tagstkptr-2;				                //   But you must match the immediately enclosing tag
-				if(i>=0){
-			      attrib = aInfo.lookup(tagstk[i]);    
+				if(i>=0){  
+			      attrib = aInfo.lookup(state.entityfetch(0).getName().stringValue().toLowerCase());    
 				  if(attrib!=null){
 			        queueSetAttribute(attrib, attribs);
 				  }
@@ -216,7 +213,7 @@ public class LoadXMLData implements IGenericXMLParser {
 			    }
 			}
 			if(state.testState(DTState.TRACE)){
-                  state.traceTagEnd("createEntity", null);
+                  state.traceTagEnd();
             }  
 		}    
 	    		

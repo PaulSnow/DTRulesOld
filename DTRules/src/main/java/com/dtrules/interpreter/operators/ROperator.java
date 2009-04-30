@@ -75,6 +75,9 @@ public class ROperator extends ARObject {
     protected static void alias (IRObject o ,String n) {
         try {
             RName rn = RName.getRName(n);
+            if(primitives.containsAttribute(rn)){
+            	throw new RuntimeException("Duplicate definitions for "+rn.stringValue());
+            }
             primitives.addAttribute(rn, "", o, false, true, o.type(),null,"operator","");
             primitives.put(rn,o);
         } catch (RulesException e) {

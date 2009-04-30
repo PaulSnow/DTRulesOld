@@ -341,17 +341,31 @@ public class RDecisionTable extends ARObject {
 			state.pushframe();
 			
 			if(rcontext==null){
+			    if(state.testState(DTState.TRACE)){
+			        state.traceTagBegin("setup");
+			    }
 			    executeTable(state);
+			    state.traceTagEnd();
 			}else{
 			    if(state.testState(DTState.TRACE)){
-			        state.traceTagBegin("context", "execute='"+contextsrc+"'");
+			        state.traceTagBegin("context", "execute",contextsrc);
+			        
+			        for(String context : this.contexts){
+			            if(context != null && context.trim().length()>0){
+			                state.traceInfo("formal",context);
+			            }
+			        }
+			        state.traceTagBegin("setup");
 			        try {
                         rcontext.execute(state);
                     } catch (RulesException e) {
+                        state.traceTagEnd();
+                        state.traceTagEnd();
                         e.setSection("Context", 0);
                         throw e;
                     }
-			        state.traceTagEnd("context", null);
+                    state.traceTagEnd();
+			        state.traceTagEnd();
 			    }else{
 			        rcontext.execute(state);
 			    }    
@@ -392,26 +406,31 @@ public class RDecisionTable extends ARObject {
         int edepth    = state.edepth();  // Get the initial depth of the entity stack 
                                          //  so we can toss any extra entities added...
         if(trace){
-            state.traceTagBegin("decisiontable","tID='"+state.tracePt()+"' name='"+dtname+"'");
+            state.traceTagEnd();
+            state.traceTagBegin("decisiontable","name",dtname.stringValue());
             if(state.testState(DTState.VERBOSE)){
-                state.traceTagBegin("entity_stack", null);
+                state.traceTagBegin("entity_stack");
                 for(int i=0;i<state.edepth();i++){
-                    state.traceInfo("entity", "id='"+state.getes(i).getID()+"'", state.getes(i).stringValue());
+                    state.traceInfo("entity", "id",state.getes(i).getID()+"", state.getes(i).stringValue());
                 }
-                state.traceTagEnd("entity_stack",null);
+                state.traceTagEnd();
             }
-            state.traceTagBegin("initialActions", null);
+            state.traceTagBegin("initialActions");
             for( int i=0; rinitialActions!=null && i<rinitialActions.length; i++){
                 try{
+                   state.traceTagBegin("initialAction");
+                   state.traceInfo("formal",initialActions[i]);
                    rinitialActions[i].execute(state);
+                   state.traceTagEnd();
                 }catch(RulesException e){
                     e.setSection("Initial Actions", i+1);
                     throw e;
                 }
             }
-            state.traceTagEnd("initialActions", null);
+            state.traceTagEnd();
             if(decisiontree!=null)decisiontree.execute(state);
-            state.traceTagEnd  ("decisiontable",null);            
+            state.traceTagEnd();
+            state.traceTagBegin("setup");
         }else{
             for( int i=0; rinitialActions!=null && i<rinitialActions.length; i++){
                 state.setCurrentTableSection("InitialActions", i);

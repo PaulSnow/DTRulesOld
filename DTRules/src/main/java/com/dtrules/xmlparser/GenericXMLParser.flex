@@ -318,7 +318,7 @@ header     = "<?"([^?]|[?][^>])*"?>"
   "/>" {
      parser.beginTag(tagstk,tagstkptr,currenttag,attribs);
      parser.endTag(tagstk,tagstkptr,currenttag,"",attribs);
-     attribs.clear();
+
      popTag(currenttag);
      popstate();
      return 1;
@@ -340,7 +340,6 @@ header     = "<?"([^?]|[?][^>])*"?>"
   "</"{Identifier}{ws}*">" {
      String endTag = yytext();
      parser.endTag(tagstk,tagstkptr,currenttag,unencode(body),attribs);
-     attribs.clear();
      popTag(endTag);
      popstate();
   }
@@ -362,7 +361,6 @@ header     = "<?"([^?]|[?][^>])*"?>"
   "</"{Identifier}{ws}*">" {
      String endTag = yytext();
      parser.endTag(tagstk,tagstkptr,currenttag,"",attribs);
-     attribs.clear();
      popTag(endTag);
      popstate();
      return 1;

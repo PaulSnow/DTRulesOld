@@ -18,7 +18,6 @@
   
 package com.dtrules.mapping;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -100,9 +99,9 @@ public class Mapping {
         Mapping mapping = new Mapping(session);
     	try {
 			InputStream s = session.getRuleSet().openfile(filename);
-            session.getState().traceTagBegin("loadMapping", "file='"+filename+"'");
+            session.getState().traceTagBegin("loadMapping", "file",filename);
 			mapping.loadMap(s);
-			session.getState().traceTagEnd("loadMapping",null); 
+			session.getState().traceTagEnd(); 
 		} catch (FileNotFoundException e) {
  			throw new RuntimeException(e);
 		} catch (Exception e) {
@@ -151,9 +150,9 @@ public class Mapping {
        String filename = rs.getMapPath().get(0);
        try {
            InputStream s = session.getRuleSet().openfile(filename);
-           session.getState().traceTagBegin("loadMapping", "file='"+filename+"'");
+           session.getState().traceTagBegin("loadMapping", "file",filename);
            this.loadMap(s);
-           session.getState().traceTagEnd("loadMapping",null); 
+           session.getState().traceTagEnd(); 
        } catch (FileNotFoundException e) {
            throw new RuntimeException(e);
        } catch (Exception e) {
@@ -227,17 +226,17 @@ public class Mapping {
         }
         try {
             if(session.getState().testState(DTState.TRACE)){
-                session.getState().traceTagBegin("dataLoad","source='"+source+"'");   
+                session.getState().traceTagBegin("dataLoad","source",source);   
             }
             
             GenericXMLParser.load(dataSource, dataloader);
 
             if(session.getState().testState(DTState.TRACE)){
-                session.getState().traceTagEnd("dataLoad",null);
+                session.getState().traceTagEnd();
             }
         } catch (Exception e) {
             if(session.getState().testState(DTState.TRACE)){
-                session.getState().traceTagEnd("dataLoad",null);
+                session.getState().traceTagEnd();
             }
             throw new RulesException("Parse Error","LoadMap.loadData()",e.getMessage());
         }
@@ -255,16 +254,16 @@ public class Mapping {
         }
         try {
             if(session.getState().testState(DTState.TRACE)){
-                session.getState().traceTagBegin("loadData","");
+                session.getState().traceTagBegin("loadData");
             }
             XMLNode tag = datasrc.getRootTag();
             processTag(tag);
             if(session.getState().testState(DTState.TRACE)){
-                session.getState().traceTagEnd("loadData",null);
+                session.getState().traceTagEnd();
             }
         }catch(Exception e){
             if(session.getState().testState(DTState.TRACE)){
-                session.getState().traceTagEnd("loadData",null);
+                session.getState().traceTagEnd();
             }
             throw new RulesException("Parse Error","LoadMap.loadData()",e.getMessage());
         }
@@ -287,7 +286,7 @@ public class Mapping {
             ((LoadDatamapData)dataloader).endTag(tagstk, tagstkptr, tag, tag.getBody(), tag.getAttribs());
             tagstkptr--;
             tagstk[tagstkptr]= null;
-            state.traceTagEnd(tag.getTag()==null?"process":tag.getTag(), null);
+            state.traceTagEnd();
         }
     }
 

@@ -134,8 +134,8 @@ class DataObjectMap {
      * with the tags defined in the mapping file.  
      * @return
      */
-    public String init(DataMap datamap){
-        loaded = true;
+    public synchronized String init(DataMap datamap)  {
+        if(loaded == true) return null;
         try {
             Class c = Class.forName(dataObjName);
             Method [] methods = c.getMethods();
@@ -153,8 +153,10 @@ class DataObjectMap {
                 }
             }
         } catch (ClassNotFoundException e) {
+            loaded = true;
             return "Could not find the DO: "+dataObjName;
         }
+        loaded = true;
         return null;
     }
  

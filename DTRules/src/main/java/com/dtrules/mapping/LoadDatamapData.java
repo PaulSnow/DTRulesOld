@@ -87,7 +87,7 @@ public class LoadDatamapData extends LoadXMLData {
 			    }
 			}
 			if(state.testState(DTState.TRACE)){
-                state.traceTagEnd("createEntity", null);
+                state.traceTagEnd();
             }  
 		}    		
 
@@ -155,7 +155,7 @@ public class LoadDatamapData extends LoadXMLData {
 					}
 					//   conversion in the Rules Engine to do the proper thing.
 					state.def(a,value,false);
-                    state.traceInfo("message",null,"   /"+a+" \""+body+"\" def");
+                    state.traceInfo("message","   /"+a+" \""+body+"\" def");
 				}				
 		}
 		

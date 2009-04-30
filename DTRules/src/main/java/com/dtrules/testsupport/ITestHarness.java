@@ -3,9 +3,11 @@
  */
 package com.dtrules.testsupport;
 
+import java.io.OutputStream;
 import java.io.PrintStream;
 
 import com.dtrules.infrastructure.RulesException;
+import com.dtrules.mapping.DataMap;
 import com.dtrules.session.IRSession;
 
 /**
@@ -95,7 +97,16 @@ public interface ITestHarness {
      * @return
      */
     boolean Trace();
-
+    
+    /**
+     * Provides a way for a project to manage how data is loaded into a 
+     * session.
+     * @param session
+     * @param path
+     * @param dataset
+     * @throws Exception
+     */
+    public void loadData(IRSession session, String path, String dataset)throws Exception ;
     
     /**
      * The name of the report file.
@@ -117,4 +128,28 @@ public interface ITestHarness {
      * open one for you.
      */
     void printReport(int runNumber, IRSession session, PrintStream out) throws Exception;
+    
+    public void    setDataMap(DataMap datamap);
+    
+    public DataMap getDataMap();
+    
+    /**
+     * Alternate Configuration File (generally the deployed rule set) to use as a 
+     * basis to produce a change report XML 
+     * @return
+     */
+    public String  referenceRulesDirectoryFile ();
+    /**
+     * Path to the Alternate Configuration File (generally the deployed rule set) to 
+     * use as a basis to produce a change report XML 
+     * @return
+     */
+    public String  referencePath ();
+    /**
+     * Generate a change report xml to the given output stream.
+     * @param report
+     */
+    public void    changeReportXML(OutputStream report);
+    
+
 }

@@ -103,27 +103,32 @@ public class CNode implements DTNode {
 	public void execute(DTState state) throws RulesException{
         boolean result;
         try {
-            result = state.evaluateCondition(condition);
+            if(state.testState(DTState.TRACE)){
+                state.traceTagBegin("Condition", "n",(conditionNumber+1)+"");
+                    state.traceInfo("Formal", dtable.getConditions()[conditionNumber]);
+                    state.traceInfo("Postfix", dtable.getConditionsPostfix()[conditionNumber]);
+                    state.traceTagBegin("execute");
+                    result = state.evaluateCondition(condition);
+                    state.traceTagEnd();
+                    state.traceInfo("result", "v",(result?"Y":"N"),null);
+                state.traceTagEnd();
+            }else{
+                result = state.evaluateCondition(condition);
+            }
+            
+    		if(result){
+    			iftrue.execute(state);
+    		}else{
+    			iffalse.execute(state);
+    		}
+    		
         } catch (RulesException e) {
-            state.traceTagBegin("Condition", "n='"+(conditionNumber+1)+"' ");
-            state.traceInfo("Condition_Text", null, dtable.conditions[conditionNumber]);
+            state.traceTagBegin("Condition", "n", (conditionNumber+1)+"");
+            state.traceInfo("Condition_Text", dtable.conditions[conditionNumber]);
             e.setSection("Condition",conditionNumber+1);
+            e.setFormal(dtable.getConditions()[conditionNumber]);
             throw e;
         }
-        if(state.testState(DTState.TRACE)){
-            if(state.testState(DTState.VERBOSE)){
-                state.traceTagBegin("Condition", "n='"+(conditionNumber+1)+"'"+"r='"+(result?"Y'":"N'"));
-                state.traceInfo("Formal", null,dtable.getConditions()[conditionNumber]);
-                state.traceTagEnd("Condition", "");
-            }else{
-                state.traceInfo("Condition", "n='"+(conditionNumber+1)+"'"+"r='"+(result?"Y'":"N'"));
-            }
-        }
-		if(result){
-			iftrue.execute(state);
-		}else{
-			iffalse.execute(state);
-		}
 	}
 
 	public Coordinate validate() {

@@ -16,6 +16,23 @@ public class XMLHeader implements XMLNode {
     Object body;
     XMLNode parent;
     
+    
+    /* (non-Javadoc)
+     * @see com.dtrules.mapping.XMLNode#addChild(com.dtrules.mapping.XMLNode)
+     */
+    @Override
+    public void addChild(XMLNode node) {
+       tags.add(node);
+    }
+
+    /* (non-Javadoc)
+     * @see com.dtrules.mapping.XMLNode#remove(com.dtrules.mapping.XMLNode)
+     */
+    @Override
+    public void remove(XMLNode node){
+        tags.remove(node);
+    }
+
     public HashMap<String, Object> getAttribs() {
         return attribs;
     }

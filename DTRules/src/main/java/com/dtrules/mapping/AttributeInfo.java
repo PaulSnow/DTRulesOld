@@ -114,7 +114,7 @@ class AttributeInfo {
 			final Attrib attrib = (Attrib)iattribs.next();			
 			/* Duplicate attributes may be encountered in mapping xml. 
 			   So we won't throw this error. */
-			if(attrib.enclosure.equals(_enclosure))	{
+			if(attrib.enclosure.equalsIgnoreCase(_enclosure))	{
 				if (" ".equals(attrib.rAttribute)) {
 					attrib.rAttribute = _attribute;  
 				}
@@ -130,9 +130,9 @@ class AttributeInfo {
 					  thisisanerror = false;
 				}
 				if (thisisanerror){
-                    state.traceInfo("error", null,"Duplicate:" + _enclosure + "." + tag);
+                    state.traceInfo("error", "Duplicate:" + _enclosure + "." + tag);
                 }
-                state.traceInfo("error", null,
+                state.traceInfo("error", 
 				         (thisisanerror?"ERROR: ":"WARNING: ") + "\n"+
 				          "The tag <"+tag+"> and enclosure <"+_enclosure+"> "+
 						  "have been encountered more than once in this mapping file\n"+
@@ -162,7 +162,7 @@ class AttributeInfo {
 		Iterator iattribs = tag_instances.iterator();
 		while(iattribs.hasNext()){
 			Attrib attrib = (Attrib) iattribs.next();
-			if(attrib.enclosure.equals(_enclosure)){
+			if(attrib.enclosure.equalsIgnoreCase(_enclosure)){
 			   return attrib;
 			}
 		}
@@ -175,7 +175,7 @@ class AttributeInfo {
 		Iterator iattribs = tag_instances.iterator();
 		while(iattribs.hasNext()){
 			Attrib attrib = (Attrib)iattribs.next();
-			if(attrib.enclosure.equals(_enclosure))
+			if(attrib.enclosure.equalsIgnoreCase(_enclosure))
 			{
 				return true;
 			}

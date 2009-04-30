@@ -283,6 +283,19 @@ public class RArray extends ARObject implements Collection<IRObject> {
 		return new RArray(session.getUniqueID(), dups, newArray, executable);
 	}
 
+	/**
+     * returns the clone of this object and of its elements
+     */
+    public IRObject deepCopy(IRSession session) throws RulesException {
+        ArrayList<IRObject> newArray = new ArrayList<IRObject>();
+        newArray.addAll(array);
+        for(int i=0;i<newArray.size();i++){
+            IRObject element = newArray.get(i);
+            newArray.add(i,element.clone(session));
+        }
+        return new RArray(session.getUniqueID(), dups, newArray, executable);
+    }
+
     public RArray rArrayValue() throws RulesException {
         return this;
     }

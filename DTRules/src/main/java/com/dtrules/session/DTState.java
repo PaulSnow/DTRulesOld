@@ -24,6 +24,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Random;
 
 import com.dtrules.decisiontables.RDecisionTable;
@@ -33,6 +34,7 @@ import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RName;
 import com.dtrules.xmlparser.GenericXMLParser;
+import com.dtrules.xmlparser.XMLPrinter;
 
 public class DTState {
  
@@ -79,12 +81,7 @@ public class DTState {
     int      framestkptr    = 0;
     int      currentframe   = 0;
    
-	final IRSession session;
-  
-	ArrayList<String> tagstk     = new ArrayList<String>();
-	int               tracePoint = 0;
-	boolean newline   = true;
-	 
+	final IRSession session; 
     
     public long      seed       = 0x711083186866559L;
     public Random    rand       = new Random(seed);
@@ -92,12 +89,14 @@ public class DTState {
      * The default debugging printstream is Standard Out.
      * The default error printstream is Standard Out.
      */
-   private PrintStream  out     = System.out;
+   private XMLPrinter   out     = new XMLPrinter(System.out);
+   private PrintStream  outPs   = System.out;
    private PrintStream  err     = System.out;  
     
-   public PrintStream getErrorOut() { return err; }
-   public PrintStream getDebugOut() { return out; }
-   public PrintStream getTraceOut() { return out; }
+   public PrintStream getErrorOut()         { return err; }
+   public PrintStream getDebugOut()         { return outPs; }
+   public PrintStream getTraceOut()         { return outPs; }
+   public XMLPrinter  getTraceXMLPrinter()  { return out; }
    
    public static final int DEBUG =   0x00000001;
    public static final int TRACE =   0x00000002;
@@ -111,15 +110,19 @@ public class DTState {
     * Set the output streams for debug and trace.
     */ 
    public void setOutput(OutputStream debugtrace, OutputStream error){
-       out = new PrintStream(debugtrace);
-       err = new PrintStream(error);
+       if(debugtrace != null){
+           outPs = new PrintStream(debugtrace);
+           out   = new XMLPrinter(outPs);
+       }
+       err   = new PrintStream(error);
    }
    
    /**
     * Set the output streams for debug and trace.
     */ 
    public void setOutput(PrintStream debugtrace, PrintStream error){
-       out = debugtrace;
+       outPs = debugtrace;
+       out   = new XMLPrinter(outPs);
        err = error;
    }
  
@@ -136,100 +139,86 @@ public class DTState {
      
    public void traceStart(){
        setState(TRACE);
-       tracePoint = 0;
-       traceTagBegin("DTRulesTrace",null);
+       out.opentag("DTRulesTrace");
    }
-   public void traceEnd() throws RulesException {
 
-       while(tagstk.size()>0){ //Close all tags.
-           traceTagEnd(tagstk.get(tagstk.size()-1),null);
-       }
+   public void traceEnd() throws RulesException {
+       out.close();
        clearState(TRACE);
    }
-
    
-   /**
-    * Returns a trace point.  The trace Point is incremented each time a
-    * point is generated.  The idea is that the RulesEngine state can be
-    * reset to the state represented by one of these trace points.
-    * @return
-    */
-   public int tracePt(){ return tracePoint++; }
-   
-   /**
-     * Begins an execution tag.  The execution (of something) is
-     * contained between the traceStart and traceEnd tags.  If any
-     * attributes should be included, pass them as a string, i.e.
-     * " dt='Compute Policy" col='5' "
-     * If ECHO is set, then the output is also echoed to 
-     * Standard out.
-     */
-   public void traceTagBegin(String tag, String attribs){
+   public void traceTagBegin(String tag, HashMap<String,Object> attribs){
        if(testState(TRACE)){
-           if(!newline)out.println();
-           if(testState(ECHO) && out != System.out){
-               System.out.print(tag + " "+attribs);
-           }
-           out.print("<"+tag+ (attribs!=null ?" "+attribs+">":">"));
-           newline = false;
-           tagstk.add(tag);
+           out.opentag(tag,attribs);
        }
    }
-  /**
-   * Prints a single tag, i.e. "<tag attribs />" 
-   * @param tag
-   * @param attribs
-   */
-  public void traceInfo(String tag, String attribs){
-      if(testState(TRACE)){
-          if(!newline)out.println();
-          if(testState(ECHO) && out != System.out){
-              System.out.print(tag + " "+attribs);
-          }
-          out.println("<"+tag+ (attribs!=null ?" "+attribs+"/>":"/>"));
-          newline = true;
-      }
-  }
-  /**
-   * Prints a tag, attributes, body, and the end tag.
-   * @param info        The tag to use in the XML
-   * @param attribs     Any attibutes you  want
-   * @param body        The body of the tag.
-   */
-  public void traceInfo(String info, String attribs, String body)throws RulesException{
-     traceTagBegin(info, attribs);
-     traceTagEnd(info,body);
-  }
-  
-   /**
-    * Ends an execution tag.  The execution (of something) is
-    * contained between the traceTagBegin and traceTagEnd calls.  
-    * Tags are checked for balance (if the tag is supplied.)
-    * If ECHO is on, the body is written to standard.out. 
-    * Standard out.
-    * Returns true if it printed something.
-    */
-  public void traceTagEnd(String tag, String body) throws RulesException { 
-      if(testState(TRACE)){
-          if(testState(ECHO) && out != System.out && body!=null){
-              System.out.print(body);
-              System.out.print("\n");
-          }
-          int index = tagstk.size()-1;
-          if(index<0){
-              System.out.println("tag underflow");
-          }
-          String btag = tagstk.get(index);
-          tagstk.remove(index);
-          if(tag!=null && !btag.equals(tag)){
-              System.out.println("tag_error tag1='"+GenericXMLParser.encode(btag)+"' "+
-                             "expectedtag='"+GenericXMLParser.encode(tag)+"'");
-          }
-          if(body!=null) out.print(GenericXMLParser.encode(body));
-          out.println("</"+btag+">");
-          newline=true;
-      }
-  }
+   
+   public void traceTagBegin(String tag){
+       if(testState(TRACE)){
+           out.opentag(tag);
+       }
+   }
+   
+   public void traceTagBegin(String tag, String name1, String value1){
+       if(testState(TRACE)){
+           out.opentag(tag,name1,value1);
+       }
+   }
+   
+   public void traceTagBegin(String tag, 
+           String name1, String value1, 
+           String name2, String value2){
+       if(testState(TRACE)){
+           out.opentag(tag,name1,value1,name2,value2);
+       }
+   }
+   
+   public void traceTagBegin(String tag, 
+           String name1, String value1, 
+           String name2, String value2,
+           String name3, String value3){
+       if(testState(TRACE)){
+           out.opentag(tag,name1,value1,name2,value2,name3,value3);
+       }
+   }
+   
+   public void traceInfo(String tag, String body){
+       if(testState(TRACE))out.printdata(tag, body);
+   }
+   
+   public void traceInfo(String tag, String name1, String value1, String body){
+       if(testState(TRACE))out.printdata(tag,name1,value1,body);
+   }
+   
+   public void traceInfo(String tag, 
+           String name1, String value1,
+           String name2, String value2,
+           String body){
+       if(testState(TRACE))out.printdata(tag,name1,value1,name2,value2,body);
+   }
+   
+   public void traceInfo(String tag, 
+           String name1, String value1,
+           String name2, String value2,
+           String name3, String value3,
+           String body){
+       if(testState(TRACE))out.printdata(tag,name1,value1,name2,value2,name3,value3,body);
+   }
+   
+   public void traceInfo(String tag, 
+           String name1, String value1,
+           String name2, String value2,
+           String name3, String value3,
+           String name4, String value4,
+           String body){
+       if(testState(TRACE))out.printdata(tag,name1,value1,name2,value2,name3,value3,name4,value4,body);
+   }
+   
+   public void traceTagEnd(){
+       if(testState(TRACE)){
+           out.closetag();
+       } 
+   }
 
    /**
     * Prints a string to the output file if DEBUG is on.
@@ -239,13 +228,10 @@ public class DTState {
     */
   public boolean debug(String s){
       if(testState(DEBUG)){
-          if(!newline)out.println();
-          if(testState(ECHO) && out != System.out){
+          if(testState(ECHO) && outPs != System.out){
               System.out.print(s);
           }
-          s = GenericXMLParser.encode(s);
-          out.print("<dbg>"+s+"</dbg>");
-          newline=false;
+          out.printdata("dbg",s);
           return true;
       }
       return false;
@@ -256,24 +242,23 @@ public class DTState {
        * the debugging output stream.
        */
       public void pstack() {
+         if(testState(TRACE))return;
          try{
-            traceTagBegin("pstack", null);
+            out.opentag("pstack");
             
-            traceTagBegin("datastk", null);
-            for (int i = 0; i < ddepth(); i++) {
-                traceTagBegin("e",null);
-                traceTagEnd  ("e",getds(i).stringValue());
-            }
-            traceTagEnd("datastk",null);
+                out.opentag("datastk");
+                    for (int i = 0; i < ddepth(); i++) {
+                        out.printdata("ds","depth",""+i,getds(i).stringValue());
+                    }
+                out.closetag();
+    
+                out.opentag("entitystk");
+                    for (int i = 0; i < ddepth(); i++) {
+                        out.printdata("es","depth",""+i,getes(i).stringValue());
+                    }
+                out.closetag();
 
-            traceTagBegin("entitystk", null);
-            for (int i = 0; i < edepth(); i++) {
-                traceTagBegin("e",null);
-                traceTagEnd  ("e",getes(i).stringValue());
-            }
-            traceTagEnd("entitystk",null);
-            
-            traceTagEnd("pstack", null);
+            out.closetag();
          }catch(RulesException e){
             err.print("ERROR printing the stacks!\n");
             err.print(e.toString()+"\n");
@@ -363,6 +348,9 @@ public class DTState {
                     "Data Stack overflow.");
 		}
 		datastk[datastkptr++]=o;
+		if((state | VERBOSE) != 0){
+		    traceInfo("datapush", "attribs",o.postFix(),null);
+		}
 	}
 	/**
 	 * Pops an IRObject off the data stack and returns that object.
@@ -375,6 +363,9 @@ public class DTState {
 		}
         IRObject rval = datastk[--datastkptr];
         datastk[datastkptr]=null;
+        if((state | VERBOSE) != 0){
+            traceInfo("datapop",rval.stringValue());
+        }
 		return(rval);
 	}
 	
@@ -657,8 +648,10 @@ public class DTState {
                REntityEntry entry = e.getEntry(name);
                if(entry!=null &&(!protect || entry.writable)){
                    if(testState(TRACE)){
-                       traceTagBegin("def", "entity='"+e.postFix()+"' name='"+name.stringValue()+"'");
-                       traceTagEnd("def",value.postFix());
+                       out.printdata("def", 
+                               "entity",e.postFix(),
+                               "name",name.stringValue(),
+                               value.postFix());
                    }
 
                    e.put(name, value);

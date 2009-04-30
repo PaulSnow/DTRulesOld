@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import sun.rmi.runtime.Log;
+
 import com.dtrules.compiler.cup.Compiler;
 import com.dtrules.xmlparser.GenericXMLParser;
 import com.dtrules.xmlparser.IGenericXMLParser;
@@ -34,6 +36,7 @@ public class DTCompiler implements IGenericXMLParser{
     private ArrayList<CompileError> errors  = new ArrayList<CompileError>();
     private ArrayList<Changed>      changes = new ArrayList<Changed>();
     
+
     Compiler compiler = null;
     int     conditionsCompiled      = 0;
     int     actionsCompiled         = 0;
@@ -222,6 +225,7 @@ public class DTCompiler implements IGenericXMLParser{
                 GenericXMLParser.load(in, this);
             } catch (Exception e) {
                 errors.add(new CompileError(
+                		
                         tablename,filename,"Error occurred in the XML parsing", e.toString(), -1,null
                         ,compiler.getParsedTokens())
                 );

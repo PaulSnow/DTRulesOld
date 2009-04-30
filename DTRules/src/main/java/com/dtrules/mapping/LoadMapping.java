@@ -73,10 +73,8 @@ public class LoadMapping implements IGenericXMLParser {
     	try{	// Cache the def operator.  
     	   def = session.getState().find(RName.getRName("def"));
     	}catch(Exception e){
-            try {
-                state.traceInfo("error", null,"General Rules Engine Failure");
-            } catch (RulesException e1) { } // Ignore since we are going to throw anyway...
-    		throw new RuntimeException(e);
+            state.traceInfo("error","General Rules Engine Failure");
+            throw new RuntimeException(e);
     	}
     	
     	Iterator<RName> es = this.map.entities.keySet().iterator();
@@ -86,11 +84,9 @@ public class LoadMapping implements IGenericXMLParser {
 			  IREntity e     = findEntity(ename.stringValue().toLowerCase(),null,null);
 			  state.entitypush(e);
 		   } catch (RulesException e) {
-              try {
-                 state.traceInfo("error", null,"Failed to initialize the Entity Stack (Failed on "+ename+")\n"+e);
-              } catch (RulesException e1) { } // Ignore since we are going to throw anyway...
+              state.traceInfo("error", "Failed to initialize the Entity Stack (Failed on "+ename+")\n"+e);
     		  throw new RuntimeException(e);  
-		}
+		   }
     	}
     }
     
@@ -167,12 +163,12 @@ public class LoadMapping implements IGenericXMLParser {
 		    
 		      state.entitypush(e);
 			  if(state.testState(DTState.TRACE)){
-		          state.traceTagBegin("createEntity", "name='"+info.name+"' id='"+code+"'");
+		          state.traceTagBegin("createEntity", "name",info.name,"id",code);
 		          traceopen = true;
 			  }    
 		    }else{
                 
-		      state.traceInfo("error", null, "The Mapping defines '"+info.entity+"', but this entity isn't defined in the EDD");
+		      state.traceInfo("error","The Mapping defines '"+info.entity+"', but this entity isn't defined in the EDD");
 		      throw new Exception("The Mapping defines '"+info.entity+"', but this entity isn't defined in the EDD");
 		    }
 		} 
@@ -218,7 +214,7 @@ public class LoadMapping implements IGenericXMLParser {
 			    }
 			}
 			if(state.testState(DTState.TRACE)){
-                  state.traceTagEnd("createEntity", null);
+                  state.traceTagEnd();
             }  
 		}    
 	    		

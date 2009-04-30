@@ -44,6 +44,7 @@ public class RArrayOps {
             new Mark();
             new Arraytomark();
             new Copyelements();
+            new DeepCopy();
 	    	new Sortarray();
             new Sortentities();
 	    	new Add_no_dups();
@@ -78,7 +79,7 @@ public class RArrayOps {
                 for(String t : results){
                     r.add(RString.newRString(t));
                     if(state.testState(DTState.TRACE)){
-                        state.traceInfo("addto", "arrayID='"+r.getID()+"'","'"+t+"'");
+                        state.traceInfo("addto", "arrayID",r.getID()+"",t);
                     }
                 }
                 state.datapush(r);
@@ -99,7 +100,7 @@ public class RArrayOps {
 				IRObject  value = state.datapop();
 				RArray rarray  = state.datapop().rArrayValue();
 				if(state.testState(DTState.TRACE)){
-                    state.traceInfo("addto", "arrayID='"+rarray.getID()+"'",value.postFix());
+                    state.traceInfo("addto", "arrayID",rarray.getID()+"",value.postFix());
                 }
 				rarray.add(value);
 			}
@@ -117,7 +118,7 @@ public class RArrayOps {
 				int position = state.datapop().intValue();
                 RArray rarray = state.datapop().rArrayValue();
 				if(state.testState(DTState.TRACE)){
-                    state.traceInfo("addat", "arrayID='"+rarray.getID()+"' index="+position+"'",value.postFix());
+                    state.traceInfo("addat", "arrayID",rarray.getID()+"", "index",position+"",value.postFix());
                 }
 				rarray.add(position, value);
 				
@@ -141,7 +142,7 @@ public class RArrayOps {
 					for(int i=0; i<array.size();){
 						if(value.equals((IRObject)array.get(i))){
                             if(state.testState(DTState.TRACE)){
-                                state.traceInfo("removed", "arrayID='"+rarray.getID()+"'",value.postFix());
+                                state.traceInfo("removed", "arrayID",rarray.getID()+"",value.postFix());
                             }
 							array.remove(i);
                             removed = true;
@@ -172,7 +173,7 @@ public class RArrayOps {
                 
                 ArrayList array   = rarray.arrayValue();
                    if(state.testState(DTState.TRACE)){
-                       state.traceInfo("removed", "arrayID='"+rarray.getID()+"' position='"+position+"'");
+                       state.traceInfo("removed", "arrayID",rarray.getID()+"","position",position+"",null);
                    }
         				
                 array.remove(position);				
@@ -254,9 +255,9 @@ public class RArrayOps {
 				RArray rarray     = state.datapop().rArrayValue();
 				RArray newRArray  = rarray.clone(state.getSession()).rArrayValue();
 				if(state.testState(DTState.TRACE)){
-	                state.traceInfo("copyelements", "id='"+rarray.getID()+"' newarrayid='"+newRArray.getID()+"'");
+	                state.traceInfo("copyelements","id",rarray.getID()+"","newarrayid",newRArray.getID()+"",null);
 				    for(IRObject v : newRArray){
-	                    state.traceInfo("addto", "arrayID='"+rarray.getID()+"'",v.postFix());
+	                    state.traceInfo("addto", "arrayID",rarray.getID()+"",v.postFix());
 				    }
                 }
     
@@ -264,6 +265,32 @@ public class RArrayOps {
 				
 			}
 		}
+		
+		 /**
+         * DeepCopy ( Array --> newarray)
+         * Copies the array, and makes copies of all of the elements
+         * as well.
+         */     
+        static class DeepCopy extends ROperator {
+            DeepCopy () {super("deepcopy");}
+            
+            public void execute(DTState state) throws RulesException {
+                RArray rarray     = state.datapop().rArrayValue();
+                RArray newRArray  = rarray.deepCopy(state.getSession()).rArrayValue();
+                
+                if(state.testState(DTState.TRACE)){
+                    state.traceInfo("copyelements","id",rarray.getID()+"","newarrayid",newRArray.getID()+"",null);
+                    for(IRObject v : newRArray){
+                        state.traceInfo("addto", "arrayID",rarray.getID()+"",v.postFix());
+                    }
+                }
+    
+                state.datapush(newRArray);  
+                
+            }
+        }
+		
+		
 		
 	    /**
 	     * sortarray( Array boolean --> )
@@ -280,7 +307,7 @@ public class RArrayOps {
 				ArrayList<IRObject> array = rarray.arrayValue();
 				
                 if(state.testState(DTState.TRACE)){
-                   state.traceInfo("sort", "length='"+array.size()+"' arrayID='"+rarray.getID()+"'",asc ? "true" : "false");
+                   state.traceInfo("sort", "length",array.size()+"","arrayID",rarray.getID()+"",asc ? "true" : "false");
                 }
 
 				IRObject temp = null;
@@ -335,9 +362,9 @@ public class RArrayOps {
 				ArrayList<IRObject> array = rarray.arrayValue();
 				if(state.testState(DTState.TRACE)){
 	               state.traceInfo("sortentities", 
-	                       "length='"+array.size()+
-	                       "' by='"+rname.stringValue()+
-	                       "' arrayID='"+rarray.getID()+"'",
+	                       "length",   array.size()+"",
+	                       "by",       rname.stringValue(),
+	                       "arrayID",  rarray.getID()+"",
 	                       asc ? "true" : "false");
 	            }
 				REntity temp = null;
@@ -347,7 +374,9 @@ public class RArrayOps {
                     boolean done = true;
 					for(int j=0; j<size-1-i; j++){
                         try {
-						if((((REntity)array.get(j)).get(rname)).compare(((REntity)array.get(j+1)).get(rname))==greaterthan){	
+                        IRObject v1 = ((REntity) array.get(j)).get(rname);
+                        IRObject v2 = ((REntity) array.get(j+1)).get(rname);
+						if(v1.compare(v2)==greaterthan){	
 							temp = (REntity)array.get(j);
 							array.set(j, (REntity)array.get(j+1));
 							array.set(j+1, temp);
@@ -373,15 +402,14 @@ public class RArrayOps {
                 
 				IRObject  value  = state.datapop();
                 RArray    rArray = (RArray) state.datapop();
-				ArrayList array  = rArray.arrayValue();
-                for(int i=0; i<array.size(); i++){
-					if(value.equals((IRObject)array.get(i))){
+				for(IRObject v : rArray){
+					if(value.equals((IRObject)v)){
 						return;
 					}
 				}
-				array.add(value);
+				rArray.add(value);
                 if(state.testState(DTState.TRACE)){
-                    state.traceInfo("addto", "arrayId='"+rArray.getID()+"'",value.postFix());
+                    state.traceInfo("addto", "arrayId",rArray.getID()+"",value.postFix());
                 }
 
 			}
@@ -399,7 +427,7 @@ public class RArrayOps {
                 ArrayList array  = rarray.arrayValue();
 				array.clear();
                 if (state.testState(DTState.TRACE)){
-                    state.traceInfo("clear", "array='"+rarray.stringValue()+"'");
+                    state.traceInfo("clear","array",rarray.stringValue(),null);
                 }
 			}
 		}		

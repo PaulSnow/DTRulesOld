@@ -19,6 +19,16 @@ public interface XMLNode {
     public abstract String toString();
 
     /**
+     * Adds the given XMLNode to the children of this tag
+     */
+    public abstract void addChild(XMLNode node);
+    
+    /**
+     * Removes any reference to the given node from
+     * this XML Node 
+     */
+    public abstract void remove(XMLNode node);
+    /**
      * @return the tag
      */
     public abstract String getTag();

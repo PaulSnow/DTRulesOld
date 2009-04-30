@@ -118,7 +118,7 @@ public class DTLoader implements IGenericXMLParser {
                 dt.build();
                 
 			} catch (RulesException e) {
-                state.traceInfo("error", null,"Error building Decision Table "+dt+"\r\n"+e);
+                state.traceInfo("error","Error building Decision Table "+dt+"\r\n"+e);
 			}
 		}
 	}
@@ -371,7 +371,7 @@ public class DTLoader implements IGenericXMLParser {
             throw new RuntimeException("An Invocation Target Exception was thrown processing the Begin XML tag "+tag+
                             "\nError states: "+e.getCause());
 		} catch (Exception e) {
-            state.traceInfo("error", null,e.getCause().getMessage());
+            state.traceInfo("error", e.getCause().getMessage());
 			throw new RuntimeException("Error Parsing Decision Tables: "+e.getMessage());
 		}			
 	}
@@ -399,10 +399,10 @@ public class DTLoader implements IGenericXMLParser {
                 process_field();
             }
 		} catch (InvocationTargetException e){  // Ignore errors thrown by Decision Table parsing
-            state.traceInfo("error", null,"An Invocation Target Exception was thrown processing the End XML tag "+tag+
+            state.traceInfo("error", "An Invocation Target Exception was thrown processing the End XML tag "+tag+
                             "\nError states "+e.getCause());
 		} catch (Exception e) {
-            state.traceInfo("error", null,e.getCause().getMessage());
+            state.traceInfo("error", e.getCause().getMessage());
 			throw new RuntimeException("Error Parsing Decision Tables: "+e.getMessage());
 		}	
 		

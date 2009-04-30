@@ -28,8 +28,8 @@ public class BalanceTable {
 
     private int maxRow=0,maxCol=0;
     private int maxARow=0;
-    private String ctable[][] = new String[32][102400];
-    private String atable[][] = new String[32][102400];
+    private String ctable[][] = new String[100][10240];
+    private String atable[][] = new String[100][10240];
     
     final   RDecisionTable  dt;
     public BalanceTable(RDecisionTable dt) throws RulesException{

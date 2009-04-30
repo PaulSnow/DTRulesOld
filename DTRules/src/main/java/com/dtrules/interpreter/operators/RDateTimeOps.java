@@ -183,7 +183,8 @@ public class RDateTimeOps {
                 Date  date   = state.datapop().timeValue();
                 state.calendar.setTime(date);
                 state.calendar.add(Calendar.MONTH, months);
-                state.datapush(RTime.getRTime(state.calendar.getTime()));
+                Date  newdate = state.calendar.getTime();
+                state.datapush(RTime.getRTime(newdate));
             }
         } 
 
@@ -393,14 +394,16 @@ public class RDateTimeOps {
         /**
          * ( date1 date2 -- int )
          * Returns the number of years between date1 and date2.  It is always
-         * the difference, i.e. positive, even if date1 is after date2
+         * the difference.  the value returned is negative if date1 is before date2.
          */
         static class YearsBetween extends ROperator {
             YearsBetween() {super("yearsbetween"); }
             public void execute(DTState state) throws RulesException {
                 Date date2 = state.datapop().timeValue();
                 Date date1 = state.datapop().timeValue();
+                boolean swapped = false; 
                 if(date1.after(date2)){
+                    swapped = true;
                     Date hold = date1;
                     date1 = date2;
                     date2 = hold;
@@ -416,23 +419,24 @@ public class RDateTimeOps {
                 int diff = y2-y1;
                 if(m2<m1)diff--;
                 if(m2==m1 && d2<d1)diff--;
+                if(swapped)diff *= -1;
                 state.datapush(RInteger.getRIntegerValue(diff));
             }
             
         }
         /**
          * ( date1 date2 -- int )
-         * Returns the number of months between date1 and date2.  It is always
-         * the difference, i.e. positive, even if date1 is after date2.  The
-         * number of months doesn't care about the day... the 30th of the month
-         * is treated identically to the first of the month.
+         * Returns the number of months between date1 and date2.  If date1
+         * is after date2, the number returned is negative.
          */
         static class MonthsBetween extends ROperator {
             MonthsBetween() {super("monthsbetween"); }
             public void execute(DTState state) throws RulesException {
                 Date date2 = state.datapop().timeValue();
                 Date date1 = state.datapop().timeValue();
+                boolean swapped = false;
                 if(date1.after(date2)){
+                    swapped = true;
                     Date hold = date1;
                     date1 = date2;
                     date2 = hold;
@@ -450,16 +454,27 @@ public class RDateTimeOps {
                 int monthdiff = m2-m1;
                 if(d2<d1-1)monthdiff--;
                 if(monthdiff < 0)monthdiff +=12;
-                monthdiff += 12*yeardiff;  
+                monthdiff += 12*yeardiff;
+                if(swapped)monthdiff *= -1;
                 state.datapush(RInteger.getRIntegerValue(monthdiff));
              }
           }  
+        
+          /**
+           * (date1 date2 --> int )
+           * Returns the days between two dates.  This is the difference between
+           * the dates, and is negative if date1 is before date2.
+           * @author ps24876
+           *
+           */
           static class DaysBetween extends ROperator {
         	  DaysBetween() {super("daysbetween"); }
               public void execute(DTState state) throws RulesException {
                   Date date2 = state.datapop().timeValue();
                   Date date1 = state.datapop().timeValue();
+                  boolean swapped = false;
                   if(date1.after(date2)){
+                      swapped = true;
                       Date hold = date1;
                       date1 = date2;
                       date2 = hold;
@@ -469,6 +484,7 @@ public class RDateTimeOps {
                   state.calendar.setTime(date2);
                   long to   = state.calendar.getTimeInMillis();
                   long days = Math.round((to-from)/(1000*60*60*24));
+                  if (swapped) days *= -1;
                   state.datapush(RInteger.getRIntegerValue(days));
               }
           }

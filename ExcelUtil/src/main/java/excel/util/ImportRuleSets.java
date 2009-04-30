@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -42,6 +43,8 @@ import com.dtrules.xmlparser.XMLPrinter;
 
 public class ImportRuleSets {
 	
+    boolean CountsAreDirty;
+    
     String tmpEDD = "tmpEDD.xml";
     
     String defaultColumns[]={"number","comments","dsl","table"};
@@ -91,6 +94,7 @@ public class ImportRuleSets {
                 }  
             }    
         }
+        
         return xlsFound;
     }
         
@@ -345,7 +349,59 @@ public class ImportRuleSets {
         String value = getCellValue(sheet,row, field);
         return value.trim();
     }
-        
+    
+    /**
+     * Clear a number field that shouldn't have any numbers.
+     * @param sheet
+     * @param row
+     */
+    void clearNumber(HSSFSheet sheet, int row){
+        String numberFound = getNumber(sheet,row);
+        if(numberFound.length()>0){
+            short field = (short) getColumn("number");
+            if(field!=-1){
+               sheet.getRow(row).getCell(field).setCellValue(new HSSFRichTextString(""));
+            }
+            CountsAreDirty = true;
+        }
+    }
+    
+    
+    /**
+     * Prints the Context/InitialAction/Condition/Action number, does checks, prints
+     * errors.  We MIGHT make it fix the errors...
+     * @param out
+     * @param sheet
+     * @param row
+     * @param label
+     * @param count
+     */
+    private void printNumber(XMLPrinter out, HSSFSheet sheet, int row, String label, int count){
+        String numberFound = getNumber(sheet, row);
+        int v;
+        try {
+            v = Integer.parseInt(numberFound);
+        } catch (NumberFormatException e) {
+            System.out.println(" Invalid number "+label+" on the "+count);
+            v = count;
+            short field = (short) getColumn("number");
+            if(field!=-1){
+               sheet.getRow(row).getCell(field).setCellType(HSSFCell.CELL_TYPE_STRING);
+               sheet.getRow(row).getCell(field).setCellValue(new HSSFRichTextString(count+""));
+            }
+            CountsAreDirty = true;
+        }
+        if(v != count){
+            System.out.println(" Incorrect Count "+label+" on the "+count+".  Found "+numberFound);
+            short field = (short) getColumn("number");
+            if(field!=-1){
+               sheet.getRow(row).getCell(field).setCellValue(new HSSFRichTextString(count+""));
+            }
+            CountsAreDirty = true;
+        }
+        out.printdata(label, numberFound);
+    }
+    
     /**
      * Returns the Table value
      * of these.
@@ -408,12 +464,22 @@ public class ImportRuleSets {
         POIFSFileSystem fs = new POIFSFileSystem( input );
         HSSFWorkbook wb = new HSSFWorkbook(fs);
         boolean tablefound = false;
+        CountsAreDirty = false;
         for(int i=0; i< wb.getNumberOfSheets(); i++){
             tablefound |= convertOneSheet(file.getName(),wb.getSheetAt(i),out,depth);
         }
+        if(CountsAreDirty == true){
+            System.out.println("Line Numbers on Contexts, Initial Actions, Conditions, and/or Actions are incorrect.\r\n" +
+            		"A Corrected version has been written to the decision table directory");
+            OutputStream output = new FileOutputStream(file.getAbsolutePath()+".fixedCounts");
+            wb.write(output);
+        }
         return tablefound;
         
-	}    
+	}   
+	
+	String currentDT = "";
+	
     /**
      * Returns true if the given sheet describes a valid DecisionTable.
      *
@@ -435,6 +501,7 @@ public class ImportRuleSets {
         out.opentag("decision_table");
         
         String dtName = value.replaceAll("[\\s]+", "_");
+        currentDT = dtName;
         
         indent(depth);
         System.out.println(dtName);
@@ -482,6 +549,7 @@ public class ImportRuleSets {
         if(attrib.equalsIgnoreCase("contexts")){
             rowIndex++;
             out.opentag("contexts");
+            int contextCount = 1;
             while(true){
                 attrib           = getNextAttrib(sheet, rowIndex);
                 if(attrib.length()>0)break;   
@@ -489,8 +557,11 @@ public class ImportRuleSets {
                 if(context != "") 
                 {
                     out.opentag("context_details");
+                    printNumber(out,sheet,rowIndex,"context_number",contextCount++);
                     out.printdata("context_description",context);
                     out.closetag();
+                }else{  
+                    clearNumber(sheet,rowIndex);
                 }
                 rowIndex++;
             }
@@ -503,14 +574,14 @@ public class ImportRuleSets {
         if(attrib.equalsIgnoreCase("initial_actions")){
             rowIndex++;
             out.opentag("initial_actions");
-            while(isAction(sheet,rowIndex)){                 
+            int iactionCount = 1;
+            while(isAction(sheet,rowIndex)){  
                 String initialActionDescription = getDSL(sheet, rowIndex); 
     
                 if(initialActionDescription != "") 
                 {
                     out.opentag("initial_action_details");
-                    String actionNumber = getNumber(sheet, rowIndex); 
-                    out.printdata("initial_action_number",actionNumber);
+                    printNumber(out,sheet,rowIndex,"intial_action_number",iactionCount++);
                     
                     String initialActionComment = getComments(sheet, rowIndex);
                     out.printdata("initial_action_comment",initialActionComment);
@@ -520,6 +591,8 @@ public class ImportRuleSets {
                     
                     out.printdata("initial_action_description",initialActionDescription);
                     out.closetag();
+                }else{  
+                    clearNumber(sheet,rowIndex);
                 }
                 rowIndex++;
             }
@@ -531,16 +604,16 @@ public class ImportRuleSets {
         rowIndex++;
         
         out.opentag("conditions");
+        int conditionCount = 1;
         while(isCondition(sheet, rowIndex)){
             
         	String conditionDescription = getDSL(sheet, rowIndex); 
 
         	if(conditionDescription != "") {
         		out.opentag("condition_details");
-	        	String conditionNumber = getNumber(sheet, rowIndex); 
-                out.printdata("condition_number",conditionNumber);
-	        	
-	        	String conditionComment = getNumber(sheet, rowIndex);
+                printNumber(out,sheet,rowIndex,"condition_number",conditionCount++);
+                	
+	        	String conditionComment = getComments(sheet, rowIndex);
                 out.printdata("condition_comment",conditionComment);
                 
                 String requirements         = getRequirement(sheet, rowIndex);
@@ -562,8 +635,10 @@ public class ImportRuleSets {
 	        		}
 	        	}
                 out.closetag();
-        	}
-            rowIndex++;
+        	}else{ 
+                clearNumber(sheet,rowIndex);
+            }
+        	rowIndex++;
         }
         out.closetag();
         
@@ -572,12 +647,12 @@ public class ImportRuleSets {
         rowIndex++;
         
         out.opentag("actions");
+        int actionCount = 1;
         	while(isAction(sheet,rowIndex)){
         	    String actionDescription = getDSL(sheet, rowIndex);  
                 if(actionDescription.length()>0){
                     out.opentag("action_details");
-            		String actionNumber = getNumber(sheet, rowIndex);
-            		out.printdata("action_number",actionNumber);
+                    printNumber(out,sheet,rowIndex,"action_number",actionCount++);
                 	
                 	String actionComment = getComments(sheet, rowIndex); 
                     out.printdata("action_comment",actionComment);
@@ -599,7 +674,9 @@ public class ImportRuleSets {
                 		}
                 	}
                     out.closetag();
-                }	
+                }else{	
+                    clearNumber(sheet,rowIndex);
+                }    
             	rowIndex++;  
             	
         	}
