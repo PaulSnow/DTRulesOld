@@ -293,10 +293,10 @@ public class Excel2XML {
                 ChangeReport cr = new ChangeReport(
                         ruleset,
                         path,
-                        "DTRules.xml",
+                        rulesConfig,
                         "development",
                         applicationRepositoryPath,
-                        "DTRules.xml",
+                        rulesConfig,
                         "deployed");
                 cr.compare(System.out);
                 cr.compare(new FileOutputStream(converter.getRuleSet().getWorkingdirectory()+"changes.xml"));   

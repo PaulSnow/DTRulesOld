@@ -374,10 +374,14 @@ public abstract class ATestHarness implements ITestHarness {
                 try{
                     result1 = XMLTree.BuildTree(new FileInputStream(file),false,false);
                     result2 = XMLTree.BuildTree(new FileInputStream(getResultDirectory()+file.getName()),false, false);
-                    if(compareNodes(result1,result2)){
-                        report.printdata("match","file",file.getName(),"");
+                    if(result1 != null && result2 != null){
+                        if(compareNodes(result1,result2)){
+                            report.printdata("match","file",file.getName(),"");
+                        }else{
+                            report.printdata("resultChanged","file",file.getName(),"");
+                        }
                     }else{
-                        report.printdata("resultChanged","file",file.getName(),"");
+                        report.printdata("error","file",file.getName(),"");
                     }
                 }catch (Exception e){
                     report.printdata("unknown","file",file.getName(),"Missing Files to do the compare");
