@@ -1,5 +1,5 @@
-/*  
- * Copyright 2004-2007 MTBJ, Inc.  
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */
+ **/
 package com.dtrules.decisiontables;
 
 import com.dtrules.infrastructure.RulesException;
@@ -37,7 +37,7 @@ public class BalanceTable {
     } 
     
     RDecisionTable balancedTable (IRSession s) throws RulesException{
-        if(!dt.isCompiled())dt.build();
+        if(!dt.isCompiled())dt.build(s.getState());
         if(!dt.isCompiled()){
             throw new RulesException("DecisionTableError","balancedTable()","Malformed Decision Table");
         }
@@ -46,7 +46,7 @@ public class BalanceTable {
         atable = btable.actiontable;
         filltable(0,0,btable.decisiontree); 
         btable.setType(RDecisionTable.Type.BALANCED);
-        btable.build();
+        btable.build(s.getState());
         return btable;
     }
 

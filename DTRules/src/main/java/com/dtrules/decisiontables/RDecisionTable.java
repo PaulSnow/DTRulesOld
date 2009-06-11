@@ -1,7 +1,5 @@
-/*  
- * $Id$   
- *  
- * Copyright 2004-2007 MTBJ, Inc.  
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -14,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */  
+ **/ 
   
 package com.dtrules.decisiontables;
 
@@ -62,10 +60,10 @@ public class RDecisionTable extends ARObject {
     
     enum UnbalancedType { FIRST, ALL };         // Unbalanced Table Types.
     public static enum Type { 
-        BALANCED { void build(RDecisionTable dt) {dt.buildBalanced(); }},
-        FIRST    { void build(RDecisionTable dt) {dt.buildUnbalanced(UnbalancedType.FIRST); }},
-        ALL      { void build(RDecisionTable dt) {dt.buildUnbalanced(UnbalancedType.ALL);   }};
-        abstract void build(RDecisionTable dt);
+        BALANCED { void build(DTState state, RDecisionTable dt) {dt.compile(); dt.buildBalanced();                       dt.check(null);}},
+        FIRST    { void build(DTState state, RDecisionTable dt) {dt.compile(); dt.buildUnbalanced(state, UnbalancedType.FIRST); dt.check(null);}},
+        ALL      { void build(DTState state, RDecisionTable dt) {dt.compile(); dt.buildUnbalanced(state, UnbalancedType.ALL);   dt.check(null);}};
+        abstract void build(DTState state, RDecisionTable dt);
     }    
   
     public Type  type = Type.BALANCED;          // By default, all decision tables are balanced.
@@ -107,6 +105,217 @@ public class RDecisionTable extends ARObject {
 	String      contextsrc;                     // For Tracing...
 	IRObject    rcontext;                       //  lists of entities.  It is best if this is done within the table than
 	                                            //  by the calling table.
+	boolean  [] columnsSpecified  = null;       // Columns defined in the XML
+	boolean  [] columnsUsed       = null;       // These are the columns really used in the executable form of the table.
+	boolean  [] conditionsUsed    = null;       // We mark conditions which might be evaluated
+	boolean  [] actionsUsed       = null;       // We mark actions which might be evaluated
+	boolean  [] columnUnreachable = null;       // Mark actions unreachable if they don't end up in the decision tree
+	boolean     hasNullColumn     = false;      // Not all tables have a null column.  This is true if 
+	                                            //   this table has one.
+	
+	public boolean getHasNullColumn(){
+	    return hasNullColumn;
+	}
+	
+	/**
+     * @return the type
+     */
+    public Type getType() {
+        return type;
+    }
+
+    /**
+     * @return the mAXCOL
+     */
+    public static int getMAXCOL() {
+        return MAXCOL;
+    }
+
+    /**
+     * @return the maxcol
+     */
+    public int getMaxcol() {
+        return maxcol;
+    }
+
+    /**
+     * @return the ruleset
+     */
+    public RuleSet getRuleset() {
+        return ruleset;
+    }
+
+    /**
+     * @return the fields
+     */
+    public Map<RName, String> getFields() {
+        return fields;
+    }
+
+    /**
+     * @return the initialActions
+     */
+    public String[] getInitialActions() {
+        return initialActions;
+    }
+
+    /**
+     * @return the rinitialActions
+     */
+    public IRObject[] getRinitialActions() {
+        return rinitialActions;
+    }
+
+    /**
+     * @return the initialActionsPostfix
+     */
+    public String[] getInitialActionsPostfix() {
+        return initialActionsPostfix;
+    }
+
+    /**
+     * @return the initialActionsComment
+     */
+    public String[] getInitialActionsComment() {
+        return initialActionsComment;
+    }
+
+    /**
+     * @return the contexts
+     */
+    public String[] getContexts() {
+        return contexts;
+    }
+
+    /**
+     * @return the contextsPostfix
+     */
+    public String[] getContextsPostfix() {
+        return contextsPostfix;
+    }
+
+    /**
+     * @return the contextsrc
+     */
+    public String getContextsrc() {
+        return contextsrc;
+    }
+
+    /**
+     * @return the rcontext
+     */
+    public IRObject getRcontext() {
+        return rcontext;
+    }
+
+    /**
+     * @return the columnsSpecified
+     */
+    public boolean[] getColumnsSpecified() {
+        return columnsSpecified;
+    }
+
+    /**
+     * @return the columnsUsed
+     */
+    public boolean[] getColumnsUsed() {
+        return columnsUsed;
+    }
+
+    /**
+     * @return the conditionsUsed
+     */
+    public boolean[] getConditionsUsed() {
+        return conditionsUsed;
+    }
+
+    /**
+     * @return the actionsUsed
+     */
+    public boolean[] getActionsUsed() {
+        return actionsUsed;
+    }
+
+    /**
+     * @return the columnUnreachable
+     */
+    public boolean[] getColumnUnreachable() {
+        return columnUnreachable;
+    }
+
+    /**
+     * @return the errorlist
+     */
+    public List<ICompilerError> getErrorlist() {
+        return errorlist;
+    }
+
+    /**
+     * @return the balanceTable
+     */
+    public BalanceTable getBalanceTable() {
+        return balanceTable;
+    }
+
+    private void whatsUsed(){
+        columnsSpecified  = new boolean [conditiontable[0].length];
+	    columnsUsed       = new boolean [conditiontable[0].length];
+	    columnUnreachable = new boolean [conditiontable[0].length];
+	    conditionsUsed    = new boolean [conditions.length];
+	    actionsUsed       = new boolean [actions.length];
+	    
+	    for(int col=0; col < conditiontable[0].length; col++){   // For each column
+	        for(int row=0; row < conditiontable.length; row++) { // For each row
+	            if(    conditiontable[row][col].equalsIgnoreCase("y")||
+	                   conditiontable[row][col].equalsIgnoreCase("n")||
+	                   conditiontable[row][col].equalsIgnoreCase("*")){
+	                columnsSpecified[col]    = true;
+	            }
+	        }
+	                // A bit tricky.  We LOOK at columns that seem to be used.
+                    //  but if no actions are specified, we don't worry about them.
+                    //  This is because dead columns will be dropped when we 
+                    //  balance tables, and we will throw a bogus error if we don't
+                    //  ignore such columns here.
+	 
+	        for(int row=0; row < actions.length; row++){
+	            if( columnsSpecified[col] && actiontable[row][col].equalsIgnoreCase("x")){
+	                columnsUsed[col]=true;                  // If there is an action specified, return it to the used
+	                actionsUsed[row]=true;                  //   category (and mark the action as used as well).
+	            }
+	        }
+	    }
+	}	
+	
+	private void setUnreachable(){
+	    for(int i=0; i < columnsUsed.length; i++){         // We assume the worst... If we are using the column,
+	        columnUnreachable[i]=columnsUsed[i];           //  then we assume it is unreachable until proven 
+	    }                                                  //  otherwise.
+	    setUnreachable(decisiontree);                      // Now go look for each column in the decisiontree!
+	}
+	
+	private void setUnreachable(DTNode node){              // This is a recursive search for each column... 
+	    if(node == null ) return;                          // Somebody else's problem if nulls are in the tree...
+	    if(node instanceof CNode){                         // If a condition node, recurse...
+            setUnreachable( ((CNode)node).iftrue);         //    look at the true branches... 
+            setUnreachable( ((CNode)node).iffalse);        //    look at the false branches...
+            conditionsUsed[((CNode)node).conditionNumber] = true;   // And set that we might actually need to evaluate
+	    }                                                  //             this condition.
+	    if(node instanceof ANode){                         // If this is an Action Node... Look at its columns!    
+	        for (int col : ((ANode)node).columns){         // Simply grab the columns that might lead to this action...
+	            columnUnreachable[col-1]=false;            //    and mark them as reachable (i.e. not unreachable)
+	        }
+	        if(((ANode)node).columns.size()==0) {          // If no column got us here, then this is a null column
+	            hasNullColumn = true;
+	        }
+	        for (int action : ((ANode)node).anumbers){     // Mark all the actions in this column as used.
+	            actionsUsed[action]=true;
+	        }
+	    }
+	    
+	}
+	
+	
 	
 	List<ICompilerError> errorlist = new ArrayList<ICompilerError>();
 	DTNode decisiontree=null;
@@ -218,7 +427,7 @@ public class RDecisionTable extends ARObject {
      * Build this decision table according to its type.
      *
      */
-	public void build(){
+	public void build(DTState state){
        errorlist.clear();
        decisiontree = null;
        buildContexts();
@@ -226,7 +435,7 @@ public class RDecisionTable extends ARObject {
         * If a context or contexts are specified for this decision table,
         * compile the context formal into postfix.
         */
-       type.build(this);
+       type.build(state, this);
     }
         
     /**
@@ -261,7 +470,7 @@ public class RDecisionTable extends ARObject {
 		dtname       = RName.getRName(name,true);
 		
         EntityFactory ef = ruleset.getEntityFactory(session);
-        RDecisionTable dttable =ef.findDecisionTable(RName.getRName(name)); 
+        RDecisionTable dttable =ef.findDecisionTable(RName.getRName(name));
         if(dttable != null){
             new CompilerError(CompilerError.Type.TABLE,"Duplicate Decision Tables Found",0,0);
 		}    
@@ -273,66 +482,130 @@ public class RDecisionTable extends ARObject {
 	 * compile all conditions and all actions.
 	 */
 	public List<ICompilerError> compile(){
-		compiled          = true;                  // Assume the compile will work.
-		rconditions       = new IRObject[conditionsPostfix.length];
-		ractions          = new IRObject[actionsPostfix.length];
-		rinitialActions   = new IRObject[initialActionsPostfix.length];
-		
-		for(int i=0; i< initialActions.length; i++){
-             try {
-                 rinitialActions[i] = RString.compile(session, initialActionsPostfix[i],true);
-             } catch (Exception e) {
-                 errorlist.add(
-                         new CompilerError(
-                            ICompilerError.Type.INITIALACTION,
-                            "Postfix Interpretation Error: "+e,
-                            initialActionsPostfix[i],
-                            i
-                         )
-                 );            
-                 compiled = false;
-                 rinitialActions[i]=RNull.getRNull();
+	    try{
+    		compiled          = true;                  // Assume the compile will work.		
+    		rconditions       = new IRObject[conditionsPostfix.length];
+    		ractions          = new IRObject[actionsPostfix.length];
+    		rinitialActions   = new IRObject[initialActionsPostfix.length];
+    		
+    		for(int i=0; i< initialActions.length; i++){
+                 try {
+                     rinitialActions[i] = RString.compile(session, initialActionsPostfix[i],true);
+                 } catch (Exception e) {
+                     errorlist.add(
+                             new CompilerError(
+                                ICompilerError.Type.INITIALACTION,
+                                "Postfix Interpretation Error: "+e,
+                                initialActionsPostfix[i],
+                                i
+                             )
+                     );            
+                     compiled = false;
+                     rinitialActions[i]=RNull.getRNull();
+                 }
              }
-         }
-		 
-		for(int i=0;i<rconditions.length;i++){
-			try {
-				rconditions[i]= RString.compile(session, conditionsPostfix[i],true);
-			} catch (RulesException e) {
-                errorlist.add(
-                   new CompilerError(
-                      ICompilerError.Type.CONDITION,
-                      "Postfix Interpretation Error: "+e,
-                      conditionsPostfix[i],
-                      i
-                   )
-                );
-                compiled=false;
-				rconditions[i]=RNull.getRNull();
-			}
+    		 
+    		for(int i=0;i<rconditions.length;i++){
+    			try {
+    				rconditions[i]= RString.compile(session, conditionsPostfix[i],true);
+    			} catch (RulesException e) {
+                    errorlist.add(
+                       new CompilerError(
+                          ICompilerError.Type.CONDITION,
+                          "Postfix Interpretation Error: "+e,
+                          conditionsPostfix[i],
+                          i
+                       )
+                    );
+                    compiled=false;
+    				rconditions[i]=RNull.getRNull();
+    			}
+    		}
+    		for(int i=0;i<ractions.length;i++){
+    			try {
+    				ractions[i]= RString.compile(session, actionsPostfix[i],true);
+    			} catch (RulesException e) {
+                    errorlist.add(
+                            new CompilerError(
+                               ICompilerError.Type.ACTION,
+                               "Postfix Interpretation Error: "+e,
+                               actionsPostfix[i],
+                               i
+                            )
+                         );
+                    compiled=false;
+    				ractions[i]=RNull.getRNull();
+    			}
+    		}
+	    }catch(Exception e){
+            errorlist.add(
+                    new CompilerError(
+                       ICompilerError.Type.TABLE,
+                       "Unexpected Exception Thrown: "+e,
+                       0,
+                       0
+                    )
+                 );
+      
+	  
+	    }
+		return errorlist;
+	}
+	
+	/**
+	 * Checks the compile of this decision table, setting the columns used and
+	 * looks for unreachable columns.
+	 */
+	public void check(PrintStream out){
+		
+	    whatsUsed();
+		setUnreachable();
+		
+        boolean header = false;
+
+		for(int i=0; i< columnUnreachable.length; i++){
+		    if(columnUnreachable[i]){
+		        if(out!= null && header == false){
+                    out.println (getName().stringValue());
+                    header = true;
+                }
+                if(out!=null)out.println("  *** Column "+(i+1)+" cannot be reached.");
+                
+		        //errorlist.add(                              // Print warings about unreachable code.
+                //        new CompilerError(
+                //                ICompilerError.Type.TABLE,
+                //                "Column "+(i+1)+" cannot be reached.",
+                //                0,i
+                //             )
+                //        );
+		    }
 		}
-		for(int i=0;i<ractions.length;i++){
-			try {
-				ractions[i]= RString.compile(session, actionsPostfix[i],true);
-			} catch (RulesException e) {
-                errorlist.add(
-                        new CompilerError(
-                           ICompilerError.Type.ACTION,
-                           "Postfix Interpretation Error: "+e,
-                           actionsPostfix[i],
-                           i
-                        )
-                     );
-                compiled=false;
-				ractions[i]=RNull.getRNull();
-			}
+				
+		for(int i=0; i< conditionsUsed.length; i++){
+		    if(rconditions[i]!=null && conditionsUsed[i]==false){
+		        if(out!= null && header == false){
+		            out.println (getName().stringValue());
+		            header = true;
+		        }
+		        if(out!=null)out.println("      condition "+(i+1)+" is not used");
+		    }
 		}
-        return errorlist;
+		
+		for(int i=0; i< actionsUsed.length; i++){
+            if(ractions[i]!=null && actionsUsed[i]==false){
+                if(out != null && header == false){
+                    out.println (getName().stringValue());
+                    header = true;
+                }
+                if(out!=null)out.println("      action "+(i+1)+" is not used");
+            }
+        }
 	}
 	
 	public void execute(DTState state) throws RulesException {
 	    RDecisionTable last = state.getCurrentTable();
 	    state.setCurrentTable(this);
+	    state.traceTagBegin("decisiontable","name",dtname.stringValue());
 	    try {
 			int estk     = state.edepth();
 			int dstk     = state.ddepth();
@@ -382,10 +655,12 @@ public class RDecisionTable extends ARObject {
 			     (cstk!= state.cdepth() ? "Control Stack before "+cstk+" after "+state.cdepth()+"\n":""));
 			}
 		} catch (RulesException e) {
+	        state.traceTagEnd();
 			e.addDecisionTable(this.getName().stringValue(), this.getFilename());
 			state.setCurrentTable(last);
 			throw e;
 		}
+		state.traceTagEnd();
 	    state.setCurrentTable(last);
 	}
 	
@@ -407,7 +682,6 @@ public class RDecisionTable extends ARObject {
                                          //  so we can toss any extra entities added...
         if(trace){
             state.traceTagEnd();
-            state.traceTagBegin("decisiontable","name",dtname.stringValue());
             if(state.testState(DTState.VERBOSE)){
                 state.traceTagBegin("entity_stack");
                 for(int i=0;i<state.edepth();i++){
@@ -429,7 +703,6 @@ public class RDecisionTable extends ARObject {
             }
             state.traceTagEnd();
             if(decisiontree!=null)decisiontree.execute(state);
-            state.traceTagEnd();
             state.traceTagBegin("setup");
         }else{
             for( int i=0; rinitialActions!=null && i<rinitialActions.length; i++){
@@ -451,10 +724,10 @@ public class RDecisionTable extends ARObject {
 	 * then validates that structure.
 	 * @return true if the structure builds and is valid; false otherwise.
 	 */
-	public List<ICompilerError> getErrorList()  {
+	public List<ICompilerError> getErrorList(DTState state)  {
        if(decisiontree==null){
            errorlist.clear();
-           build();
+           build(state);
 	   }
 	   return errorlist;
 	}	
@@ -469,18 +742,17 @@ public class RDecisionTable extends ARObject {
      * The way we build this binary tree is we walk down each column, tracing
 	 * that column's path through the decision tree.  Once we are at the end of the column,
 	 * we add on the actions.  This algorithm assumes that a decision table describes
-	 * a complete decision tree, i.e. there is no set of posible condition states which 
+	 * a complete decision tree, i.e. there is no set of possible condition states which 
      * are not explicitly handled by the decision table.
 	 *
 	 */
 	void buildBalanced() {
-		compile();
 		if(conditiontable[0].length == 0 ||           // If we have no conditions, or
 		   conditiontable[0][0].equals("*")){         // If *, we just execute all actions
 		   decisiontree = ANode.newANode(this,0);	  //   checked in the first column             
 		   return;
 		}
-        
+       
 		decisiontree = new CNode(this,0,0, rconditions[0]);                          // Allocate a root node.
        
         for(int col=0;col<maxcol;col++){						// For each column, we are going to run down the
@@ -865,10 +1137,7 @@ public class RDecisionTable extends ARObject {
      * to execute only the first column whose conditions are met.  This 
      * routine executes all columns whose conditions are met.
      */
-    public void buildUnbalanced(UnbalancedType type) {
-       
-        compile(); 
-        
+    public void buildUnbalanced(DTState state, UnbalancedType type) {
        if( 
            conditiontable.length == 0 ||
     	   conditiontable[0].length == 0 ||           // If we have no conditions, or
@@ -914,7 +1183,7 @@ public class RDecisionTable extends ARObject {
        }    
        addDefaults(top,defaults);                                   // Add defaults to all unmapped branches
        if(allCol >= 0) addAll(top, ANode.newANode(this,allCol));    // Add to all branches the All actions
-       decisiontree = optimize(top);                                // Optimize the given tree.
+       decisiontree = optimize(state, top);                                // Optimize the given tree.
     }     
 
     /**
@@ -947,15 +1216,15 @@ public class RDecisionTable extends ARObject {
      * @param node
      * @return
      */
-    private DTNode optimize(DTNode node){
-        ANode opt = node.getCommonANode();
+    private DTNode optimize(DTState state, DTNode node){
+        ANode opt = node.getCommonANode(state);
         if(opt!=null){
             return opt;
         }
         CNode cnode = (CNode) node;
-        cnode.iftrue  = optimize(cnode.iftrue);
-        cnode.iffalse = optimize(cnode.iffalse);
-        if(cnode.iftrue.equalsNode(cnode.iffalse)){
+        cnode.iftrue  = optimize(state, cnode.iftrue);
+        cnode.iffalse = optimize(state, cnode.iffalse);
+        if(cnode.iftrue.equalsNode(state, cnode.iffalse)){
             return cnode.iftrue;
         }
         return cnode;

@@ -1,3 +1,19 @@
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
+ *   
+ * Licensed under the Apache License, Version 2.0 (the "License");  
+ * you may not use this file except in compliance with the License.  
+ * You may obtain a copy of the License at  
+ *   
+ *      http://www.apache.org/licenses/LICENSE-2.0  
+ *   
+ * Unless required by applicable law or agreed to in writing, software  
+ * distributed under the License is distributed on an "AS IS" BASIS,  
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
+ * See the License for the specific language governing permissions and  
+ * limitations under the License.  
+ **/ 
+
 package com.dtrules.testsupport;
 
 import java.io.File;
@@ -16,11 +32,18 @@ import com.dtrules.session.IRSession;
 import com.dtrules.session.RuleSet;
 import com.dtrules.session.RulesDirectory;
 import com.dtrules.xmlparser.XMLPrinter;
+import com.dtrules.xmlparser.XMLTree;
+import com.dtrules.xmlparser.XMLTree.Node;
 import com.dtrules.mapping.DataMap;
 
 public abstract class ATestHarness implements ITestHarness {
  
-    DataMap datamap=null;
+    DataMap datamap     =   null;
+    String  currentfile =   "";
+    
+    public String getCurrentFile () {
+        return currentfile;
+    }
     
     public void executeDecisionTables(IRSession session)throws RulesException{
     	String [] decisionTables = getDecisionTableNames(); 
@@ -105,6 +128,13 @@ public abstract class ATestHarness implements ITestHarness {
     public boolean Trace() { return true; }
     
     /**
+     * By default, we will produce a coverage report as long as you have trace
+     * turned on.  (No use if you don't, because we generate the coverage report
+     * from the trace files)
+     */
+    public boolean coverageReport() { return true; }
+    
+    /**
      * The name of the report file.
      * @return
      */
@@ -145,20 +175,6 @@ public abstract class ATestHarness implements ITestHarness {
              File           files[]  = dir.listFiles();
              int            dfcnt    = 1;
              
-             if(Verbose()){
-                 /** Print out the balanced tables **/
-                 PrintStream btables = new PrintStream(getOutputDirectory()+"balanced.txt");
-                 IRSession s=null;
-                 try {
-                    s = rs.newSession();
-                 } catch (RulesException e) {
-                    System.out.println("SystemPath: "+getPath());
-                    System.out.println("RulesDirectoryFile: "+getRulesDirectoryFile());
-                    throw e;
-                 }
-                 s.printBalancedTables(btables);
-             }
-             
              Date start = new Date();
              System.out.println(start);  
              
@@ -178,6 +194,13 @@ public abstract class ATestHarness implements ITestHarness {
                  }
                  
              }
+             
+             if(Trace() && coverageReport()){
+                 Coverage c = new Coverage(rs,getOutputDirectory());
+                 c.compute();
+                 c.printReport(new PrintStream(getOutputDirectory()+"coverage.xml"));
+             }
+             
              {
                  Date now = new Date();
                  long dt  = (now.getTime()-start.getTime())/dfcnt;
@@ -195,6 +218,11 @@ public abstract class ATestHarness implements ITestHarness {
          }
          
          rpt.close();
+         try{
+             compareTestResults();
+         }catch(Exception e){
+             System.out.println("Error comparing Test Results: "+e);
+         }
      }
      
      public void loadData(IRSession session, String path, String dataset)throws Exception {
@@ -207,17 +235,23 @@ public abstract class ATestHarness implements ITestHarness {
          mapping.loadData(session, datamap);
      }
     
+     
+     
      public void runfile(RulesDirectory rd, RuleSet rs,  int dfcnt, String path, String dataset) {
          
          PrintStream    out          = null;
          OutputStream   tracefile    = null;
          OutputStream   entityfile   = null;
+         
+         currentfile = dataset;
+         
+         String root = dataset.substring(0,dataset.indexOf("."));
 
          try {
               
-              out        = new PrintStream     (getOutputDirectory()+"results"   +dfcnt+ ".xml");
+              out        = new PrintStream     (getOutputDirectory()+root+"_results.xml");
               if(Trace()){
-                tracefile  = new FileOutputStream(getOutputDirectory()+"trace_"    +dfcnt+ ".xml");
+                tracefile  = new FileOutputStream(getOutputDirectory()+root+"_trace.xml");
               }
               IRSession      session    = rs.newSession();
               DTState        state      = session.getState();
@@ -231,9 +265,9 @@ public abstract class ATestHarness implements ITestHarness {
               loadData(session, path, dataset);
               
               if(Verbose()){
-                  datamap.print(new FileOutputStream(getOutputDirectory()+"datamap"+dfcnt+".xml"));
+                  datamap.print(new FileOutputStream(getOutputDirectory()+root+"_datamap.xml"));
                   
-                  entityfile = new FileOutputStream(getOutputDirectory()+"entities_before_" +dfcnt+ ".xml");
+                  entityfile = new FileOutputStream(getOutputDirectory()+root+"_entities_before.xml");
                   RArray entitystack = new RArray(0,false,false);
                   for(int i=0; i< session.getState().edepth()-2; i++){
                       entitystack.add(session.getState().entityfetch(i));
@@ -251,7 +285,7 @@ public abstract class ATestHarness implements ITestHarness {
               
               // Then if asked, dump the entities.
               if(Verbose()){
-                  entityfile = new FileOutputStream(getOutputDirectory()+"entities_after_" +dfcnt+ ".xml");
+                  entityfile = new FileOutputStream(getOutputDirectory()+root+"_entities_after.xml");
                   RArray entitystack = new RArray(0,false,false);
                   for(int i=0; i< session.getState().edepth()-2; i++){
                       entitystack.add(session.getState().entityfetch(i));
@@ -296,12 +330,81 @@ public abstract class ATestHarness implements ITestHarness {
           }
       }
     
-     public String referenceRulesDirectoryFile ()       { return null; }; 
+    /**
+     * By default, we will simply dump the entities as the report file.
+     */
+    public void printReport(int runNumber, IRSession session, PrintStream out)
+            throws Exception {
+        RArray entitystack = new RArray(0,false,false);
+        for(int i=0; i< session.getState().edepth()-2; i++){
+            entitystack.add(session.getState().entityfetch(i));
+        }
+        session.printEntityReport(new XMLPrinter(out), false, session.getState(), "entitystack", entitystack);
+    }
+
+    public String referenceRulesDirectoryFile ()       { return null; }; 
      public String referencePath ()                     { return null; };
      public void   changeReportXML(OutputStream report){
          ChangeReport cr = new ChangeReport(
                  getRuleSetName(), 
                  getPath(),getRulesDirectoryFile(),"development",
                  referencePath(),referenceRulesDirectoryFile(),"deployed");
+         try{
+             cr.compare(report);
+         }catch(Exception e){
+             System.out.println("Could not compare rule sets");
+         }
      }
+
+    public boolean compareNodes(Node thisResult, Node oldResult){
+         return thisResult.absoluteMatch(oldResult, false);
+     }
+     
+    public void compareTestResults() throws Exception {
+        XMLPrinter report = new XMLPrinter(compareTestResultsReport());
+        report.opentag("results");
+        File outputs = new File(getOutputDirectory());
+        if(outputs == null || !outputs.isDirectory()){
+            System.out.println("'"+getOutputDirectory()+"' does not exist or is not a directory");
+        }
+        File files[] = outputs.listFiles();
+        for(File file : files){
+            if(file.getName().endsWith("_results.xml")){
+                Node result1=null, result2=null;
+                try{
+                    result1 = XMLTree.BuildTree(new FileInputStream(file),false,false);
+                    result2 = XMLTree.BuildTree(new FileInputStream(getResultDirectory()+file.getName()),false, false);
+                    if(compareNodes(result1,result2)){
+                        report.printdata("match","file",file.getName(),"");
+                    }else{
+                        report.printdata("resultChanged","file",file.getName(),"");
+                    }
+                }catch (Exception e){
+                    report.printdata("unknown","file",file.getName(),"Missing Files to do the compare");
+                }
+            }
+        }
+        report.closetag();
+    }
+
+    /**
+     * By default, we will look for a directory: <br> 
+     * <br>
+     *      <testdirectory>/results <br>
+     */
+    public String getResultDirectory() {
+        return getOutputDirectory()+"results/";        
+    }
+    
+    /**
+     * Returns standard out by default.
+     */
+    public PrintStream  compareTestResultsReport () throws Exception {
+        PrintStream ctrr = new PrintStream(getOutputDirectory()+"TestResults.xml");
+        return ctrr;
+        
+    }
+    
+     
+     
 }

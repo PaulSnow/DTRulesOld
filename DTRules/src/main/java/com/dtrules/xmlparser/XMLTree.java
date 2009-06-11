@@ -1,7 +1,5 @@
-/*  
- * $Id$   
- *  
- * Copyright 2004-2009 DTRules.com 
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -14,7 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */ 
+ **/ 
+
 package com.dtrules.xmlparser;
 
 import java.io.FileInputStream;
@@ -96,6 +95,7 @@ public class XMLTree {
         }
         
         private String fix(String s, boolean whitespace ){
+            if(s==null)return "";
             if(whitespace)return s;
             s = s.trim().replaceAll("[\r\n\t]"," ");
             while(s.indexOf("  ")>=0) {
@@ -284,8 +284,7 @@ public class XMLTree {
         }
 
         public boolean error(String v) throws Exception {
-            System.out.println(v);
-            return true;
+            return false;
         }
 
         public void comment(String comment) {
@@ -323,7 +322,27 @@ public class XMLTree {
     
    
     
-    
+    /**
+     * Bubble sort with quick out. Very fast on previously sorted data
+     * and pretty fast on nearly sorted data.
+     * @param array
+     */
+    public static void sortByAttribute(boolean ascending, ArrayList<Node> nodes, String attribute){
+        int fence = nodes.size()-1;
+        boolean sorted = false;
+        for(int i=0; i < fence && !sorted ; i++){
+            for(int j = 0; j < fence-i; j++){
+                Node jth = nodes.get(j);
+                Node jplusOne = nodes.get(j+1);
+                if( jth.getAttributes().get(attribute).toString().compareTo(
+                        jplusOne.getAttributes().get(attribute).toString())>0 ^ !ascending){
+                    sorted = false;
+                    nodes.set(j,jplusOne);
+                    nodes.set(j+1,jth);
+                }
+            }
+        }
+    }
     
     
 }

@@ -1,7 +1,5 @@
-/*  
- * $Id$   
- *  
- * Copyright 2004-2007 MTBJ, Inc.  
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -14,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */ 
+ **/
 package com.dtrules.decisiontables;
 
 import java.util.Iterator;
@@ -92,13 +90,13 @@ public class DecisionTableTypeTest {
             
             test = new DecisionTableTypeTest(session,rs);
             test.dt.setType(RDecisionTable.Type.FIRST);
-            test.dt.build();
-            test.printtable ();
+            test.dt.build(session.getState());
+            test.printtable (session);
             
             test = new DecisionTableTypeTest(session,rs);
             test.dt.setType(RDecisionTable.Type.ALL);
-            test.dt.build();
-            test.printtable ();
+            test.dt.build(session.getState());
+            test.printtable (session);
             
             
         } catch (Exception e) {
@@ -107,7 +105,7 @@ public class DecisionTableTypeTest {
         
     } 
         
-    void printtable(){
+    void printtable(IRSession session){
        maxRow = maxCol = 0;
        filltable(0,0,dt.decisiontree);
       
@@ -131,7 +129,7 @@ public class DecisionTableTypeTest {
            }
            System.out.println();
        }
-       Iterator<ICompilerError> errors = dt.getErrorList().iterator();
+       Iterator<ICompilerError> errors = dt.getErrorList(session.getState()).iterator();
        while(errors.hasNext()){
            ICompilerError error = errors.next();
            System.out.println(error.getMessage()+

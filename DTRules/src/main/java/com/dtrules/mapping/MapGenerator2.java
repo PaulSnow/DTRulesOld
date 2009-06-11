@@ -1,7 +1,5 @@
-/*  
- * $Id$   
- *  
- * Copyright 2004-2007 MTBJ, Inc.  
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -14,12 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */ 
+ **/ 
 
-/**
- * This Generator works with the new Format for EDD's which defines Entities and fields 
- * within those entities
- */
 package com.dtrules.mapping;
 
 import java.io.FileInputStream;
@@ -34,6 +28,11 @@ import com.dtrules.xmlparser.GenericXMLParser;
 import com.dtrules.xmlparser.IGenericXMLParser;
 import com.dtrules.xmlparser.XMLPrinter;
 
+
+/**
+ * This Generator works with the new Format for EDD's which defines Entities and fields 
+ * within those entities
+ */
 @SuppressWarnings({"unchecked"})
 public class MapGenerator2 implements IGenericXMLParser, IMapGenerator  {
     String[]                    tagstk;

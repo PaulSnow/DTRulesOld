@@ -1,7 +1,5 @@
-/*  
- * $Id$   
- *  
- * Copyright 2004-2007 MTBJ, Inc.  
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -14,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */  
+ **/ 
   
 package com.dtrules.decisiontables;
 
@@ -53,20 +51,20 @@ public class CNode implements DTNode {
      * false paths are the same.
      * And those CommonANodes have to be equal.
      */
-	public boolean equalsNode(DTNode node) {
-        if(node.getClass().equals(CNode.class)){
+	public boolean equalsNode(DTState state, DTNode node) {
+        if(node instanceof CNode){
             CNode cnode = (CNode)node;
             if(cnode.conditionNumber != conditionNumber){
                 return false;
             }
-            return(cnode.iffalse.equalsNode(iffalse) && 
-               cnode.iftrue.equalsNode(iftrue));
+            return(cnode.iffalse.equalsNode(state, iffalse) && 
+               cnode.iftrue.equalsNode(state, iftrue));
         }else{
-            ANode me  = getCommonANode();       // Get this CNode's commonANode.
+            ANode me  = getCommonANode(state);  // Get this CNode's commonANode.
             if(me==null)return false;           // If none exists, it can't be equal!
-            ANode him = getCommonANode();       // Get the other DTNode's commonANode
+            ANode him = getCommonANode(state);  // Get the other DTNode's commonANode
             if(him==null)return false;          // If none exists, it can't be equal!
-            return me.equalsNode(him);          // Return true if this node matches that node!
+            return me.equalsNode(state, him);   // Return true if this node matches that node!
         }    
     }
 	
@@ -76,12 +74,17 @@ public class CNode implements DTNode {
      * So both iftrue and iffalse have to have a commonANode, and those have
      * to match.
      */
-    public ANode getCommonANode() {
-        ANode trueSide = iftrue.getCommonANode();           // Does the true side have a CommonANode
-        if(trueSide==null)return null;                      // Nope? false!
-        ANode falseSide = iffalse.getCommonANode();         // Does the false side have a CommonANode?
-        if(falseSide==null)return null;                     // Nope? false!
-        if(trueSide.equalsNode(falseSide))return trueSide;  // If they match, I just have to return one of them!
+    public ANode getCommonANode(DTState state) {
+        if(state.testState(DTState.TRACE) &&                // If we are tracing, don't do this.
+                iftrue.equalsNode(state, iffalse)){         // If both true/false paths are the same, 
+            ANode trueSide  = iftrue.getCommonANode(state); //   then we will merge them.  Get the 
+            ANode falseSide = iffalse.getCommonANode(state);
+            trueSide.addNode(falseSide);                    
+            if(trueSide instanceof ANode){                  // We add them together so we maintain the tracking
+                ((ANode) trueSide).addNode((ANode)falseSide);   //   of columns tested.
+            }
+            return trueSide;  
+        }
         return null;                                        // If they don't match, I have to return false!
     }
 

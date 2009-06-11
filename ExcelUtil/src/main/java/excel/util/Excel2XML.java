@@ -1,5 +1,5 @@
-/*  
- * Copyright 2004-2007 MTBJ, Inc.  
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -12,7 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */ 
+ **/ 
+
 package excel.util;
 
 import java.io.FileInputStream;
@@ -23,9 +24,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.channels.FileChannel;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.dtrules.admin.RulesAdminService;
 import com.dtrules.compiler.cup.Compiler;
 import com.dtrules.compiler.decisiontables.DTCompiler;
 import com.dtrules.decisiontables.RDecisionTable;
@@ -41,6 +44,7 @@ import com.dtrules.session.IRSession;
 import com.dtrules.session.RSession;
 import com.dtrules.session.RuleSet;
 import com.dtrules.session.RulesDirectory;
+import com.dtrules.testsupport.ChangeReport;
 
 public class Excel2XML {
 
@@ -142,6 +146,7 @@ public class Excel2XML {
      * @param NumErrorsToReport How many errors to print
      * @param err The output stream which to print the errors
      */
+    @SuppressWarnings("unchecked")
     public void compile(int NumErrorsToReport, PrintStream err) {
         
         try {
@@ -192,7 +197,18 @@ public class Excel2XML {
             
             dtcompiler.printErrors(err, NumErrorsToReport);
             err.println("Total Errors Found: "+dtcompiler.getErrors().size());
-            
+            if(dtcompiler.getErrors().size() == 0){
+                rd  = new RulesDirectory(path, rulesDirectoryXML);
+                rs  = rd.getRuleSet(RName.getRName(ruleset));
+                PrintStream btables = new PrintStream(rs.getWorkingdirectory()+"balanced.txt");
+                rs.newSession().printBalancedTables(btables);
+                RulesAdminService admin = new RulesAdminService(rs.newSession(),rd);
+                List tables = admin.getDecisionTables(rs.getName());
+                for(Object table : tables){
+                   RDecisionTable dtable = admin.getDecisionTable(rs.getName(),(String)table);
+                   dtable.check(System.out);
+                }
+            }
         } catch (Exception e) {
             err.print(e);
         }
@@ -243,5 +259,53 @@ public class Excel2XML {
                 mapping,
                 rs.getFilepath()+rs.getEDD_XMLName(), 
                 rs.getWorkingdirectory()+"map.xml");
+    }
+    
+    /**
+     * Helper function for compiling Rule Sets.
+     * @param path                  The Base Path in the file system.  All other files 
+     *                              are defined as relative points away from this Base Path
+     * @param rulesConfig           The name of the Rule Set configuration file
+     * @param ruleset               The name of the Rule Set to compile. (Most of the parameters
+     *                              to the compiler are pulled from the configuration file 
+     * @param applicationRepositoryPath     This is a relative path to a possibly different
+     *                              version of this Rule Set.  Generally, this is the version 
+     *                              that is currently deployed.  The compile will produce 
+     *                              a compare of changes between the Rule Set under development,
+     *                              and this Rule Set.  If null, this comparison will be skipped.
+     * @throws Exception
+     */
+    public static void compile (
+            String path, 
+            String rulesConfig, 
+            String ruleset,
+            String applicationRepositoryPath) throws Exception {
+        try{
+            System.out.println("Starting: "+ new Date());
+            Excel2XML converter     = new Excel2XML(path, rulesConfig, ruleset);
+            System.out.println("Converting: "+ new Date());
+            converter.convertRuleset();
+            System.out.println("Compiling: "+ new Date());
+            converter.compile(2,System.out);
+            System.out.println("Done: "+ new Date());
+            
+            if(converter.getDTCompiler().getErrors().size()==0 && applicationRepositoryPath != null){
+                ChangeReport cr = new ChangeReport(
+                        ruleset,
+                        path,
+                        "DTRules.xml",
+                        "development",
+                        applicationRepositoryPath,
+                        "DTRules.xml",
+                        "deployed");
+                cr.compare(System.out);
+                cr.compare(new FileOutputStream(converter.getRuleSet().getWorkingdirectory()+"changes.xml"));   
+            }
+    
+        } catch ( Exception ex ) {
+            System.out.println("Failed to convert the Excel files");
+            ex.printStackTrace();
+            throw ex;
+        }
     }
 }

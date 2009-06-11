@@ -1,7 +1,5 @@
-/*  
- * $Id$   
- *  
- * Copyright 2004-2007 MTBJ, Inc.  
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -14,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */  
+ **/
   
 package com.dtrules.decisiontables;
 
@@ -115,7 +113,7 @@ public class DTLoader implements IGenericXMLParser {
 		while(it.hasNext()){
             try {
                 RDecisionTable dt = ef.getDecisionTable(it.next());
-                dt.build();
+                dt.build(state);
                 
 			} catch (RulesException e) {
                 state.traceInfo("error","Error building Decision Table "+dt+"\r\n"+e);
