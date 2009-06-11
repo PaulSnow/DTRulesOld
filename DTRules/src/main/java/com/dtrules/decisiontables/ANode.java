@@ -67,7 +67,11 @@ public class ANode implements DTNode {
        return new ANode(dt,col+1, list, numbers);
     }   
     
-    public void addNode(ANode node){
+    public void addNode(DTNode _node){
+        if(!(_node instanceof ANode)){
+            throw new RuntimeException("Shouldn't every call if Node types don't match!");
+        }
+        ANode node = (ANode)_node;
         columns.addAll(node.columns);
         for(int i=0;i<node.anumbers.size(); i++){
             Integer index = node.anumbers.get(i);
