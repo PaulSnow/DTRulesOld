@@ -1225,6 +1225,7 @@ public class RDecisionTable extends ARObject {
         cnode.iftrue  = optimize(state, cnode.iftrue);
         cnode.iffalse = optimize(state, cnode.iffalse);
         if(cnode.iftrue.equalsNode(state, cnode.iffalse)){
+            cnode.iftrue.addNode(cnode.iffalse);
             return cnode.iftrue;
         }
         return cnode;

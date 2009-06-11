@@ -70,4 +70,11 @@ public interface DTNode {
     * there is only one execution path through an ANode).
     */
    ANode      getCommonANode(DTState state);
+   /**
+    * When optimizing a decision table, we have to be able to combine
+    * nodes intelligently. We have to maintain the column numbers, for 
+    * one thing.
+    * @param _node
+    */
+   public void addNode(DTNode _node);
 }

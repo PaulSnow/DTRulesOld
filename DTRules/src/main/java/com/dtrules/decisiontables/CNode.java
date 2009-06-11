@@ -149,4 +149,14 @@ public class CNode implements DTNode {
 	public String toString(){
 		return "Condition Number "+(conditionNumber+1);
 	}
+	
+	public void addNode(DTNode _node) {
+	    if(!(_node instanceof CNode)){
+	        throw new RuntimeException("Shouldn't ever attempt to combine nodes of different types");
+	    }
+	    CNode node = (CNode) _node;
+	    iftrue.addNode(node.iftrue);
+	    iffalse.addNode(node.iffalse);
+	}
+	
 }
