@@ -314,10 +314,22 @@ public class XMLTree {
         FileInputStream f = new FileInputStream(filename);
         return BuildTree(f, keepHeader, keepComments);
     }
-    
-    static public Node BuildTree(InputStream f, boolean keepHeader, boolean keepComments) throws Exception {
-        Loader l = new Loader(keepComments, keepHeader);
-        return l.loadStream(f);
+    /**
+     * Returns null if the inputStream provided isn't an XML file, or some other unexpected Exception
+     * is thrown.
+     * @param f
+     * @param keepHeader
+     * @param keepComments
+     * @return
+     * @throws Exception
+     */
+    static public Node BuildTree(InputStream f, boolean keepHeader, boolean keepComments) {
+        try {
+            Loader l = new Loader(keepComments, keepHeader);
+            return l.loadStream(f);
+        }catch(Exception e){
+            return null;
+        }
     }
     
    

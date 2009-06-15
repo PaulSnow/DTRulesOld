@@ -39,42 +39,44 @@ public class TestSampleProject2 extends ATestHarness {
     public String   getRuleSetName()          { return "SampleProject2";                }
     public String   getDecisionTableName()    { return "Compute_Eligibility";  }
     public String   getRulesDirectoryFile()   { return "xml/DTRules.xml";               }             
-
-    public void printReport(int runNumber, IRSession session, PrintStream out) throws RulesException {
-        out.println("Results from RunNumber: "+runNumber+"\r\n");
-        RArray results = session.getState().find("job.results").rArrayValue();
-        for(IRObject r :results){
-            IREntity result = r.rEntityValue();
-            
-            if(result.get("eligible").booleanValue()){
-                out.print("Approved For ");
-                prt(out,result,"program");
-                prt(out,result,"programLevel");
-            }else{
-                out.print("Not Approved for ");
-                prt(out,result,"program");
-                RArray notes = result.get("notes").rArrayValue();
-                for(IRObject n : notes){
-                    out.print("     ");
-                    out.print(n.stringValue());
-                }
-                out.println();
-            }
-            prt(out,result,"client_id");
-            prt(out,result,"totalGroupIncome");
-            prt(out,result,"client_fpl");
-            out.println("\r\n");
-        }
-    }
- 
-    private void prt(PrintStream out, IREntity entity, String attrib){
-        IRObject value = entity.get(attrib);
-        out.print(attrib+" = "+value.stringValue()+"\r\n");
-    }
-    
+   
     public static void main(String[] args) {
         TestSampleProject2 t = new TestSampleProject2();
         t.runTests();
+    }
+    
+    public void printReport(int runNumber, IRSession session, PrintStream _out) throws RulesException {
+        XMLPrinter xout = new XMLPrinter(_out);
+        xout.opentag("results","runNumber",runNumber);
+        RArray results = session.getState().find("job.results").rArrayValue();
+        for(IRObject r :results){
+            IREntity result = r.rEntityValue();
+
+            xout.opentag("Client","id",result.get("client_id"));
+            prt(xout,result,"totalGroupIncome");
+            prt(xout,result,"client_fpl");
+            if(result.get("eligible").booleanValue()){
+                xout.opentag("Approved");
+                prt(xout,result,"program");
+                prt(xout,result,"programLevel");
+                xout.closetag();
+            }else{
+                xout.opentag("NotApproved");
+                    prt(xout,result,"program");
+                    RArray notes = result.get("notes").rArrayValue();
+                    xout.opentag("Notes");
+                        for(IRObject n : notes){
+                           xout.printdata("note",n.stringValue());
+                        }
+                    xout.closetag();
+                xout.closetag();
+            }
+        }
+    }
+ 
+    private void prt(XMLPrinter xout, IREntity entity, String attrib){
+        IRObject value = entity.get(attrib);
+        xout.printdata(attrib,value);
     }
     
 }    

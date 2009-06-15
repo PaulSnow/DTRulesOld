@@ -46,25 +46,8 @@ public class CompileSampleProject2 {
     public static void main(String args[]) throws Exception { 
         try {
             
-            System.out.println("Starting: "+ new Date());
-            String file    = "xml/DTRules.xml";
-            String ruleset = "SampleProject2";
-            
-            Excel2XML converter     = new Excel2XML(path, file, ruleset);
-            System.out.println("Converting: "+ new Date());
-
-            converter.convertRuleset();
-            System.out.println("Compiling: "+ new Date());
-
-            converter.compile(2,System.out);
-            System.out.println("Done: "+ new Date());
-
-            MapGenerator mgen = new MapGenerator();
-            
-            mgen.generateMapping("main", 
-            		path+"xml/"+converter.getRuleSet().getEDD_XMLName(), 
-            		converter.getRuleSet().getWorkingdirectory()+"main.xml"); 
-           
+            Excel2XML.compile(path,"xml/DTRules.xml","SampleProject2","repository");
+                       
         } catch ( Exception ex ) {
             System.out.println("Failed to convert the Excel files");
             ex.printStackTrace();
