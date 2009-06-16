@@ -1,11 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-  <classpathentry kind="src" path="src/main/java"/>
-  <classpathentry kind="output" path="target/classes"/>
-  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-  <classpathentry kind="src" path="/DTParser"/>
-  <classpathentry kind="var" path="M2_REPO/java_cup/java-cup/11a/java-cup-11a.jar"/>
-  <classpathentry kind="src" path="/DTRules"/>
-  <classpathentry kind="var" path="M2_REPO/jsr94/jsr94/2.1/jsr94-2.1.jar"/>
-  <classpathentry kind="src" path="/DTScanner"/>
-  <classpathentry kind="var" path="M2_REPO/JFlex/JFlex/1.4.1/JFlex-1.4.1.jar"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="/DTParser"/>
+	<classpathentry kind="src" path="/DTRules"/>
+	<classpathentry kind="src" path="/DTScanner"/>
+	<classpathentry kind="lib" path="/DTParser/lib/java-cup-11a.jar"/>
+	<classpathentry kind="lib" path="/DTRules/lib/jsr94.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
