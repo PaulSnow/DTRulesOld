@@ -1,7 +1,5 @@
-/*  
- * $Id$   
- *  
- * Copyright 2004-2007 MTBJ, Inc.  
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -14,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */  
+ **/ 
   
 package com.dtrules.decisiontables;
 
@@ -69,7 +67,11 @@ public class ANode implements DTNode {
        return new ANode(dt,col+1, list, numbers);
     }   
     
-    public void addNode(ANode node){
+    public void addNode(DTNode _node){
+        if(!(_node instanceof ANode)){
+            throw new RuntimeException("Shouldn't every call if Node types don't match!");
+        }
+        ANode node = (ANode)_node;
         columns.addAll(node.columns);
         for(int i=0;i<node.anumbers.size(); i++){
             Integer index = node.anumbers.get(i);
@@ -114,7 +116,7 @@ public class ANode implements DTNode {
 	public void execute(DTState state) throws RulesException {
         Iterator<Integer> inum = anumbers.iterator();
         if(state.testState(DTState.TRACE)){
-            state.traceTagBegin("Column", "n",prtColumns(columns));
+            state.traceTagBegin("column", "n",prtColumns(columns));
         }
         int num = 0;
         try {
@@ -167,19 +169,17 @@ public class ANode implements DTNode {
      * only one set of actions it executes regardless of the path taken, and
      * 2) if the actions this node takes are exactly the as the node provided. 
 	 */
-    public boolean equalsNode(DTNode node) {
-        ANode other = node.getCommonANode();                    // Get the common path            
+    public boolean equalsNode(DTState state, DTNode node) {
+        ANode other = node.getCommonANode(state);               // Get the common path            
         if(other==null)return false;                            // No common path? Not Equal then!
         if(other.anumbers.size()!=anumbers.size()) return false;// Must be the same length.
-        Iterator<Integer> iother = other.anumbers.iterator();   // Iterate through the other node's actions.
-        Iterator<Integer> ithis  = anumbers.iterator();         // Also Iterate through this nodee's actions.
-        while(iother.hasNext()){                                //   The other node still has actions? loop!
-            if(!iother.next().equals(ithis.next()))return false;//   Make sure each action is the same action.
-        }                                                       //     If a mismatch is found, Not Equal!!!
+        for(int i = 0; i< anumbers.size(); i++){
+            if(!other.anumbers.get(i).equals(anumbers.get(i)))return false;  //   Make sure each action is the same action.
+        }                                                                    //     If a mismatch is found, Not Equal!!!
         return true;
     }
 
-    public ANode getCommonANode() {
+    public ANode getCommonANode(DTState state) {
         return this;
     }
     

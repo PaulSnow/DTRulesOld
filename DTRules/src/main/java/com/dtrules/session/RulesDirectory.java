@@ -1,7 +1,5 @@
-/*  
- * $Id$   
- *  
- * Copyright 2004-2007 MTBJ, Inc.  
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -14,8 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */  
-  
+ **/ 
+
 package com.dtrules.session;
 
 import java.io.FileInputStream;
@@ -190,7 +188,8 @@ public class RulesDirectory {
 				currentset.setFilepath(body.trim());
             }else if (tag.equals("WorkingDirectory")){
                 currentset.setWorkingdirectory(body.trim());
-            }else if (tag.equals("Entities")){
+            }else if (tag.equals("Entities") ||
+                      tag.equals("EDD") ){
 				currentset.edd_names.add((String) attribs.get("name"));
 			}else if (tag.equals("Decisiontables")){
 				currentset.dt_names.add((String) attribs.get("name"));
@@ -198,7 +197,8 @@ public class RulesDirectory {
 				currentset.map_paths.add((String) attribs.get("name"));
 			}else if (tag.equals("DTExcelFolder")){
 			    currentset.setExcel_dtfolder(body.trim());
-            }else if (tag.equals("EDDExcelFile")){
+            }else if (tag.equals("EDDExcelFile")||
+                      tag.equals("EDDExcelFolder")){
                 currentset.setExcel_edd(body.trim());
             }
 		}

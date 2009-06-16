@@ -1,5 +1,5 @@
-/*  
- * Copyright 2004-2007 MTBJ, Inc.  
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */
+ **/
 package com.dtrules.admin;
 
 import java.io.FileNotFoundException;
@@ -31,6 +31,7 @@ import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RName;
 import com.dtrules.session.EntityFactory;
+import com.dtrules.session.IRSession;
 import com.dtrules.session.RSession;
 import com.dtrules.session.RuleSet;
 import com.dtrules.session.RulesDirectory;
@@ -46,12 +47,12 @@ import com.dtrules.session.RulesDirectory;
  */
 @SuppressWarnings("unchecked")
 public class RulesAdminService implements IRulesAdminService{
-	final private RSession         session;
+	final private IRSession         session;
           private RulesDirectory   rd;          // The Rules Directory provides a place where Rule
                                                 // sets are defined.
         
 	/**
-     * The RulesAdminService needs a session for specifing the output of debugging
+     * The RulesAdminService needs a session for specifying the output of debugging
      * and trace information.  It needs a Rules Directory to administer.  
 	 */
     public RulesAdminService(final RSession session, final RulesDirectory rd) {
@@ -60,6 +61,18 @@ public class RulesAdminService implements IRulesAdminService{
         this.rd      = rd;
     }
 
+    /**
+     * The RulesAdminService needs a session for specifying the output of debugging
+     * and trace information.  It needs a Rules Directory to administer.  
+     */
+    public RulesAdminService(final IRSession session, final RulesDirectory rd) {
+        super();
+        this.session = session;
+        this.rd      = rd;
+    }
+    
+    
+    
     /**
      * Create a new Attribute;  The Entity modified is specified by the attribute.
      * @param rulesetname The name of the RuleSet where the attribute should be created.
@@ -370,7 +383,6 @@ public class RulesAdminService implements IRulesAdminService{
 	 * @see com.dtrules.admin.IRulesAdminService#updateRuleset(com.dtrules.session.RuleSet)
 	 */
 	public void updateRuleset(RuleSet ruleset) {
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -404,7 +416,7 @@ public class RulesAdminService implements IRulesAdminService{
         return rd;
     }
 
-    public final RSession getSession() {
+    public final IRSession getSession() {
         return session;
     }
     

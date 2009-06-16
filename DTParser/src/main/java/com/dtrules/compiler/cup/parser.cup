@@ -1,5 +1,5 @@
 /*  
- * Copyright 2004-2008 MTBJ, Inc.  
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -254,8 +254,8 @@ maximusstatements ::=
                                                       "} "+a+"for ";                            :} ;
 
                    
-usingblock   ::= RENTITY:ee        usingblock:e               {: RESULT = ee + "entitypush "+e+"entitypop ";  :} |
-                 RENTITY:ee COMMA  usingblock:e               {: RESULT = ee + "entitypush "+e+"entitypop ";  :} |
+usingblock   ::= RENTITY:ee        usingblock:e               {: RESULT = ee + " entitypush "+e+"entitypop ";  :} |
+                 RENTITY:ee COMMA  usingblock:e               {: RESULT = ee + " entitypush "+e+"entitypop ";  :} |
                  block:e                                      {: RESULT = e; :} ; 
 
 // To make this work, the token filter has to inject a token after every possessive parsed, and

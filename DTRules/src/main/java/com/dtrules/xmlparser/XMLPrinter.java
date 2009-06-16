@@ -1,7 +1,5 @@
-/*  
- * $Id$   
- *  
- * Copyright 2004-2007 MTBJ, Inc.  
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -14,7 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */ 
+ **/ 
+
 package com.dtrules.xmlparser;
 
 import java.io.OutputStream;
@@ -39,12 +38,64 @@ import com.dtrules.interpreter.RTime;
  */
 public class XMLPrinter implements IXMLPrinter {
     ArrayList<String>  tagStack    = new ArrayList<String>();
-    final PrintWriter  out;
+    final PrintWriter  pw;
     boolean            newline     = true;
     boolean            intextbody  = false;
     boolean            intagbody   = false;
     boolean            noSpaces    = false;
     String             indentStr   = "\t";
+   
+    StringBuffer       buffer      = new StringBuffer();
+    boolean            buffering   = false;
+   
+    /**
+     * Start buffering XML output.  Later you can decide to delete
+     * or write the buffered XML output.  A pointer into the buffer
+     * is returned to allow you to nest calls to buffer output.
+     * This index must be saved by the caller, and provided to either
+     * the deleteBuffer() or writeBuffer() call.
+     * 
+     * @return buffer index
+     */
+    public int bufferOutput(){
+        buffering =  true;
+        return buffer.length();
+    }
+    /**
+     * Delete the buffered output up to the point where the buffering
+     * begins.  This is defined by the pointer returned by the bufferOutput
+     * call.  Pointers that are greater than the current buffer size are
+     * ignored (this can happen if you mess up your nesting of 
+     * start buffer/end buffer calls) are ignored.
+     * @param ptr
+     */
+    public void deleteBuffer(int ptr){
+        if(ptr <= buffer.length()){
+            buffer.setLength(ptr);
+            buffering = ptr>0;
+        }
+    }
+    /**
+     * Write the buffer associated with the given buffer index.  If this
+     * index is zero, then this will turn off buffering.
+     * @param ptr
+     */
+    public void writeBuffer(int ptr){
+        if(ptr==0){
+            pw.write(buffer.toString());
+            pw.flush();
+            buffering =  false;
+        }
+    }
+    
+    private void prt(String s){
+        if(buffering){
+            buffer.append(s);
+        }else{
+            pw.write(s);
+        }
+        pw.flush();
+    }
     
     public void setSpaceCnt(int cnt){
         if(cnt>=0){
@@ -81,7 +132,7 @@ public class XMLPrinter implements IXMLPrinter {
      */
     private void newline(){
         if(noSpaces) return;
-        if(!newline)out.println();
+        if(!newline) prt("\r\n");
         newline = true;
     }
     /**
@@ -91,9 +142,17 @@ public class XMLPrinter implements IXMLPrinter {
      * @param text
      */
     private void print(String text){
-        out.print(text);
+        prt(text);
         newline = false;
     }
+    /**
+     * Just prints data inside a tag.  No effect on the newline character.
+     * @param text
+     */
+    private void printData(String text){
+        prt(text);
+    }
+    
     /**
      * Prints out spaces to indent
      */
@@ -412,7 +471,7 @@ public class XMLPrinter implements IXMLPrinter {
                 bodyvalue = RTime.getRTime((Date)bodyvalue);
             }
             String v = GenericXMLParser.encode(bodyvalue.toString());
-            out.print(v);
+            printData(v);
         }    
         intextbody = true;
     }
@@ -549,11 +608,11 @@ public class XMLPrinter implements IXMLPrinter {
     }
     
     public XMLPrinter(Writer out ){
-        this.out = new PrintWriter(out,true);
+        pw = new PrintWriter(out,true);
     }
     
     public XMLPrinter(OutputStream stream ){
-        out = new PrintWriter(stream,true);
+        pw = new PrintWriter(stream,true);
     }
     /**
      * Opens an output stream, and puts out the surrounding root tag.
@@ -561,7 +620,7 @@ public class XMLPrinter implements IXMLPrinter {
      * @param stream
      */
     public XMLPrinter(String tag, OutputStream stream){
-        out = new PrintWriter(stream,true);
+        pw = new PrintWriter(stream,true);
         opentag(tag);
     }
     

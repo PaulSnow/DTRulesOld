@@ -1,5 +1,5 @@
-/*  
- * Copyright 2004-2007 MTBJ, Inc.  
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -12,7 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */ 
+ **/ 
+
 
 package excel.util;
 
@@ -64,38 +65,43 @@ public class ImportRuleSets {
        return -1;
     }
   
-    private void indent(int depth){
-    	for(int j=0;j<depth;j++)System.out.print("  "); 
+    private void indent(StringBuffer buff, int depth){
+    	for(int j=0;j<depth;j++)buff.append("  "); 
     }
     /** 
      * Convert all the Excel files in the given directory, and all sub
-     * directories
+     * directories.  We return a string buffer of data on the decision tables
+     * converted, if we find any.  Otherwise we return a null.
      * @param directory
      * @param sb
      * @return true if some file to convert was found.
      * @throws Exception
      */    
-    private boolean convertFiles(File directory,XMLPrinter out, int depth) throws Exception{
+    private StringBuffer convertFiles(File directory,XMLPrinter out, int depth) throws Exception{
+        StringBuffer data = new StringBuffer();
         boolean xlsFound = false;
         File[] files = directory.listFiles();
         for(int i=0; i < files.length; i++){
             if(files[i].isDirectory()){
-            	indent(depth);
-            	System.out.println(files[i].getName());
-                if(convertFiles(files[i],out,depth+1)){
+            	indent(data, depth);
+            	data.append(files[i].getName());
+            	StringBuffer d2 = convertFiles(files[i],out,depth+1);
+            	if(d2!=null){
+            	   data.append(d2);
                    xlsFound = true;
                 }   
             }else{
                 if(files[i].getName().endsWith(".xls")){ 
-                	indent(depth);
-                	System.out.println(files[i].getName());
-                	convertDecisionTable(files[i], out, depth+1);
+                	indent(data, depth);
+                	data.append(files[i].getName());
+                	data.append("\r\n");
+                	convertDecisionTable(data, files[i], out, depth+1);
                 	xlsFound = true;
                 }  
             }    
         }
-        
-        return xlsFound;
+        if(xlsFound)return data;
+        return null;
     }
         
     /**
@@ -108,7 +114,12 @@ public class ImportRuleSets {
      */    
 	public void convertDecisionTables(String directory,String destinationFile) throws Exception{
 		  XMLPrinter out = new XMLPrinter("decision_tables",new FileOutputStream(destinationFile));
-		  convertFiles(new File(directory),out,0);
+		  StringBuffer conversion = convertFiles(new File(directory),out,0);
+		  if(conversion != null){
+		      System.out.print(conversion);
+		  }else{
+		      System.out.println("No Decision Tables Found");
+		  }
 		  out.close();
     }
     
@@ -457,7 +468,7 @@ public class ImportRuleSets {
      * @return true if at least one decision table was found in this file
      * @throws Exception
      */
-	public boolean convertDecisionTable(File file,XMLPrinter out, int depth) throws Exception{
+	public boolean convertDecisionTable(StringBuffer data, File file,XMLPrinter out, int depth) throws Exception{
 		if(! (file.getName().endsWith(".xls"))) return false; 
 		
 		InputStream input = new FileInputStream(file.getAbsolutePath());
@@ -466,7 +477,7 @@ public class ImportRuleSets {
         boolean tablefound = false;
         CountsAreDirty = false;
         for(int i=0; i< wb.getNumberOfSheets(); i++){
-            tablefound |= convertOneSheet(file.getName(),wb.getSheetAt(i),out,depth);
+            tablefound |= convertOneSheet(data, file.getName(),wb.getSheetAt(i),out,depth);
         }
         if(CountsAreDirty == true){
             System.out.println("Line Numbers on Contexts, Initial Actions, Conditions, and/or Actions are incorrect.\r\n" +
@@ -488,7 +499,7 @@ public class ImportRuleSets {
      * @param sb
      * @return
      */
-    private boolean convertOneSheet(String filename, HSSFSheet sheet,XMLPrinter out, int depth){    
+    private boolean convertOneSheet(StringBuffer data, String filename, HSSFSheet sheet,XMLPrinter out, int depth){    
         columns = defaultColumns;
         
         // The first row of a decision table has to provide the decision table name.  This is required!
@@ -503,8 +514,9 @@ public class ImportRuleSets {
         String dtName = value.replaceAll("[\\s]+", "_");
         currentDT = dtName;
         
-        indent(depth);
-        System.out.println(dtName);
+        indent(data,depth);
+        data.append(dtName);
+        data.append("\r\n");
         
         ArrayList<String> attributes = new ArrayList<String>();
         

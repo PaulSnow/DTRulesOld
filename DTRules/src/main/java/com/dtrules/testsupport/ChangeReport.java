@@ -1,6 +1,19 @@
-/**
- * 
- */
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
+ *   
+ * Licensed under the Apache License, Version 2.0 (the "License");  
+ * you may not use this file except in compliance with the License.  
+ * You may obtain a copy of the License at  
+ *   
+ *      http://www.apache.org/licenses/LICENSE-2.0  
+ *   
+ * Unless required by applicable law or agreed to in writing, software  
+ * distributed under the License is distributed on an "AS IS" BASIS,  
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
+ * See the License for the specific language governing permissions and  
+ * limitations under the License.  
+ **/ 
+
 package com.dtrules.testsupport;
 
 
@@ -268,7 +281,8 @@ public class ChangeReport {
                     }else if(tag.equals("Decisiontables")){
                         String file = attribs.get("name");
                         config.setDtsName(file);
-                    }else if(tag.equals("Entities")){
+                    }else if(tag.equals("Entities")
+                            || tag.equals("EDD")){
                         String file = attribs.get("name");
                         config.setEddName(file);
                     }else if(tag.equals("Map")){
@@ -351,24 +365,74 @@ public class ChangeReport {
    
    /**
     * Find all the nodes in a tree with a particular tag 
-    * @param node
-    * @param decisiontables
+    * @param tag        The tag to search for
+    * @param node       The node in the tree to search
+    * @param list       List of nodes with tag names that match.  If null, the
+    *                   list is allocated for you.
     */
-   public static void findnodes(String tag, Node node,ArrayList<Node> decisiontables){
+   public static ArrayList<Node> findnodes(String tag, Node node, ArrayList<Node> list){
+       if(list == null){
+           list = new ArrayList<Node>();
+       }
        if(node.getName().equals(tag)){
-           decisiontables.add(node);
+           list.add(node);
        }else{
            for(Node n : node.getTags()){
-               findnodes(tag,n,decisiontables);
+               findnodes(tag,n,list);
            }
        }
+       return list;
    }
+   
    public static ArrayList<Node> findentities(Node root){
        ArrayList<Node> entities = new ArrayList<Node>();
        findnodes("entity", root,entities);
        return entities;
    }
-      
+     
+   /**
+    * It is interesting to find what nodes have been added, and which have been deleted.
+    * This routine does that for us easily. We look for the nodes that have a matching 
+    * set of attributes in both lists.  If a node in the first list isn't in the second list (i.e.
+    * if we are matching on an attribute "name", and a node in list one has a name X, and
+    * no node in list2 has a name X, then we remove it from list one).
+    * 
+    * We remove nodes that cannot be compared.  It leaves us with only nodes in our lists
+    * common to both sources.
+    * @attrib
+    * @param t1
+    * @param t2
+    * @param message
+    * 
+    */
+   public static ArrayList<Node> findMissingNodes(String attribs[], ArrayList<Node> dts1, ArrayList<Node> dts2){
+       ArrayList<Node> missing = new ArrayList<Node>();
+       for(int i = dts1.size()-1; i>=0; i--){
+           Node t1 = dts1.get(i);
+           Node match = null;
+           for(Node t2: dts2){
+               boolean allmatch = true;
+               for(String attrib : attribs){
+                   if(!t1.getAttributes().get(attrib).equals(t2.getAttributes().get(attrib))){
+                       allmatch = false;
+                       break;
+                   }
+               }
+               if(allmatch){
+                   match = t2;
+                   break;
+               }
+           }
+           if(match == null){
+               missing.add(t1);         // Add the missing node to the list of missing nodes.
+               dts1.remove(i);
+           }else{
+               dts2.remove(match);      // Now this insures dts2 is in the same order
+               dts2.add(0,match);       // as dts1!  We do assume no duplicate tables...
+           }
+       }
+       return missing;
+   }
    /**
     * It is interesting to find what nodes have been added, and which have been deleted.
     * This routine does that for us easily. We look for the nodes that have a matching 
@@ -432,28 +496,6 @@ public class ChangeReport {
                    Object hld = array[j];
                    array[j]   = array[j+1];
                    array[j+1] = hld;
-               }
-           }
-       }
-   }
-
-   /**
-    * Bubble sort with quick out. Very fast on previously sorted data
-    * and pretty fast on nearly sorted data.
-    * @param array
-    */
-   void sortByAttribute(boolean ascending, ArrayList<Node> nodes, String attribute){
-       int fence = nodes.size()-1;
-       boolean sorted = false;
-       for(int i=0; i < fence && !sorted ; i++){
-           for(int j = 0; j < fence-i; j++){
-               Node jth = nodes.get(j);
-               Node jplusOne = nodes.get(j+1);
-               if( jth.getAttributes().get(attribute).toString().compareTo(
-                       jplusOne.getAttributes().get(attribute).toString())>0 ^ !ascending){
-                   sorted = false;
-                   nodes.set(j,jplusOne);
-                   nodes.set(j+1,jth);
                }
            }
        }
@@ -607,13 +649,13 @@ public class ChangeReport {
        
        report.opentag("edd");
        
-       if(rules1.edd == null ){ 
-           report.printdata("error","the EDD for "+rules1.description+" was not found");
-       }
-       if(rules2.edd == null ){
-           report.printdata("error","the EDD for "+rules2.description+" was not found");
-       }
        if(rules1.edd == null || rules2.edd == null){
+           if(rules1.edd == null ){ 
+               report.printdata("error","the EDD for "+rules1.description+" was not found");
+           }
+           if(rules2.edd == null ){
+               report.printdata("error","the EDD for "+rules2.description+" was not found");
+           }       
            report.closetag();
            return;
        }
@@ -636,41 +678,23 @@ public class ChangeReport {
            {for(Node m : missing){ report.printdata("NewEntity",m.getAttributes().get("name"));}}
            missing = ChangeReport.findMissingNodes("name",(String)null,entities2,entities1);
            {for(Node m : missing){ report.printdata("DeletedEntity",m.getAttributes().get("name"));}}
-       }
-       ArrayList<Integer> differences = new ArrayList<Integer>(); 
-       
-       if(entities1.size() > 0 ){
-           report.opentag("modified_entities");
-           for(int i = 0; i < entities1.size();  i++){
-               String name1 = entities1.get(i).getAttributes().get("name");
-               if(  !entities1.get(i).absoluteMatch(entities2.get(i),false) ){
-                   differences.add(i);
-                   report.printdata("table_name",name1);
+           for(int i=0;i<entities1.size();i++){
+               ArrayList<Node> fields1 = findnodes("field",entities1.get(i),null);
+               ArrayList<Node> fields2 = findnodes("field",entities2.get(i),null);
+               missing = ChangeReport.findMissingNodes("name",(String)null,fields1,fields2);
+               {for(Node m : missing){ report.printdata("NewAttribute",m.getAttributes().get("name"));}}
+               missing = ChangeReport.findMissingNodes("name",(String)null,entities2,entities1);
+               {for(Node m : missing){ report.printdata("DeletedAttribute",m.getAttributes().get("name"));}}
+               for(int j=0; j<fields1.size();j++){
+                   if(!fields1.get(j).absoluteMatch(fields2.get(j),false)){
+                       report.printdata("AttributeChanged",
+                               "entity",    entities1.get(i).getAttributes().get("name"),
+                               "attribute", fields1.get(j).getAttributes().get("name"),
+                               null);
+                   }
                }
            }
-           report.closetag();   
-       }
-       
-       if(differences.size()>0){
-           report.opentag("changes");
-           for(int i : differences){
-               Node entity1 = entities1.get(i);
-               Node entity2 = entities2.get(i);
-               if( functionChanged(entity1,entity2)){
-                   ArrayList<Node> fields1 = new ArrayList<Node>(entity1.getTags());
-                   ArrayList<Node> fields2 = new ArrayList<Node>(entity2.getTags());
-                   String name1 = entities1.get(i).getAttributes().get("name");
-                   report.opentag("entity_name","name",name1);
-                   ArrayList<Node> missing;
-                   missing = ChangeReport.findMissingNodes("name",(String)null,fields1,fields2);
-                   {for(Node m : missing){ report.printdata("NewField",m.getAttributes().get("name"));}}
-                   missing = ChangeReport.findMissingNodes("name",(String)null,fields2,fields1);
-                   {for(Node m : missing){ report.printdata("DeletedField",m.getAttributes().get("name"));}}          
-               }
-           }
-       }
-      
-       
+       } 
        report.closetag();
    }
    
@@ -709,7 +733,11 @@ public class ChangeReport {
        compareMapping(report);
    }
    
-   public void compareMapping(XMLPrinter report) throws Exception {
+   
+   public boolean compareMapping(XMLPrinter report) throws Exception {
+       boolean differences = false;
+       
+       int buffIndex = report.bufferOutput();
        report.opentag("mapping");
        
        if(rules1.mapping == null ){ 
@@ -720,12 +748,130 @@ public class ChangeReport {
        }
        if(rules1.mapping == null || rules2.mapping == null){
            report.closetag();
-           return;
+           return differences;
        }
-       /**
+       
        Node root1 = rules1.getMappingRoot();
        Node root2 = rules2.getMappingRoot();
-       **/
+           
+       ArrayList<Node> attributes1 = findnodes("setattribute",root1,null);
+       ArrayList<Node> attributes2 = findnodes("setattribute",root2,null);
+       
+       if(attributes1.size()==0){
+           report.printdata("empty","no attributes mapped in map file for "+rules1.description);
+       }
+       if(attributes2.size()==0){
+           report.printdata("empty","no attributes mapped in map file for "+rules2.description);
+       }
+       
+       XMLTree.sortByAttribute(true,attributes1,"enclosure");
+       XMLTree.sortByAttribute(true,attributes1,"RAttribute");
+       XMLTree.sortByAttribute(true,attributes1,"tag");
+       XMLTree.sortByAttribute(true,attributes2,"enclosure");
+       XMLTree.sortByAttribute(true,attributes2,"RAttribute");
+       XMLTree.sortByAttribute(true,attributes2,"tag");
+       
+       String attribs2match[] = {"tag","RAttribute","enclosure"};
+       {
+           ArrayList<Node> missing;
+           missing = ChangeReport.findMissingNodes(attribs2match,attributes1,attributes2);
+           if(missing.size()>0)differences = true;
+           {for(Node m : missing){ report.printdata("NewMappings",m.getAttributes().get("tag")+" now maps to "+
+                   m.getAttributes().get("enclosure")+"."+m.getAttributes().get("RAttribute"));}}
+           missing = ChangeReport.findMissingNodes(attribs2match,attributes2,attributes1);
+           if(missing.size()>0)differences = true;
+           {for(Node m : missing){ report.printdata("DeletedMappings",m.getAttributes().get("tag")+" no longer maps to "+
+                   m.getAttributes().get("enclosure")+"."+m.getAttributes().get("RAttribute"));}}
+       }
+       
+       ArrayList<Integer> diffs = new ArrayList<Integer>(); 
+       
+       if(attributes1.size() > 0 ){
+           report.opentag("ModifiedMappings");
+           for(int i = 0; i < attributes1.size();  i++){
+               HashMap <String,String> attribs = attributes1.get(i).getAttributes();
+               if(  !attributes1.get(i).absoluteMatch(attributes2.get(i),false) ){
+                   String name1 = attribs.get("tag")+" maps "+attribs.get("enclosure")+"."+attribs.get("RAttribute")+" (now type "+attribs.get("type")+")";
+                   diffs.add(i);
+                   differences = true;
+                   report.printdata("MapTypeChanged",name1);
+               }
+           }
+           report.closetag();   
+       } 
+           
+       ArrayList<Node> datamaps1 = findnodes("do2entitymap",root1,null);
+       ArrayList<Node> datamaps2 = findnodes("do2entitymap",root2,null);
+       
+       {
+           ArrayList<Node> missing;
+           missing = ChangeReport.findMissingNodes("class",(String)null,datamaps1,datamaps2);
+           if(missing.size()>0)differences = true;
+           {for(Node m : missing){ report.printdata("NewDataObjectMappings",m.getAttributes().get("class"));}}
+           missing = ChangeReport.findMissingNodes("class",(String)null,datamaps2,datamaps1);
+           if(missing.size()>0)differences = true;
+           {for(Node m : missing){ report.printdata("DeletedDataObjectMappings",m.getAttributes().get("class"));}}
+       }
+       
+       if(datamaps1.size() > 0 ){
+           report.opentag("ModifiedDataMaps");
+           for(int i = 0; i < datamaps1.size();  i++){
+               if(  !datamaps1.get(i).absoluteMatch(datamaps2.get(i),false) ){
+                   String name1 = datamaps1.get(i).getAttributes().get("class");
+                   report.printdata("dataObject",name1);
+                   differences = true;
+               }
+           }
+           report.closetag();   
+       }
+       
+       ArrayList<Node> entitydefs1 = findnodes("entity",root1,null);
+       ArrayList<Node> entitydefs2 = findnodes("entity",root2,null);
+       
+       {
+           ArrayList<Node> missing;
+           missing = ChangeReport.findMissingNodes("name",(String)null,entitydefs1,entitydefs2);
+           if(missing.size()>0)differences = true;
+           {for(Node m : missing){ report.printdata("NewEntityDeclarations",m.getAttributes().get("class"));}}
+           missing = ChangeReport.findMissingNodes("name",(String)null,entitydefs2,entitydefs1);
+           if(missing.size()>0)differences = true;
+           {for(Node m : missing){ report.printdata("DeletedEntityDeclarations",m.getAttributes().get("class"));}}
+       }
+       
+       if(entitydefs1.size() > 0 ){
+           report.opentag("ModifiedEntityDeclarations");
+           for(int i = 0; i < datamaps1.size();  i++){
+               if(  !entitydefs1.get(i).absoluteMatch(entitydefs2.get(i),false) ){
+                   String name1 = entitydefs1.get(i).getAttributes().get("name");
+                   report.printdata("dataObject",name1);
+                   differences = true;
+               }
+           }
+           report.closetag();   
+       }
+       
+       ArrayList<Node> initialentities1 = findnodes("initialentity",root1,null);
+       ArrayList<Node> initialentities2 = findnodes("initialentity",root2,null);
+       
+       {
+           ArrayList<Node> missing;
+           missing = ChangeReport.findMissingNodes("entity",(String)null,initialentities1,initialentities2);
+           if(missing.size()>0)differences = true;
+           {for(Node m : missing){ report.printdata("NewInitialEntities",m.getAttributes().get("entity"));}}
+           missing = ChangeReport.findMissingNodes("entity",(String)null,initialentities2,initialentities1);
+           if(missing.size()>0)differences = true;
+           {for(Node m : missing){ report.printdata("DeletedInitialEntities",m.getAttributes().get("entity"));}}
+       }       
+       
        report.closetag();
+       
+       if(differences){
+           report.writeBuffer(buffIndex);
+       }else{
+           report.deleteBuffer(buffIndex);
+           report.opentag("mapping");
+           report.closetag();
+       }
+       return differences;
    }
 }

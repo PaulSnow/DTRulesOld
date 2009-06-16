@@ -1,6 +1,19 @@
-/**
- * 
- */
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
+ *   
+ * Licensed under the Apache License, Version 2.0 (the "License");  
+ * you may not use this file except in compliance with the License.  
+ * You may obtain a copy of the License at  
+ *   
+ *      http://www.apache.org/licenses/LICENSE-2.0  
+ *   
+ * Unless required by applicable law or agreed to in writing, software  
+ * distributed under the License is distributed on an "AS IS" BASIS,  
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
+ * See the License for the specific language governing permissions and  
+ * limitations under the License.  
+ **/ 
+
 package com.dtrules.testsupport;
 
 import java.io.OutputStream;
@@ -9,6 +22,7 @@ import java.io.PrintStream;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.mapping.DataMap;
 import com.dtrules.session.IRSession;
+import com.dtrules.xmlparser.XMLTree.Node;
 
 /**
  * @author ps24876
@@ -78,7 +92,13 @@ public interface ITestHarness {
      */
     String getOutputDirectory();
     
-   
+    /**
+     * This is where we are going to look for past results to compare
+     * our new results to.
+     * @return
+     */
+    String getResultDirectory();
+    
     /**
      * Do you want to print the report data to the Console as well as to the
      * report file?  If so, this method should return true.
@@ -117,6 +137,30 @@ public interface ITestHarness {
      * Runs all the test files in the TestDirectory;
      */
     void runTests();
+    
+    /**
+     * Once the two XML results are returned, this test is used to check 
+     * if they are the same.
+     * @param thisResult
+     * @param oldResult
+     * @return
+     */
+    boolean compareNodes(Node thisResult, Node oldResult);
+    
+    /**
+     * When we compare the results of one run of a set of tests against another,
+     * this is where we write the report.
+     * 
+     * @return
+     */
+    PrintStream  compareTestResultsReport () throws Exception ;
+    
+    /**
+     * Compare our new results with a set of past result files.
+     */
+    public void    compareTestResults() throws Exception ;
+
+    
     /**
      * Print reports; Since the test harness can run multiple tests, the number of 
      * the test having been run is passed down to printReport.  That way, if it needs
@@ -150,6 +194,18 @@ public interface ITestHarness {
      * @param report
      */
     public void    changeReportXML(OutputStream report);
+
+    /**
+     * If true, and trace files are produced, then a coverage report
+     * will be generated.
+     * @return
+     */
+    public boolean coverageReport();
     
+    /**
+     * Returns the filename of the test set currently under test.
+     * @return
+     */
+    public String getCurrentFile();
 
 }

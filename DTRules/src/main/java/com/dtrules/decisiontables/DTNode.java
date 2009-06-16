@@ -1,7 +1,5 @@
-/*  
- * $Id$   
- *  
- * Copyright 2004-2007 MTBJ, Inc.  
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -14,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */  
+ **/
   
 package com.dtrules.decisiontables;
 
@@ -63,7 +61,7 @@ public interface DTNode {
     * @param node
     * @return
     */
-   boolean    equalsNode(DTNode node); 
+   boolean    equalsNode(DTState state, DTNode node); 
    /**
     * Returns an ANode which represents the execution of every 
     * path through the given DTNode.  If different paths through
@@ -71,5 +69,12 @@ public interface DTNode {
     * a null.  Note that ANodes always return themselves (i.e.
     * there is only one execution path through an ANode).
     */
-   ANode      getCommonANode();
+   ANode      getCommonANode(DTState state);
+   /**
+    * When optimizing a decision table, we have to be able to combine
+    * nodes intelligently. We have to maintain the column numbers, for 
+    * one thing.
+    * @param _node
+    */
+   public void addNode(DTNode _node);
 }

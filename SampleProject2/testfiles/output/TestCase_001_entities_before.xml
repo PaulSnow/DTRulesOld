@@ -1,0 +1,167 @@
+<entitystack>
+	<array name='entitystack' id='0'>
+		<entity name='case' DTRulesId='100008' id='v2'>
+			<attribute name='mapping*key'>v2</attribute>
+			<attribute name='case_ID'></attribute>
+			<attribute name='county_cd'>LO</attribute>
+			<case>
+				<entity name='case'>self reference</entity>
+			</case>
+			<relationships>
+				<array name='relationships' id='100010'>
+					<entity name='relationship' DTRulesId='100028' id='v5'>
+						<relationship>
+							<entity name='relationship'>self reference</entity>
+						</relationship>
+						<attribute name='source'></attribute>
+						<attribute name='mapping*key'>v5</attribute>
+						<attribute name='target'></attribute>
+						<attribute name='type'>parent</attribute>
+					</entity>
+					<entity name='relationship' DTRulesId='100033' id='v6'>
+						<relationship>
+							<entity name='relationship'>self reference</entity>
+						</relationship>
+						<attribute name='source'></attribute>
+						<attribute name='mapping*key'>v6</attribute>
+						<attribute name='target'></attribute>
+						<attribute name='type'>child</attribute>
+					</entity>
+				</array>
+			</relationships>
+			<clients>
+				<array name='clients' id='100009'>
+					<entity name='client' DTRulesId='100012' id='1001'>
+						<attribute name='programLevel'></attribute>
+						<attribute name='applying'>true</attribute>
+						<client>
+							<entity name='client'>self reference</entity>
+						</client>
+						<attribute name='mapping*key'>1001</attribute>
+						<incomes>
+							<array name='incomes' id='100013'>
+								<entity name='income' DTRulesId='100016' id='v3'>
+									<attribute name='amount'>1200</attribute>
+									<income>
+										<entity name='income'>self reference</entity>
+									</income>
+									<attribute name='mapping*key'>v3</attribute>
+									<attribute name='earned'>true</attribute>
+									<attribute name='type'>WA</attribute>
+								</entity>
+								<entity name='income' DTRulesId='100019' id='v4'>
+									<attribute name='amount'>800</attribute>
+									<income>
+										<entity name='income'>self reference</entity>
+									</income>
+									<attribute name='mapping*key'>v4</attribute>
+									<attribute name='earned'>false</attribute>
+									<attribute name='type'>CS</attribute>
+								</entity>
+							</array>
+						</incomes>
+						<attribute name='incomeGroupCount'>0</attribute>
+						<attribute name='eligible'>true</attribute>
+						<attribute name='totalGroupIncome'>0</attribute>
+						<attribute name='expectedChildren'>0</attribute>
+						<attribute name='validatedCitizenship'>true</attribute>
+						<attribute name='totalIncome'>0</attribute>
+						<attribute name='age'>50</attribute>
+						<attribute name='pregnant'>false</attribute>
+						<attribute name='gender'></attribute>
+						<attribute name='livesAtResidence'>true</attribute>
+						<attribute name='client_ID'>1001</attribute>
+						<notes>
+							<array name='notes' id='100014'></array>
+						</notes>
+						<attribute name='client_fpl'>0</attribute>
+						<attribute name='disabled'>false</attribute>
+					</entity>
+					<entity name='client' DTRulesId='100023' id='1002'>
+						<attribute name='programLevel'></attribute>
+						<attribute name='applying'>true</attribute>
+						<client>
+							<entity name='client'>self reference</entity>
+						</client>
+						<attribute name='mapping*key'>1002</attribute>
+						<incomes>
+							<array name='incomes' id='100024'></array>
+						</incomes>
+						<attribute name='incomeGroupCount'>0</attribute>
+						<attribute name='eligible'>true</attribute>
+						<attribute name='totalGroupIncome'>0</attribute>
+						<attribute name='expectedChildren'>0</attribute>
+						<attribute name='validatedCitizenship'>true</attribute>
+						<attribute name='totalIncome'>0</attribute>
+						<attribute name='age'>4</attribute>
+						<attribute name='pregnant'>false</attribute>
+						<attribute name='gender'></attribute>
+						<attribute name='livesAtResidence'>true</attribute>
+						<attribute name='client_ID'>1002</attribute>
+						<notes>
+							<array name='notes' id='100025'></array>
+						</notes>
+						<attribute name='client_fpl'>0</attribute>
+						<attribute name='disabled'>false</attribute>
+					</entity>
+				</array>
+			</clients>
+		</entity>
+		<entity name='job' DTRulesId='100005' id='v1'>
+			<results>
+				<array name='results' id='100006'></array>
+			</results>
+			<attribute name='currentdate'>Fri Sep 12 00:00:00 CDT 2008</attribute>
+			<attribute name='program'>KidAid</attribute>
+			<attribute name='mapping*key'>v1</attribute>
+			<job>
+				<entity name='job'>self reference</entity>
+			</job>
+			<attribute name='effectivedate'>Wed Oct 01 00:00:00 CDT 2008</attribute>
+		</entity>
+		<entity name='constants' DTRulesId='100001' id=''>
+			<attribute name='SocialSecurity'>SS</attribute>
+			<attribute name='FreeCoverage'>Free Coverage</attribute>
+			<attribute name='Settlements'>SET</attribute>
+			<attribute name='mapping*key'></attribute>
+			<attribute name='parent'>parent</attribute>
+			<constants>
+				<entity name='constants'>self reference</entity>
+			</constants>
+			<attribute name='KidAid'>KidAid</attribute>
+			<attribute name='FPL_PerAdditionalPerson'>300</attribute>
+			<ExcludedIncomeTypes>
+				<array name='ExcludedIncomeTypes' id='100003'>
+					<attribute name=''>CS</attribute>
+					<attribute name=''>SSI</attribute>
+				</array>
+			</ExcludedIncomeTypes>
+			<attribute name='Wages'>WA</attribute>
+			<attribute name='SSI'>SSI</attribute>
+			<attribute name='MEDICAID'>MEDICAID</attribute>
+			<attribute name='child'>child</attribute>
+			<attribute name='AtCostCoverage'>At Cost Coverage</attribute>
+			<attribute name='Dividends'>DIV</attribute>
+			<attribute name='FOODSTAMPS'>FS</attribute>
+			<attribute name='LowCostCoverage'>Low Cost Coverage</attribute>
+			<coveredCounties>
+				<array name='coveredCounties' id='100002'>
+					<attribute name=''>AA</attribute>
+					<attribute name=''>AK</attribute>
+					<attribute name=''>BC</attribute>
+					<attribute name=''>BK</attribute>
+					<attribute name=''>BT</attribute>
+					<attribute name=''>CR</attribute>
+					<attribute name=''>CO</attribute>
+					<attribute name=''>TX</attribute>
+					<attribute name=''>LO</attribute>
+					<attribute name=''>AR</attribute>
+				</array>
+			</coveredCounties>
+			<attribute name='sibling'>sibling</attribute>
+			<attribute name='ChildSupport'>CS</attribute>
+			<attribute name='Tips'>TIP</attribute>
+			<attribute name='FPL_Base'>867</attribute>
+		</entity>
+	</array>
+</entitystack>

@@ -1,7 +1,5 @@
-/*  
- * $Id$   
- *  
- * Copyright 2004-2007 MTBJ, Inc.  
+/** 
+ * Copyright 2004-2009 DTRules.com, Inc.
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -14,19 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- */ 
+ **/ 
 
-/**
- * The Data Map class holds data for later mapping into the Rules Engine
- * using the same mapping definition that can be used to upload XML to
- * an EDD.  This interface can also be used to write out XML to a file.
- * 
- * This isn't a complex implementation.  The idea is to collect all the
- * data we would have written to an XML file, then map it in the same
- * way with the same tag structure into the EDD.  And as a bonus, we
- * allow for the writing of the data out as XML for debugging or playback
- * purposes.
- */
 package com.dtrules.mapping;
 
 import java.io.IOException;
@@ -44,7 +31,21 @@ import com.dtrules.xmlparser.IGenericXMLParser2;
 import com.dtrules.xmlparser.IXMLPrinter;
 import com.dtrules.xmlparser.XMLPrinter;
 
-
+/**
+ * /**
+ * The Data Map class holds data for later mapping into the Rules Engine
+ * using the same mapping definition that can be used to upload XML to
+ * an EDD.  This interface can also be used to write out XML to a file.
+ * 
+ * This isn't a complex implementation.  The idea is to collect all the
+ * data we would have written to an XML file, then map it in the same
+ * way with the same tag structure into the EDD.  And as a bonus, we
+ * allow for the writing of the data out as XML for debugging or playback
+ * purposes.
+ *
+ * @author Paul Snow
+ *
+ */
 public class DataMap implements IXMLPrinter{
     Mapping map;
     OutputStream out = null;

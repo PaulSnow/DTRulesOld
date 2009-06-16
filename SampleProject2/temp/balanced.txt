@@ -1,0 +1,118 @@
+
+Compute_Eligibility
+
+Number of Columns: 5
+
+   1  y  n  n  n  n  
+   2  -  y  n  n  n  
+   3  -  -  y  n  n  
+   4  -  -  -  y  n  
+
+   1  x  x  x        
+   2  x  x  x        
+   3  x              
+   4     x           
+   5        x        
+   6  x  x  x  x     
+
+
+
+Calculate_Individual_Income
+
+Number of Columns: 3
+
+   1  y  n  n  
+   2  -  y  n  
+
+   1  x     x  
+
+
+
+Calculate_Group_Size
+
+Number of Columns: 15
+
+   1  y  y  y  y  n  n  n  n  n  n  n  n  n  n  n  
+   2  -  -  -  -  y  y  y  y  n  n  n  n  n  n  n  
+   3  -  -  -  -  -  -  -  -  y  y  y  y  n  n  n  
+   4  -  -  -  -  -  -  -  -  -  -  -  -  y  y  n  
+   5  y  y  n  n  y  y  n  n  y  y  n  n  -  -  -  
+   6  y  n  y  n  y  n  y  n  y  n  y  n  y  n  -  
+
+   1  x  x  x  x  x  x  x  x  x  x  x  x  x  x     
+   2  x  x        x  x        x  x                 
+   3  x     x     x     x     x     x     x        
+
+
+
+Evaluate_KidAid_Eligibility
+
+Number of Columns: 190
+
+   1 y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y n 
+   2 y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y n - 
+   3 y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n - - 
+   4 y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y n n n n n n n n n n n n n n n n n n n n n n n n n n n n n - - 
+   5 y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y n n n n n y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y n n n y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y n n n y y y y y y y y y y y y y y y y y y y y y y y y y y y y n - - 
+   6 y y y y y y y y y y y y y y y y n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n n - - - - - y y y y y y y y y y y y y y y y n n n n n n n n n n n n n n n n n n n n n n n n n n n n - - - y y y y y y y y y y y y y y y y n n n n n n n n n n n n n n n n n n n n n n n n n n n n - - - y y y y y y y y y y y y y y y y n n n n n n n n n n n n - - - 
+   7 - - - - - - - - - - - - - - - - y y y y y y y y y y y y y y y y n n n n n n n n n n n n n n n n n n n n n n n n n n n n y y n n n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - y y y y y y y y y y y y y y y y n n n n n n n n n n n n y y n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+   8 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - y y y y y y y y y y y y y y y y n n n n n n n n n n n n - - y y n - - - - - - - - - - - - - - - - y y y y y y y y y y y y y y y y n n n n n n n n n n n n y y n - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+   9 y y y y n n n n n n n n n n n n y y y y n n n n n n n n n n n n y y y y n n n n n n n n n n n n y y y n n n n n n n n n - - - - - y y y y n n n n n n n n n n n n y y y y n n n n n n n n n n n n y y y n n n n n n n n n - - - y y y y n n n n n n n n n n n n y y y y n n n n n n n n n n n n y y y n n n n n n n n n - - - y y y y n n n n n n n n n n n n y y y n n n n n n n n n - - - 
+  10 - - - - y y y y n n n n n n n n - - - - y y y y n n n n n n n n - - - - y y y y n n n n n n n n - - - y y y n n n n n n - - - - - - - - - y y y y n n n n n n n n - - - - y y y y n n n n n n n n - - - y y y n n n n n n - - - - - - - y y y y n n n n n n n n - - - - y y y y n n n n n n n n - - - y y y n n n n n n - - - - - - - y y y y n n n n n n n n - - - y y y n n n n n n - - - 
+  11 - - - - - - - - y y y y n n n n - - - - - - - - y y y y n n n n - - - - - - - - y y y y n n n n - - - - - - y y y n n n - - - - - - - - - - - - - y y y y n n n n - - - - - - - - y y y y n n n n - - - - - - y y y n n n - - - - - - - - - - - y y y y n n n n - - - - - - - - y y y y n n n n - - - - - - y y y n n n - - - - - - - - - - - y y y y n n n n - - - - - - y y y n n n - - - 
+  12 y n n n y n n n y n n n y n n n y n n n y n n n y n n n y n n n y n n n y n n n y n n n y n n n - - - - - - - - - - - - y n y n - y n n n y n n n y n n n y n n n y n n n y n n n y n n n y n n n - - - - - - - - - - - - y n - y n n n y n n n y n n n y n n n y n n n y n n n y n n n y n n n - - - - - - - - - - - - y n - y n n n y n n n y n n n y n n n - - - - - - - - - - - - - - - 
+  13 - y n n - y n n - y n n - y n n - y n n - y n n - y n n - y n n - y n n - y n n - y n n - y n n y n n y n n y n n y n n - - - - - - y n n - y n n - y n n - y n n - y n n - y n n - y n n - y n n y n n y n n y n n y n n - - - - y n n - y n n - y n n - y n n - y n n - y n n - y n n - y n n y n n y n n y n n y n n - - - - y n n - y n n - y n n - y n n y n n y n n y n n y n n - - - 
+  14 - - y n - - y n - - y n - - y n - - y n - - y n - - y n - - y n - - y n - - y n - - y n - - y n - y n - y n - y n - y n - - - - - - - y n - - y n - - y n - - y n - - y n - - y n - - y n - - y n - y n - y n - y n - y n - - - - - y n - - y n - - y n - - y n - - y n - - y n - - y n - - y n - y n - y n - y n - y n - - - - - y n - - y n - - y n - - y n - y n - y n - y n - y n - - - 
+
+   1 x x x   x x x   x x x   x   x   x x x   x x x   x x x   x   x   x x x   x x x   x x x   x   x   x x   x x   x x     x   x   x     x x x   x x x   x x x   x   x   x x x   x x x   x x x   x   x   x x   x x   x x     x   x     x x x   x x x   x x x   x   x   x x x   x x x   x x x   x   x   x x   x x   x x     x   x     x x x   x x x   x x x   x   x   x x   x x   x x     x         
+   2 x       x       x       x       x       x       x       x       x       x       x       x                               x   x     x       x       x       x       x       x       x       x                               x     x       x       x       x       x       x       x       x                               x     x       x       x       x                                     
+   3   x       x       x               x       x       x               x       x       x             x     x     x                       x       x       x               x       x       x             x     x     x                   x       x       x               x       x       x             x     x     x                   x       x       x             x     x     x                 
+   4     x       x       x       x       x       x       x       x       x       x       x       x     x     x     x     x                 x       x       x       x       x       x       x       x     x     x     x     x             x       x       x       x       x       x       x       x     x     x     x     x             x       x       x       x     x     x     x     x         
+   5       x       x       x   x   x       x       x       x   x   x       x       x       x   x   x     x     x     x x   x   x   x x       x       x       x   x   x       x       x       x   x   x     x     x     x x   x   x x       x       x       x   x   x       x       x       x   x   x     x     x     x x   x   x x       x       x       x   x   x     x     x     x x   x x x x 
+   6       x       x       x   x   x       x       x       x   x   x       x       x       x   x   x     x     x     x x   x                 x       x       x   x   x       x       x       x   x   x     x     x     x x   x             x       x       x   x   x       x       x       x   x   x     x     x     x x   x             x       x       x   x   x     x     x     x x   x       
+   7                                                                                                                                                                                                                                                                                                                                                                                           x 
+   8                                                                                                                                                                                                                                                                                                                                                                                         x   
+   9                                                                                                                           x   x x                                                                                           x x                                                                                           x x                                                         x     
+  10 x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x 
+
+
+
+Evaluate_MEDICAID_Eligibility
+
+Number of Columns: 2
+
+   1  y  n  
+
+   1  x     
+   2  x     
+
+
+
+Evaluate_FOODSTAMPS_Eligibilty
+
+Number of Columns: 2
+
+   1  y  n  
+
+   1  x     
+   2  x     
+
+
+
+Evaluate_Results
+
+Number of Columns: 1
+
+
+   1  x  
+   2  x  
+   3  x  
+   4  x  
+   5  x  
+   6  x  
+   7  x  
+   8  x  
+   9  x  
+  10  x  
+
+

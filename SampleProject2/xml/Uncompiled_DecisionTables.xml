@@ -119,28 +119,28 @@
 				<action_column column_number='3' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>4</action_number>
+				<action_number>3</action_number>
 				<action_comment>Evaluate for KidAid</action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Perform Evaluate_KidAid_Eligibility</action_description>
 				<action_column column_number='1' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>5</action_number>
+				<action_number>4</action_number>
 				<action_comment>Evaluate for MEDICAID</action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Perform Evaluate_MEDICAID_Eligibility</action_description>
 				<action_column column_number='2' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>6</action_number>
+				<action_number>5</action_number>
 				<action_comment>Evaluate for FOODSTAMPS</action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Perform Evaluate_FOODSTAMPS_Eligibilty</action_description>
 				<action_column column_number='3' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>8</action_number>
+				<action_number>6</action_number>
 				<action_comment>Build a set of Result Objects to report to the caller</action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Perform Evaluate_Results</action_description>
@@ -361,7 +361,7 @@
 				<condition_column column_number='16' column_value='-'></condition_column>
 			</condition_details>
 			<condition_details>
-				<condition_number>7</condition_number>
+				<condition_number>6</condition_number>
 				<condition_comment>Is this client older than 18</condition_comment>
 				<condition_requirement></condition_requirement>
 				<condition_description>client.age &gt; 18</condition_description>
@@ -373,6 +373,10 @@
 				<condition_column column_number='6' column_value='-'></condition_column>
 				<condition_column column_number='7' column_value='-'></condition_column>
 				<condition_column column_number='8' column_value='-'></condition_column>
+				<condition_column column_number='9' column_value='Y'></condition_column>
+				<condition_column column_number='10' column_value='Y'></condition_column>
+				<condition_column column_number='11' column_value='Y'></condition_column>
+				<condition_column column_number='12' column_value='Y'></condition_column>
 				<condition_column column_number='13' column_value='-'></condition_column>
 				<condition_column column_number='14' column_value='-'></condition_column>
 				<condition_column column_number='15' column_value='-'></condition_column>
@@ -403,7 +407,7 @@
 				<action_column column_number='6' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>4</action_number>
+				<action_number>3</action_number>
 				<action_comment>Add this person&apos;s Income to the ThisPerson&apos;s total group income</action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>add the client.totalIncome to ThisClient&apos;s totalGroupIncome</action_description>
@@ -568,7 +572,7 @@
 				<condition_column column_number='16' column_value='-'></condition_column>
 			</condition_details>
 			<condition_details>
-				<condition_number>7</condition_number>
+				<condition_number>6</condition_number>
 				<condition_comment>Exclude under the FPL</condition_comment>
 				<condition_requirement></condition_requirement>
 				<condition_description>totalGroupIncome &gt; FPL</condition_description>
@@ -590,7 +594,7 @@
 				<condition_column column_number='16' column_value='-'></condition_column>
 			</condition_details>
 			<condition_details>
-				<condition_number>8</condition_number>
+				<condition_number>7</condition_number>
 				<condition_comment>Exclude under 125 percent of the FPL</condition_comment>
 				<condition_requirement></condition_requirement>
 				<condition_description>totalGroupIncome &gt; FPL125</condition_description>
@@ -612,7 +616,7 @@
 				<condition_column column_number='16' column_value='-'></condition_column>
 			</condition_details>
 			<condition_details>
-				<condition_number>9</condition_number>
+				<condition_number>8</condition_number>
 				<condition_comment>Exclude under 150 percent of the FPL</condition_comment>
 				<condition_requirement></condition_requirement>
 				<condition_description>totalGroupIncome &gt; FPL150</condition_description>
@@ -634,7 +638,7 @@
 				<condition_column column_number='16' column_value='-'></condition_column>
 			</condition_details>
 			<condition_details>
-				<condition_number>10</condition_number>
+				<condition_number>9</condition_number>
 				<condition_comment>Exclude under 175 percent of the FPL</condition_comment>
 				<condition_requirement></condition_requirement>
 				<condition_description>totalGroupIncome &gt; FPL175</condition_description>
@@ -656,7 +660,7 @@
 				<condition_column column_number='16' column_value='-'></condition_column>
 			</condition_details>
 			<condition_details>
-				<condition_number>11</condition_number>
+				<condition_number>10</condition_number>
 				<condition_comment>Exclude under 200 percent of the FPL</condition_comment>
 				<condition_requirement></condition_requirement>
 				<condition_description>totalGroupIncome &gt; FPL200</condition_description>
@@ -678,7 +682,7 @@
 				<condition_column column_number='16' column_value='-'></condition_column>
 			</condition_details>
 			<condition_details>
-				<condition_number>12</condition_number>
+				<condition_number>11</condition_number>
 				<condition_comment>Exclude under 250 percent of the FPL</condition_comment>
 				<condition_requirement></condition_requirement>
 				<condition_description>totalGroupIncome &gt; FPL250</condition_description>
@@ -700,7 +704,7 @@
 				<condition_column column_number='16' column_value='-'></condition_column>
 			</condition_details>
 			<condition_details>
-				<condition_number>14</condition_number>
+				<condition_number>12</condition_number>
 				<condition_comment>Include if not excluded and under 175 of the FPL</condition_comment>
 				<condition_requirement></condition_requirement>
 				<condition_description>totalGroupIncome &lt; FPL175</condition_description>
@@ -722,7 +726,7 @@
 				<condition_column column_number='16' column_value='-'></condition_column>
 			</condition_details>
 			<condition_details>
-				<condition_number>15</condition_number>
+				<condition_number>13</condition_number>
 				<condition_comment>Include if not excluded and under 300 of the FPL</condition_comment>
 				<condition_requirement></condition_requirement>
 				<condition_description>totalGroupIncome &lt; FPL300</condition_description>
@@ -744,7 +748,7 @@
 				<condition_column column_number='16' column_value='-'></condition_column>
 			</condition_details>
 			<condition_details>
-				<condition_number>17</condition_number>
+				<condition_number>14</condition_number>
 				<condition_comment>If you do not qualify for any of the above, or for Medicaid, then you can pay full cost if under 18</condition_comment>
 				<condition_requirement></condition_requirement>
 				<condition_description>true</condition_description>
@@ -781,7 +785,7 @@
 				<action_column column_number='9' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>3</action_number>
+				<action_number>2</action_number>
 				<action_comment>set the program Level</action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>set client.programLevel = FreeCoverage</action_description>
@@ -790,7 +794,7 @@
 				<action_column column_number='3' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>4</action_number>
+				<action_number>3</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>set client.programLevel = LowCostCoverage</action_description>
@@ -799,14 +803,14 @@
 				<action_column column_number='7' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>5</action_number>
+				<action_number>4</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>set client.programLevel = AtCostCoverage</action_description>
 				<action_column column_number='9' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>7</action_number>
+				<action_number>5</action_number>
 				<action_comment>Provide reasons for rejection</action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>set client.eligible = false</action_description>
@@ -816,35 +820,35 @@
 				<action_column column_number='14' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number></action_number>
+				<action_number>6</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Add &quot;Client is eligible for Medicaid, so cannot enroll in KidAid&quot; to client.notes</action_description>
 				<action_column column_number='11' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>8</action_number>
+				<action_number>7</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Add &quot;Must Provide Validation of Citizenship&quot; to client.notes</action_description>
 				<action_column column_number='12' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>9</action_number>
+				<action_number>8</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Add &quot;Case must be within a KidAid County&quot; to client.notes</action_description>
 				<action_column column_number='13' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>10</action_number>
+				<action_number>9</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Add &quot;Must be 18 or younger to qualify for KidAid&quot; to client.notes</action_description>
 				<action_column column_number='14' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>11</action_number>
+				<action_number>10</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>set client_fpl = FPL</action_description>
@@ -907,12 +911,14 @@
 				<action_comment>Reject the client</action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>set client.eligible = false</action_description>
+				<action_column column_number='1' column_value='X'></action_column>
 			</action_details>
 			<action_details>
 				<action_number>2</action_number>
 				<action_comment>Note rejection reason</action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>add &quot;The System does not yet support Medicaid Applications&quot; to client.notes</action_description>
+				<action_column column_number='1' column_value='X'></action_column>
 			</action_details>
 		</actions>
 	</decision_table>
@@ -1020,63 +1026,63 @@
 				<action_column column_number='1' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number></action_number>
+				<action_number>2</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>add the result to the job.results</action_description>
 				<action_column column_number='1' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>2</action_number>
+				<action_number>3</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Set Result.notes = client.notes</action_description>
 				<action_column column_number='1' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>3</action_number>
+				<action_number>4</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Set Result.client_id = client.client_id</action_description>
 				<action_column column_number='1' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>4</action_number>
+				<action_number>5</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Set Result.client = client.client</action_description>
 				<action_column column_number='1' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>5</action_number>
+				<action_number>6</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Set Result.program = job.program</action_description>
 				<action_column column_number='1' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>6</action_number>
+				<action_number>7</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Set Result.programLevel = client.programLevel</action_description>
 				<action_column column_number='1' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>7</action_number>
+				<action_number>8</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Set Result.eligible = client.eligible</action_description>
 				<action_column column_number='1' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>8</action_number>
+				<action_number>9</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Set Result.client_fpl = client.client_fpl</action_description>
 				<action_column column_number='1' column_value='X'></action_column>
 			</action_details>
 			<action_details>
-				<action_number>9</action_number>
+				<action_number>10</action_number>
 				<action_comment></action_comment>
 				<initial_action_requirement></initial_action_requirement>
 				<action_description>Set Result.totalGroupIncome = client.totalGroupIncome</action_description>
