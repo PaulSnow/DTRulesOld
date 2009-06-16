@@ -1,17 +1,11 @@
 INDEX VERSION 1.121+C:\temp\try\DTRules\.metadata\.plugins\org.eclipse.jdt.core
 3359574887.index
 3071735222.index
-361666636.index
 2609983735.index
-3465110350.index
-3227304753.index
-2022078113.index
 2852293336.index
 4234963794.index
 827404658.index
 3358187718.index
-2449391769.index
-1252479617.index
 1371040380.index
 1937856235.index
 3309982843.index
