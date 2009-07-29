@@ -32,8 +32,8 @@ import com.dtrules.xmlparser.XMLPrinter;
 
 public class TestSampleProject2 extends ATestHarness {
     
-    public boolean  Trace()                   { return true;                            }
-    public boolean  Console()                 { return true;                            }
+    public boolean  Trace()                   { return false;                            }
+    public boolean  Console()                 { return false;                            }
     public String   getPath()                 { return CompileSampleProject2.path;      }
     public String   getRulesDirectoryPath()   { return getPath()+"xml/";                }
     public String   getRuleSetName()          { return "SampleProject2";                }
@@ -52,7 +52,7 @@ public class TestSampleProject2 extends ATestHarness {
         for(IRObject r :results){
             IREntity result = r.rEntityValue();
 
-            xout.opentag("Client","id",result.get("client_id"));
+            xout.opentag("Client","id",result.get("client_id").stringValue());
             prt(xout,result,"totalGroupIncome");
             prt(xout,result,"client_fpl");
             if(result.get("eligible").booleanValue()){

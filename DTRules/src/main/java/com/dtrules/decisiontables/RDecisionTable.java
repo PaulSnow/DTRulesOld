@@ -615,10 +615,18 @@ public class RDecisionTable extends ARObject {
 			
 			if(rcontext==null){
 			    if(state.testState(DTState.TRACE)){
-			        state.traceTagBegin("setup");
+			        try{
+    			        state.traceTagBegin("setup");
+    			           executeTable(state);
+    			        state.traceTagEnd();
+			        }catch(RulesException e){
+			            state.traceTagEnd();
+			            throw e;
+			        }
+			    }else{
+			        state.traceTagEnd();
 			    }
-			    executeTable(state);
-			    state.traceTagEnd();
+			    
 			}else{
 			    if(state.testState(DTState.TRACE)){
 			        state.traceTagBegin("context", "execute",contextsrc);

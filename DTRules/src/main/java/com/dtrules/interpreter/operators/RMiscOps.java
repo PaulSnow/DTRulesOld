@@ -30,7 +30,6 @@ import com.dtrules.interpreter.RString;
 import com.dtrules.interpreter.RTime;
 import com.dtrules.session.DTState;
 import com.dtrules.session.RSession;
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.RtMethodGenerator;
 
 public class RMiscOps {
     static {
@@ -243,7 +242,7 @@ public class RMiscOps {
             try{
                e = o.rEntityValue(); 
             }catch(RulesException ex){
-               ex.addToMessage("Could not convert a "+RSession.typeInt2Str(o.type())+" to an Entity"); 
+               ex.addToMessage("entitypush could not convert a "+RSession.typeInt2Str(o.type())+" to an Entity"); 
                throw ex;
             }
             state.entitypush(e);            

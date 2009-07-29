@@ -34,6 +34,7 @@
 		<field name='ChildSupport' type='string' subtype='' access='r' input='' default_value='CS' comment='Income Type'></field>
 		<field name='constants' type='entity' subtype='' access='r' input='' default_value='' comment='Self Reference'></field>
 		<field name='coveredCounties' type='array' subtype='' access='r' input='' default_value='{ &quot;AA&quot; &quot;AK&quot; &quot;BC&quot; &quot;BK&quot; &quot;BT&quot; &quot;CR&quot; &quot;CO&quot;  &quot;TX&quot;  &quot;LO&quot;  &quot;AR&quot; }' comment='Counties covered by KidsAid'></field>
+		<field name='diagCodes' type='array' subtype='' access='r' input='' default_value='[ &quot;V2501&quot; &quot;V2502&quot; ]' comment='diag codes'></field>
 		<field name='Dividends' type='string' subtype='' access='r' input='' default_value='DIV' comment='Income Type'></field>
 		<field name='ExcludedIncomeTypes' type='array' subtype='' access='r' input='' default_value='{ &quot;CS&quot; &quot;SSI&quot; }' comment='Excluded Income Types'></field>
 		<field name='FOODSTAMPS' type='string' subtype='' access='r' input='' default_value='FS' comment='Program Type'></field>
@@ -63,6 +64,7 @@
 		<field name='currentdate' type='time' subtype='' access='r' input='main' default_value='' comment='The current date.  May be different from the actual date'></field>
 		<field name='effectivedate' type='time' subtype='' access='r' input='main' default_value='' comment='The Elgibility date if the clients prove eligible'></field>
 		<field name='job' type='entity' subtype='' access='r' input='' default_value='' comment='Self Reference'></field>
+		<field name='junk' type='entity' subtype='' access='rw' input='main' default_value='' comment='Junk to test bug'></field>
 		<field name='mapping*key' type='string' subtype='' access='r' input='' default_value='' comment='Mapping Key'></field>
 		<field name='program' type='string' subtype='' access='r' input='main' default_value='none' comment='The program for which we are evaluating Eligiblity'></field>
 		<field name='results' type='array' subtype='result' access='r' input='' default_value='' comment='The results of Elgibility for those clients applying'></field>

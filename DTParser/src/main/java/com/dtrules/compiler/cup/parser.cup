@@ -948,7 +948,7 @@ bexpr     ::=
             // This syntax looks for a match for each string in a1 to an
             // attribute n on some entity in an array of entities a2
             thereis MATCH FORALL array_expr:a1 TO nexpr:n IN array_expr:a2
-                    {: RESULT = "true { { { pop true } { pop false } { dup "+n+"execute streq } "+a2+"forfirstelse } { pop false } swap ifelse } "+a1+"for "; :} |                    
+                    {: RESULT = "true { over { { } { swap pop false swap } { dup "+n+"execute streq } "+a2+"forfirstelse } swap if pop } "+a1+"for "; :} |                    
 			// Is there a case_indvidual [ in the case ]  Where  case_indvidual.current_plan_available == false 
 			thereis eexpr:e1 WHERE bexpr:b 				
 					{: RESULT = "{ true } { false } { " + b +"} "+e1.trim()+"s forfirstelse ";                            :} |

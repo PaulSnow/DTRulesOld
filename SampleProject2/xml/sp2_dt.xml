@@ -856,9 +856,9 @@ true
 <action_number>1</action_number>
 <action_comment>set the client to eligible</action_comment>
 <initial_action_requirement></initial_action_requirement>
-<action_description>set client.eligible = true</action_description>
+<action_description>set client.eligible = true; set client.age = 1 / 0;</action_description>
 <action_postfix>
-true cvb /client.eligible xdef  
+true cvb /client.eligible xdef  1 0 div  cvi /client.age xdef  
 </action_postfix>
 <action_column column_value="X" column_number="1"></action_column>
 <action_column column_value="X" column_number="2"></action_column>

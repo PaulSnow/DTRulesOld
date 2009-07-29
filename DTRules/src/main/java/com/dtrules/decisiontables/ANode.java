@@ -147,10 +147,28 @@ public class ANode implements DTNode {
                 }  
             }
         } catch (RulesException e) {
+            boolean first = e.isFirstAction(); 
+            if(state.testState(DTState.TRACE)){
+                if(first){
+                    state.traceInfo("Error_Detected",null);
+                }
+                state.traceTagEnd();
+            }
             e.setSection("Action",num+1);
             e.setFormal(dtable.getActions()[num]);
             throw e;
+        } catch (Exception e){
+            RulesException re = new RulesException(e.getClass().getName(), e.getStackTrace()[0].getClassName(), e.getMessage());
+            re.isFirstAction(); /** Just so we note that this is the first action */
+            if(state.testState(DTState.TRACE)){
+                state.traceInfo("Error_Detected",null);
+                state.traceTagEnd();
+            }
+            re.setSection("Action",num+1);
+            re.setFormal(dtable.getActions()[num]);
+            throw re;
         }
+
 
         if(state.testState(DTState.TRACE)){
             state.traceTagEnd();

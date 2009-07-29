@@ -5,6 +5,7 @@
 	</header>
 	<decisionTables>
 		<modified_tables>
+			<table_name>Evaluate_KidAid_Eligibility</table_name>
 			<table_name>Evaluate_MEDICAID_Eligibility</table_name>
 		</modified_tables>
 		<tables_with_changes_in_execution>
@@ -12,6 +13,9 @@
 		</tables_with_changes_in_execution>
 		<execution>1 Decision Table(s) have had their execution modified</execution>
 	</decisionTables>
-	<edd></edd>
+	<edd>
+		<NewAttribute>diagCodes</NewAttribute>
+		<NewAttribute>junk</NewAttribute>
+	</edd>
 	<mapping></mapping>
 </changeReport>

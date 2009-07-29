@@ -117,21 +117,37 @@ public class CNode implements DTNode {
                 state.traceTagEnd();
             }else{
                 result = state.evaluateCondition(condition);
-            }
-            
-    		if(result){
-    			iftrue.execute(state);
-    		}else{
-    			iffalse.execute(state);
-    		}
+            }    		
     		
         } catch (RulesException e) {
-            state.traceTagBegin("Condition", "n", (conditionNumber+1)+"");
-            state.traceInfo("Condition_Text", dtable.conditions[conditionNumber]);
+            e.isFirstAction();  // Avoids a bogus "first action"
+            if(state.testState(DTState.TRACE)){
+                state.traceTagEnd();
+                state.traceInfo("result", "v", "ERROR",null);
+                state.traceTagEnd();
+            }
             e.setSection("Condition",conditionNumber+1);
             e.setFormal(dtable.getConditions()[conditionNumber]);
             throw e;
+        } catch (Exception e){
+            RulesException re = new RulesException(e.getClass().getName(), e.getStackTrace()[0].getClassName(), e.getMessage());
+            re.isFirstAction();  // Avoids a bogus "first action"
+            if(state.testState(DTState.TRACE)){
+                state.traceTagEnd();
+                state.traceInfo("result", "v", "ERROR",null);
+                state.traceTagEnd();
+            }
+            re.setSection("Condition",conditionNumber+1);
+            re.setFormal(dtable.getConditions()[conditionNumber]);
+            throw re;
         }
+
+        if(result){
+            iftrue.execute(state);
+        }else{
+            iffalse.execute(state);
+        }
+
 	}
 
 	public Coordinate validate() {

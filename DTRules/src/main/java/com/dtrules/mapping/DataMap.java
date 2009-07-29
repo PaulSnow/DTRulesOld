@@ -189,7 +189,10 @@ public class DataMap implements IXMLPrinter{
      * close the last tag.
      */
     public void closetag() {
-        tagStack.remove(tagStack.size()-1);
+        int index = tagStack.size()-1;
+        if(index>=0){
+            tagStack.remove(index);
+        }
     }
 
     private void newtag(String tag ){
@@ -514,7 +517,7 @@ public class DataMap implements IXMLPrinter{
         String do_name = obj.getClass().getName();
         ArrayList<DataObjectMap> doMaps = map.dataObjects.get(do_name);
         DataObjectMap doMap = null;
-        for(DataObjectMap DO : doMaps){
+        if(doMaps!=null) for(DataObjectMap DO : doMaps){
             if(DO.tag.equals(tag)){
                 doMap = DO;
                 break;

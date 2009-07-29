@@ -19,6 +19,7 @@ package com.dtrules.infrastructure;
 import javax.rules.RuleException;
 
 public class RulesException extends RuleException {
+    boolean firstAction  = true;
     String errortype;
 	String location;
     String message;
@@ -28,6 +29,20 @@ public class RulesException extends RuleException {
     String filename     = null;
     String section      = null;
     int    number;
+    
+    /**
+     * This method allows the trace facility to detect the first enclosing action (if 
+     * there is one) for an error.
+     * @return
+     */
+    public boolean isFirstAction(){
+        if(firstAction){
+            firstAction = false;
+            return true;
+        }
+        return false;
+    }
+    
     
     public void setPostfix(String s){
         if(postfix == null){

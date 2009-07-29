@@ -1,6 +1,6 @@
 <entitystack>
 	<array name='entitystack' id='0'>
-		<entity name='case' DTRulesId='100008' id='v2'>
+		<entity name='case' DTRulesId='100009' id='v2'>
 			<attribute name='mapping*key'>v2</attribute>
 			<attribute name='case_ID'></attribute>
 			<attribute name='county_cd'>LO</attribute>
@@ -8,8 +8,8 @@
 				<entity name='case'>self reference</entity>
 			</case>
 			<relationships>
-				<array name='relationships' id='100010'>
-					<entity name='relationship' DTRulesId='100028' id='v5'>
+				<array name='relationships' id='100011'>
+					<entity name='relationship' DTRulesId='100029' id='v5'>
 						<relationship>
 							<entity name='relationship'>self reference</entity>
 						</relationship>
@@ -18,7 +18,7 @@
 						<attribute name='target'></attribute>
 						<attribute name='type'>parent</attribute>
 					</entity>
-					<entity name='relationship' DTRulesId='100033' id='v6'>
+					<entity name='relationship' DTRulesId='100034' id='v6'>
 						<relationship>
 							<entity name='relationship'>self reference</entity>
 						</relationship>
@@ -30,8 +30,8 @@
 				</array>
 			</relationships>
 			<clients>
-				<array name='clients' id='100009'>
-					<entity name='client' DTRulesId='100012' id='1001'>
+				<array name='clients' id='100010'>
+					<entity name='client' DTRulesId='100013' id='1001'>
 						<attribute name='programLevel'></attribute>
 						<attribute name='applying'>true</attribute>
 						<client>
@@ -39,8 +39,8 @@
 						</client>
 						<attribute name='mapping*key'>1001</attribute>
 						<incomes>
-							<array name='incomes' id='100013'>
-								<entity name='income' DTRulesId='100016' id='v3'>
+							<array name='incomes' id='100014'>
+								<entity name='income' DTRulesId='100017' id='v3'>
 									<attribute name='amount'>1200</attribute>
 									<income>
 										<entity name='income'>self reference</entity>
@@ -49,7 +49,7 @@
 									<attribute name='earned'>true</attribute>
 									<attribute name='type'>WA</attribute>
 								</entity>
-								<entity name='income' DTRulesId='100019' id='v4'>
+								<entity name='income' DTRulesId='100020' id='v4'>
 									<attribute name='amount'>800</attribute>
 									<income>
 										<entity name='income'>self reference</entity>
@@ -60,26 +60,24 @@
 								</entity>
 							</array>
 						</incomes>
-						<attribute name='incomeGroupCount'>1</attribute>
-						<attribute name='eligible'>false</attribute>
-						<attribute name='totalGroupIncome'>1200</attribute>
+						<attribute name='incomeGroupCount'>0</attribute>
+						<attribute name='eligible'>true</attribute>
+						<attribute name='totalGroupIncome'>0</attribute>
 						<attribute name='expectedChildren'>0</attribute>
 						<attribute name='validatedCitizenship'>true</attribute>
-						<attribute name='totalIncome'>1200</attribute>
+						<attribute name='totalIncome'>0</attribute>
 						<attribute name='age'>50</attribute>
 						<attribute name='pregnant'>false</attribute>
 						<attribute name='gender'></attribute>
 						<attribute name='livesAtResidence'>true</attribute>
 						<attribute name='client_ID'>1001</attribute>
 						<notes>
-							<array name='notes' id='100014'>
-								<attribute name=''>Must be 18 or younger to qualify for KidAid</attribute>
-							</array>
+							<array name='notes' id='100015'></array>
 						</notes>
-						<attribute name='client_fpl'>867</attribute>
+						<attribute name='client_fpl'>0</attribute>
 						<attribute name='disabled'>false</attribute>
 					</entity>
-					<entity name='client' DTRulesId='100023' id='1002'>
+					<entity name='client' DTRulesId='100024' id='1002'>
 						<attribute name='programLevel'></attribute>
 						<attribute name='applying'>true</attribute>
 						<client>
@@ -87,10 +85,10 @@
 						</client>
 						<attribute name='mapping*key'>1002</attribute>
 						<incomes>
-							<array name='incomes' id='100024'></array>
+							<array name='incomes' id='100025'></array>
 						</incomes>
-						<attribute name='incomeGroupCount'>1</attribute>
-						<attribute name='eligible'>false</attribute>
+						<attribute name='incomeGroupCount'>0</attribute>
+						<attribute name='eligible'>true</attribute>
 						<attribute name='totalGroupIncome'>0</attribute>
 						<attribute name='expectedChildren'>0</attribute>
 						<attribute name='validatedCitizenship'>true</attribute>
@@ -101,71 +99,35 @@
 						<attribute name='livesAtResidence'>true</attribute>
 						<attribute name='client_ID'>1002</attribute>
 						<notes>
-							<array name='notes' id='100025'>
-								<attribute name=''>Client is eligible for Medicaid, so cannot enroll in KidAid</attribute>
-							</array>
+							<array name='notes' id='100026'></array>
 						</notes>
-						<attribute name='client_fpl'>867</attribute>
+						<attribute name='client_fpl'>0</attribute>
 						<attribute name='disabled'>false</attribute>
 					</entity>
 				</array>
 			</clients>
 		</entity>
-		<entity name='job' DTRulesId='100005' id='v1'>
+		<entity name='job' DTRulesId='100006' id='v1'>
 			<results>
-				<array name='results' id='100006'>
-					<entity name='result' DTRulesId='100040' id=''>
-						<result>
-							<entity name='result'>self reference</entity>
-						</result>
-						<attribute name='programLevel'></attribute>
-						<client>
-							<entity name='client' DTRulesId='100012' id='1001'>multiple reference</entity>
-						</client>
-						<attribute name='program'>KidAid</attribute>
-						<attribute name='mapping*key'></attribute>
-						<attribute name='client_ID'>1001</attribute>
-						<notes>
-							<array name='notes' id='100014'>
-								<attribute name=''>Must be 18 or younger to qualify for KidAid</attribute>
-							</array>
-						</notes>
-						<attribute name='eligible'>false</attribute>
-						<attribute name='totalGroupIncome'>1200</attribute>
-						<attribute name='client_fpl'>867</attribute>
-					</entity>
-					<entity name='result' DTRulesId='100043' id=''>
-						<result>
-							<entity name='result'>self reference</entity>
-						</result>
-						<attribute name='programLevel'></attribute>
-						<client>
-							<entity name='client' DTRulesId='100023' id='1002'>multiple reference</entity>
-						</client>
-						<attribute name='program'>KidAid</attribute>
-						<attribute name='mapping*key'></attribute>
-						<attribute name='client_ID'>1002</attribute>
-						<notes>
-							<array name='notes' id='100025'>
-								<attribute name=''>Client is eligible for Medicaid, so cannot enroll in KidAid</attribute>
-							</array>
-						</notes>
-						<attribute name='eligible'>false</attribute>
-						<attribute name='totalGroupIncome'>0</attribute>
-						<attribute name='client_fpl'>867</attribute>
-					</entity>
-				</array>
+				<array name='results' id='100007'></array>
 			</results>
-			<attribute name='currentdate'>Fri Sep 12 00:00:00 CDT 2008</attribute>
+			<attribute name='currentdate'>Fri Sep 12 00:00:00 EDT 2008</attribute>
 			<attribute name='program'>KidAid</attribute>
 			<attribute name='mapping*key'>v1</attribute>
 			<job>
 				<entity name='job'>self reference</entity>
 			</job>
-			<attribute name='effectivedate'>Wed Oct 01 00:00:00 CDT 2008</attribute>
+			<attribute name='junk'></attribute>
+			<attribute name='effectivedate'>Wed Oct 01 00:00:00 EDT 2008</attribute>
 		</entity>
 		<entity name='constants' DTRulesId='100001' id=''>
 			<attribute name='SocialSecurity'>SS</attribute>
+			<diagCodes>
+				<array name='diagCodes' id='100003'>
+					<attribute name=''>V2501</attribute>
+					<attribute name=''>V2502</attribute>
+				</array>
+			</diagCodes>
 			<attribute name='FreeCoverage'>Free Coverage</attribute>
 			<attribute name='Settlements'>SET</attribute>
 			<attribute name='mapping*key'></attribute>
@@ -176,7 +138,7 @@
 			<attribute name='KidAid'>KidAid</attribute>
 			<attribute name='FPL_PerAdditionalPerson'>300</attribute>
 			<ExcludedIncomeTypes>
-				<array name='ExcludedIncomeTypes' id='100003'>
+				<array name='ExcludedIncomeTypes' id='100004'>
 					<attribute name=''>CS</attribute>
 					<attribute name=''>SSI</attribute>
 				</array>
