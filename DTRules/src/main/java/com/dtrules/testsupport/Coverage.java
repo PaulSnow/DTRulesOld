@@ -60,7 +60,7 @@ public class Coverage {
         public Stats(RDecisionTable table,int columnCount,int conditionCount,int actionCount){
             this.table          = table;
             this.columnCount    = columnCount;
-            columnHits          = new int[columnCount];
+            columnHits          = new int[columnCount>0?columnCount:1];
             this.conditionCount = conditionCount;
             conditions          = new int[conditionCount];
             this.actionCount    = actionCount;
@@ -150,7 +150,7 @@ public class Coverage {
         
         for(Object table : tables){
             RDecisionTable dt = admin.getDecisionTable(rs.getName(),(String)table);
-            int columns     = dt.getConditiontable()[0].length;
+            int columns     = dt.getConditiontable().length>0 ? dt.getConditiontable()[0].length:0;
             int conditions  = dt.getConditiontable().length;
             int actions     = dt.getActions().length;
             Stats stats = new Stats(dt,columns,conditions,actions);

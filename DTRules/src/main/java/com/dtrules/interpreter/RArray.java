@@ -49,20 +49,20 @@ public class RArray extends ARObject implements Collection<IRObject> {
     
     
     
-    /* (non-Javadoc)
+    /**
      * @see java.util.Collection#addAll(java.util.Collection)
      */
     public boolean addAll(Collection<? extends IRObject> arg0) {
         return array.addAll(arg0);
     }
-    /* (non-Javadoc)
+    /**
      * @see java.util.Collection#clear()
      */
     public void clear() {
         array.clear();
         
     }
-    /* (non-Javadoc)
+    /**
      * @see java.util.Collection#contains(java.lang.Object)
      */
     public boolean contains(Object arg0) {
@@ -75,49 +75,49 @@ public class RArray extends ARObject implements Collection<IRObject> {
         }
         return false;
     }
-    /* (non-Javadoc)
+    /**
      * @see java.util.Collection#containsAll(java.util.Collection)
      */
     public boolean containsAll(Collection<?> arg0) {
         return array.containsAll(arg0);
     }
-    /* (non-Javadoc)
+    /**
      * @see java.util.Collection#isEmpty()
      */
     public boolean isEmpty() {
         return array.isEmpty();
     }
-    /* (non-Javadoc)
+    /**
      * @see java.util.Collection#iterator()
      */
     public Iterator<IRObject> iterator() {
         return array.iterator();
     }
-    /* (non-Javadoc)
+    /**
      * @see java.util.Collection#remove(java.lang.Object)
      */
     public boolean remove(Object arg0) {
         return array.remove(arg0);
     }
-    /* (non-Javadoc)
+    /**
      * @see java.util.Collection#removeAll(java.util.Collection)
      */
     public boolean removeAll(Collection<?> arg0) {
         return array.removeAll(arg0);
     }
-    /* (non-Javadoc)
+    /**
      * @see java.util.Collection#retainAll(java.util.Collection)
      */
     public boolean retainAll(Collection<?> arg0) {
         return retainAll(arg0);
     }
-    /* (non-Javadoc)
+    /**
      * @see java.util.Collection#toArray()
      */
     public Object[] toArray() {
         return array.toArray();
     }
-    /* (non-Javadoc)
+    /**
      * @see java.util.Collection#toArray(T[])
      */
     public <T> T[] toArray(T[] arg0) {
@@ -129,7 +129,9 @@ public class RArray extends ARObject implements Collection<IRObject> {
      */
     public int getID(){ return id; }
     /**
-     * Constructor to create the core structure for an RArray.  
+     * Constructor to create the core structure for an RArray.  We keep two "headers"
+     * to every array.  One is the executable header, the other is the non-executable
+     * header.
      * @param bogus
      * @param exectuable
      */
@@ -140,7 +142,12 @@ public class RArray extends ARObject implements Collection<IRObject> {
     	this.pair       = otherpair;
     	this.dups       = duplicates;
     }
-    
+    /**
+     * Creates a RArray
+     * @param id        A unique ID for all arrays.  Get this from the RSession object
+     * @param duplicates
+     * @param executable
+     */
     public RArray(int id, boolean duplicates, boolean executable){
        this.id         = id;
        array           = new ArrayList();
@@ -148,7 +155,13 @@ public class RArray extends ARObject implements Collection<IRObject> {
        dups            = duplicates;
        pair            = new RArray(id,dups, array, this, !executable);
     }
-    
+    /**
+     * Create an RArray from an arraylist
+     * @param id
+     * @param duplicates
+     * @param thearray
+     * @param executable
+     */
     public RArray(int id, boolean duplicates, ArrayList thearray, boolean executable){
         this.id         = id;
         this.array      = thearray;
@@ -157,39 +170,82 @@ public class RArray extends ARObject implements Collection<IRObject> {
         pair            = new RArray(id,dups,thearray,this,!executable);
      }    
     
+    /**
+     * Return an Iterator for this array.  Returns a generic Iterator because
+     * that can be cast to a typed Iterator.
+     * @return
+     */
     public Iterator getIterator(){ return array.iterator(); }
     
+    /**
+     * Returns the iArray type for Array Objects
+     */
 	public int type() {
 		return iArray;
 	}
+	/**
+	 * Add an element to this Array
+	 */
     public boolean add(IRObject v){
     	if(!dups && array.contains(v))return false;
     	return array.add(v);
     }
+    /**
+     * Add an element to a particular location in this array
+     * @param index
+     * @param v
+     */
     public void add(int index,IRObject v){
     	array.add(index,v);
     }
+    /**
+     * Delete an element at a particular location from this array
+     * @param index
+     */
     public void delete(int index){
     	array.remove(index);
     }
+    /**
+     * Find and remove a given element.  Removes the first element
+     * matching.
+     * @param v
+     */
     public void remove(IRObject v){
     	array.remove(v);
     }
+    /**
+     * Get the element at the given index
+     * @param index
+     * @return
+     * @throws RulesException
+     */
     public IRObject get(int index) throws RulesException{
     	if(index<0 || index>= array.size()){
             throw new RulesException("Undefined","RArray","Index out of bounds");
     	}
     	return (IRObject) array.get(index);
     }
+    /**
+     * @see IRObject#arrayValue()
+     */
 	public ArrayList<IRObject> arrayValue() throws RulesException {
 		return array;
 	}
-	
+	/**
+	 * @see IRObject#compare(IRObject)
+	 */
 	public boolean equals(IRObject o) throws RulesException {
 		if(o.type() != iArray) return false;
 		return ((RArray)o).array == array;
 	}
 	
+	/**
+	 * Generate the postfix for this array, while indicating
+	 * the postfix element which generated the error, assuming
+	 * the index yields that location.
+	 * @param index
+	 * @return
+	 */
 	private String generatePostfix(int index){
 		String ps = "";
 	       for(int i=0;i<array.size();i++){
@@ -199,7 +255,9 @@ public class RArray extends ARObject implements Collection<IRObject> {
 	       }
 	       return ps;
 	}
-	
+	/**
+	 * Implements the execution behavior of an RArray
+	 */
 	public void execute(DTState state) throws RulesException {
         int cnt = 0;  // A debugging aid.
         for(IRObject obj : this){
@@ -232,21 +290,29 @@ public class RArray extends ARObject implements Collection<IRObject> {
 		}
 		
 	}
-	
+	/**
+	 * @see IRObject#getExecutable()
+	 */
 	public IRObject getExecutable() {
 		if(executable)return this;
 		return pair;
 	}
-	
+	/**
+	 * @see IRObject#getNonExecutable()
+	 */
 	public IRObject getNonExecutable() {
 		if(!executable)return this;
 		return pair;
 	}
-	
+	/**
+	 * @see IRObject#isExecutable()
+	 */
 	public boolean isExecutable() {
 		return executable;
 	}
-	
+	/**
+	 * @see IRObject#postFix()
+	 */
 	public String postFix() {
 		StringBuffer result = new StringBuffer();
 		result.append(executable?"{":"[");
@@ -257,7 +323,9 @@ public class RArray extends ARObject implements Collection<IRObject> {
         result.append(executable?"}":"]");
 		return result.toString();
 	}
-	
+	/**
+	 * @see IRObject#stringValue()
+	 */
 	public String stringValue() {
 		StringBuffer result = new StringBuffer();
 		result.append(isExecutable()?"{ ":"[ ");
@@ -268,6 +336,9 @@ public class RArray extends ARObject implements Collection<IRObject> {
 		result.append(isExecutable()?"}":"]");
 		return result.toString();
 	}
+	/**
+	 * To string implementation for RArray object
+	 */
 	public String toString() {
 		return stringValue();
 	}
@@ -294,11 +365,14 @@ public class RArray extends ARObject implements Collection<IRObject> {
         return new RArray(session.getUniqueID(), dups, newArray, executable);
     }
 
+    /**
+     * @see IRObject#rArrayValue()
+     */
     public RArray rArrayValue() throws RulesException {
         return this;
     }
     
-    /*
+    /**
      * Returns the size of the array.
      */
     public int size()

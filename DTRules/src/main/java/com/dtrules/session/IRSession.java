@@ -84,15 +84,33 @@ public interface IRSession {
      * @return A unique integer.
      */
     public abstract int getUniqueID();
-
+    /**
+     * JSR94 implementation.
+     * @return
+     */
     public abstract RuleExecutionSetMetadata getRuleExecutionSetMetadata();
 
+    /**
+     * JSR94 implementation.
+     * @throws RemoteException
+     * @throws InvalidRuleSessionException
+     */
     public abstract void release() throws RemoteException,
             InvalidRuleSessionException;
-
+    /**
+     * JSR94  Implementation
+     * @return
+     * @throws RemoteException
+     * @throws InvalidRuleSessionException
+     */
     public abstract int getType() throws RemoteException,
             InvalidRuleSessionException;
 
+    /**
+     * JSR94 Implementation
+     * @param s
+     * @throws RulesException
+     */
     public abstract void execute(String s) throws RulesException;
 
     /**
@@ -100,7 +118,10 @@ public interface IRSession {
      * @return
      */
     public abstract DTState getState();
-    
+    /**
+     * Returns the EntityFactory for this session.
+     * @return
+     */
     public abstract EntityFactory getEntityFactory() ;
 
     /**
@@ -108,15 +129,46 @@ public interface IRSession {
      * @param e
      */
     public void dump(REntity e) throws RulesException;
-    
+    /**
+     * Prints an Entity to the given XML printer, surrounded by the given tag
+     * @param rpt
+     * @param tag
+     * @param e
+     * @throws Exception
+     */
     public void printEntity(IXMLPrinter rpt, String tag, IREntity e) throws Exception ;
 
+    /**
+     * Prints the given Rules Engine Object to the given XML Printer
+     * @param rpt
+     * @param state
+     * @param iRObjname
+     */
     public void printEntityReport(IXMLPrinter rpt, DTState state, String iRObjname );
-    
+    /**
+     * Prints the given object to the given XML printer
+     * @param rpt
+     * @param verbose
+     * @param state
+     * @param name
+     * @param object
+     */
     public void printEntityReport(IXMLPrinter rpt, boolean verbose, DTState state, String name, IRObject object );
-    
+    /**
+     * Prints the given object to the given XML printer
+     * 
+     * @param rpt
+     * @param verbose
+     * @param state
+     * @param iRObjname
+     */
     public void printEntityReport(IXMLPrinter rpt, boolean verbose, DTState state, String iRObjname );
-    
+    /**
+     * Prints the given object to the given XML printer
+     * 
+     * @param out
+     * @throws RulesException
+     */
     public void printBalancedTables(PrintStream out)throws RulesException;
     
     /**

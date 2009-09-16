@@ -99,7 +99,7 @@ terminal String		ABSOLUTEVALUE, ACTION, ADD, AFTER, ALL, ALLOWING, AND, ARRAY,
 					ISNOTNULL, ISNULL,	ITS, LBRACE, LCURLY, LENGTH, LESS, 
 					LOCAL, LONG, LOWER_CASE, LPAREN,  LT, LTE, MAP, MAPPINGKEY, MATCH, 
 					MATCHES, MEMBER, MINUS, MONTHS, MULTIPLY, NAME, 
-					NAMEOF, NEQ, NEW, NO, NOT, NUMBEROF, OF, ON, ONE, 
+					NAMEOF, NEQ, NEW, NO, NOT, NUMBEROF, OF, ON, ONE, ONERROR, 
 					OR, PERCENTOF, PERFORM, PLUS, PLUSORMINUS, POSSESSIVE, 
 					QUESTIONMARK, RANDOMIZE, RARRAY, RBOOLEAN, RBRACE, RCURLY, 
 					RDATE, RDECISIONTABLE, RDOUBLE, RELATIONSHIP_BETWEEN, 
@@ -180,8 +180,7 @@ non terminal String     ifcontinue,
  ** Maximus Example Terminal and non terminal Declarations
  **
  **/ 
-non terminal String		maximusstatements,
-					    parameterlist;
+non terminal String		maximusstatements;
 
                         
 /* Precedences */
@@ -216,8 +215,10 @@ done ::= ACTION statement_list:e                   {: RESULT = "\n"+e+"\n"; :}
       |
       CONDITION bexpr:e SEMI debugstatement:d SEMI {: RESULT = "\n"+e+d+"\n"; :} 
       |
-      CONTEXT context_for_table:e             SEMI {: RESULT = "\n"+e+"\n"; :}      
-      ;
+      CONTEXT context_for_table:e             SEMI {: RESULT = "\n"+e+"\n"; :} 
+      |
+      IDENT     // This is bogus, cause the TokenFilter is going to filter out any IDENT matches.     
+      ;         // But this gets rid of the warning.
                
 statement_list ::= statement_list:e1 block:e2     {: RESULT = e1+e2;            :} |
                    block:e                        {: RESULT = e;                :} ;
@@ -470,6 +471,8 @@ setstatement ::= SET left_iexpr:v    ASSIGN number:e   {:        RESULT = e+"cvi
  
 
 performstatement ::=  
+                PERFORM RDECISIONTABLE:dt1 AND ONERROR ADD eexpr:e TO CONTEXT AND PERFORM RDECISIONTABLE:dterror
+                    {: RESULT = "/"+dt1+" lookup /"+dterror+" lookup "+e+" PerformCatchError "; :}
                 RDECISIONTABLE:dt         {: RESULT = dt+" ";   :} |
                 PERFORM RDECISIONTABLE:dt {: RESULT = dt+" ";   :} |
                 PERFORM NAME:dt           {: RESULT = dt+" ";   :} ;
@@ -1169,13 +1172,20 @@ bexpr     ::=
               dexpr:d1 IS BETWEEN dexpr:d2 AND dexpr:d3 {: RESULT = d2+d1+"d> not "+d1+d3+" d> not and ";       :} |
 
 // Entity Compares
-              eexpr:e1 eq  eexpr:e2                      {: RESULT = e1+e2+"req  ";                               :} |
-              eexpr:e1 neq eexpr:e2                      {: RESULT = e1+e2+"req not ";                               :} |
+              eexpr:e1 eq  eexpr:e2                      {: RESULT = e1+e2+"req  ";                                :} |
+              eexpr:e1 neq eexpr:e2                      {: RESULT = e1+e2+"req not ";                             :} |
+              // EntityX is in the context
+
+              RENTITY:e ENTITY IS NOT IN CONTEXT         {: RESULT = "/"+e+" InContext not ";                     :} |   
+              RENTITY:e ENTITY IS IN CONTEXT             {: RESULT = "/"+e+" InContext ";                         :} |   
+              strexpr:s1 ENTITY IS IN CONTEXT            {: RESULT = s1+" InContext ";                             :} | 
+              strexpr:s1 ENTITY IS NOT IN CONTEXT        {: RESULT = s1+" InContext not ";                         :} | 
               
-              BOOLEAN VALUE OF operatorstatements:e     {: RESULT = e;                                            :} |
               
 // Rather random tests
-              BOOL_FUNCTION:b                         {: RESULT = b+" ";                                          :} ;                                                      
+              BOOLEAN VALUE OF operatorstatements:e      {: RESULT = e;                                            :} |
+
+              BOOL_FUNCTION:b                            {: RESULT = b+" ";                                        :} ;                                                      
 
 
 eq    ::=     EQ  | IS EQUAL TO                 | EQUAL TO ;

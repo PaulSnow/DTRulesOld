@@ -32,11 +32,11 @@ import com.dtrules.xmlparser.IXMLPrinter;
 import com.dtrules.xmlparser.XMLPrinter;
 
 /**
- * /**
+ * 
  * The Data Map class holds data for later mapping into the Rules Engine
  * using the same mapping definition that can be used to upload XML to
  * an EDD.  This interface can also be used to write out XML to a file.
- * 
+ * <br><br>
  * This isn't a complex implementation.  The idea is to collect all the
  * data we would have written to an XML file, then map it in the same
  * way with the same tag structure into the EDD.  And as a bonus, we
@@ -52,46 +52,11 @@ public class DataMap implements IXMLPrinter{
     ArrayList<XMLNode> tagStack = new ArrayList<XMLNode>();
     XMLNode rootTag;
    
-    /**
-     * Write out this DataMap as an XML file.  I do not write out
-     * tags with no body (body == null) and no internal structure 
-     * (no tag.tags....).  This is because the load treats attributes
-     * with null values as having not responded at all.  Such 
-     * attributes default to the default value specified in the EDD.
-     * When we load the text version however, we can't have a tag
-     * or we will not behave in the same way.  A null for a string
-     * will become a zero length string (for example).
-     * @param out
-     */
-    static public void print(XMLPrinter xout, XMLNode tag){
-        if(tag.type() == XMLNode.Type.TAG){ 
-                if(tag.getBody() == null && tag.getTags().size()>0){
-                   if(tag.getTag()!=null){
-                       xout.opentag(tag.getTag(),tag.getAttribs());
-                   }
-                   for(XMLNode t : tag.getTags()){ 
-                       print(xout,t);
-                   }
-                   if(tag.getTag()!=null){
-                       xout.closetag();
-                   }
-                }else{
-                   xout.opentag(tag.getTag(),tag.getAttribs()); 
-                   xout.printdata(tag.getBody());
-                   xout.closetag();
-                }
-
-        } else if (tag.type() == XMLNode.Type.COMMENT ){
-                xout.comment(tag.getBody().toString());
-
-        } else if (tag.type() == XMLNode.Type.HEADER ){
-                xout.header(tag.getBody().toString());
-
-        }
-    }
+ 
     
     /**
-     * If created without an output stream, no XML is written.
+     * Constructor for the DataMap structure, which will be 
+     * enclosed with the given tag.  
      * @param tag
      */
     public DataMap(String tag){
@@ -99,20 +64,31 @@ public class DataMap implements IXMLPrinter{
         rootTag = top();
     }
     /**
-     * Constructor you have to use if you wish to use Data Objects to 
-     * provide attributes.
+     * Constructor that will write out the datamap as an XML to the 
+     * given output stream.  
+     * <br><br>
+     * Now that we have a method to write out the Datamap to a file, there
+     * is no need to write out the XML as the Datamap is being built.
+     * 
      * @param map - Provides info on the DO's
      * @param tag
      * @param xmlOutputStream - Writes an XML file out if specified (not null).
+     * @deprecated
      */
     public DataMap(Mapping map, String tag, OutputStream xmlOutputStream){
         this(tag);
         this.map = map;
         this.out = xmlOutputStream;
     }
+    
     /**
      * If created with an output stream, XML is generated and written
      * to the output stream.
+     * <br><br>
+     * Now that we have a method to write out the Datamap to a file, there
+     * is no need to write out the XML as the Datamap is being built.
+     * 
+     * @deprecated
      * @param tag
      * @param xmlOutputStream
      */
@@ -144,7 +120,45 @@ public class DataMap implements IXMLPrinter{
         XMLPrinter xout= new XMLPrinter(out);
         DataMap.print(xout,rootTag);
     }
-    
+    /**
+     * Write out a subtree of the DataMap into an XML output stream.  
+     * I do not write out tags with no body (body == null) and no 
+     * internal structure  (no tag.tags....).  This is because the 
+     * load of the XML treats missing attributes with as having not 
+     * responded at all.  Such attributes default to the default value 
+     * specified in the EDD.
+     * <br><br>
+     * When we load the text version however, we can't have a tag
+     * or we will not behave in the same way.  A null for a string
+     * will become a zero length string (for example).
+     * @param out
+     */
+    static public void print(XMLPrinter xout, XMLNode tag){
+        if(tag.type() == XMLNode.Type.TAG){ 
+                if(tag.getBody() == null && tag.getTags().size()>0){
+                   if(tag.getTag()!=null){
+                       xout.opentag(tag.getTag(),tag.getAttribs());
+                   }
+                   for(XMLNode t : tag.getTags()){ 
+                       print(xout,t);
+                   }
+                   if(tag.getTag()!=null){
+                       xout.closetag();
+                   }
+                }else{
+                   xout.opentag(tag.getTag(),tag.getAttribs()); 
+                   xout.printdata(tag.getBody());
+                   xout.closetag();
+                }
+
+        } else if (tag.type() == XMLNode.Type.COMMENT ){
+                xout.comment(tag.getBody().toString());
+
+        } else if (tag.type() == XMLNode.Type.HEADER ){
+                xout.header(tag.getBody().toString());
+
+        }
+    } 
     /**
      * Returns the number of tags on the tag stack.
      */
@@ -160,7 +174,14 @@ public class DataMap implements IXMLPrinter{
         if(i<0 || i>=tagStack.size())return null;
         return tagStack.get(i).getTag();
     }
-     
+    /**
+     * Returns true if a tag (optionally with the given attribute and value,
+     * should the attribute be not null) is in the current tag stack. 
+     * @param tag
+     * @param key_attribute
+     * @param value
+     * @return
+     */
     public boolean isInContext(String tag, String key_attribute, Object value){
         XMLNode t = top();
         while(t!=null && t!=rootTag){
@@ -176,8 +197,8 @@ public class DataMap implements IXMLPrinter{
     }
     
     /**
-     * If we close, then we close all our tags.  If an output file has been specified,
-     * we write that out.
+     * If we are supposed to write out the datafile, do so here.  Otherwise this
+     * method does any other cleanup necessary in the DataMap. 
      */
     public void close() {
         if(out!=null){
@@ -195,6 +216,10 @@ public class DataMap implements IXMLPrinter{
         }
     }
 
+    /**
+     * Create a new tag
+     * @param tag
+     */
     private void newtag(String tag ){
         XMLNode t = top();
         if(t!=null && top().getBody()!=null){
@@ -206,7 +231,10 @@ public class DataMap implements IXMLPrinter{
         }
         tagStack.add(newtag);
     }
-    
+    /**
+     * Create a new header
+     * @param header
+     */
     private void header(String header){
         XMLNode t = top();
         if(t!=null && top().getBody()!=null){

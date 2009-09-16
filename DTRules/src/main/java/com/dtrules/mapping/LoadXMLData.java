@@ -134,7 +134,7 @@ public class LoadXMLData implements IGenericXMLParser {
 		
         EntityInfo    info  = (EntityInfo)    this.map.requests.get(name);
 		AttributeInfo aInfo = (AttributeInfo) this.map.setattributes.get(tag);
-
+		IREntity      topOfEntityStack = state.entityfetch(0);
 			
 		//		 If I get info, then create an entity.
 		//		 Get the code from this tag.
@@ -180,7 +180,7 @@ public class LoadXMLData implements IGenericXMLParser {
 			{                                                   // Not only do you have to match the attribute name,
 			    int i=tagstkptr-2;				                //   But you must match the immediately enclosing tag
 				if(i>=0){  
-			      attrib = aInfo.lookup(state.entityfetch(0).getName().stringValue().toLowerCase());    
+			      attrib = aInfo.lookup(topOfEntityStack.getName().stringValue().toLowerCase());    
 				  if(attrib!=null){
 			        queueSetAttribute(attrib, attribs);
 				  }

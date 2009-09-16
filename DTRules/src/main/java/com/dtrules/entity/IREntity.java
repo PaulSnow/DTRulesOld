@@ -33,7 +33,7 @@ public interface IREntity extends IRObject{
     public RXmlValue getRXmlValue();
     
     /**
-     * 
+     * Set the XML value associated with this entity
      */
     public void setRXmlValue(RXmlValue rXmlValue);
     

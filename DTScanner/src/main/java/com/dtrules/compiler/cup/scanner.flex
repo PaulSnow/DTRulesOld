@@ -201,6 +201,7 @@ string     = {stringdbl}|{stringsgl}
   "matches"        {return build(sym.MATCHES); }
 
   "error"{ws}+"code"("s")?          {return build(sym.ERRORCODE); }
+  "on"{ws}+"error"                  {return build(sym.ONERROR); }
   "absolute"{ws}+"value"            {return build(sym.ABSOLUTEVALUE); }
   "else"{ws}+"if"{ws}+"none"{ws}+"are"{ws}+"found"
                                     {return build(sym.ELSEIFNONEAREFOUND); }

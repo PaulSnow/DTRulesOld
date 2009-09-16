@@ -13,97 +13,105 @@
 						<relationship>
 							<entity name='relationship'>self reference</entity>
 						</relationship>
-						<attribute name='source'></attribute>
+						<source>
+							<entity name='client' DTRulesId='100013' id='1001'>
+								<attribute name='programLevel'></attribute>
+								<attribute name='applying'>true</attribute>
+								<client>
+									<entity name='client'>self reference</entity>
+								</client>
+								<attribute name='mapping*key'>1001</attribute>
+								<incomes>
+									<array name='incomes' id='100014'>
+										<entity name='income' DTRulesId='100017' id='v3'>
+											<attribute name='amount'>1200</attribute>
+											<income>
+												<entity name='income'>self reference</entity>
+											</income>
+											<attribute name='mapping*key'>v3</attribute>
+											<attribute name='earned'>true</attribute>
+											<attribute name='type'>WA</attribute>
+										</entity>
+										<entity name='income' DTRulesId='100020' id='v4'>
+											<attribute name='amount'>800</attribute>
+											<income>
+												<entity name='income'>self reference</entity>
+											</income>
+											<attribute name='mapping*key'>v4</attribute>
+											<attribute name='earned'>false</attribute>
+											<attribute name='type'>CS</attribute>
+										</entity>
+									</array>
+								</incomes>
+								<attribute name='incomeGroupCount'>0</attribute>
+								<attribute name='eligible'>true</attribute>
+								<attribute name='totalGroupIncome'>0</attribute>
+								<attribute name='expectedChildren'>0</attribute>
+								<attribute name='validatedCitizenship'>true</attribute>
+								<attribute name='totalIncome'>0</attribute>
+								<attribute name='age'>50</attribute>
+								<attribute name='pregnant'>false</attribute>
+								<attribute name='gender'></attribute>
+								<attribute name='livesAtResidence'>true</attribute>
+								<attribute name='client_ID'>1001</attribute>
+								<notes>
+									<array name='notes' id='100015'></array>
+								</notes>
+								<attribute name='client_fpl'>0</attribute>
+								<attribute name='disabled'>false</attribute>
+							</entity>
+						</source>
 						<attribute name='mapping*key'>v5</attribute>
-						<attribute name='target'></attribute>
+						<target>
+							<entity name='client' DTRulesId='100024' id='1002'>
+								<attribute name='programLevel'></attribute>
+								<attribute name='applying'>true</attribute>
+								<client>
+									<entity name='client'>self reference</entity>
+								</client>
+								<attribute name='mapping*key'>1002</attribute>
+								<incomes>
+									<array name='incomes' id='100025'></array>
+								</incomes>
+								<attribute name='incomeGroupCount'>0</attribute>
+								<attribute name='eligible'>true</attribute>
+								<attribute name='totalGroupIncome'>0</attribute>
+								<attribute name='expectedChildren'>0</attribute>
+								<attribute name='validatedCitizenship'>true</attribute>
+								<attribute name='totalIncome'>0</attribute>
+								<attribute name='age'>4</attribute>
+								<attribute name='pregnant'>false</attribute>
+								<attribute name='gender'></attribute>
+								<attribute name='livesAtResidence'>true</attribute>
+								<attribute name='client_ID'>1002</attribute>
+								<notes>
+									<array name='notes' id='100026'></array>
+								</notes>
+								<attribute name='client_fpl'>0</attribute>
+								<attribute name='disabled'>false</attribute>
+							</entity>
+						</target>
 						<attribute name='type'>parent</attribute>
 					</entity>
 					<entity name='relationship' DTRulesId='100034' id='v6'>
 						<relationship>
 							<entity name='relationship'>self reference</entity>
 						</relationship>
-						<attribute name='source'></attribute>
+						<source>
+							<entity name='client' DTRulesId='100024' id='1002'>multiple reference</entity>
+						</source>
 						<attribute name='mapping*key'>v6</attribute>
-						<attribute name='target'></attribute>
+						<target>
+							<entity name='client' DTRulesId='100013' id='1001'>multiple reference</entity>
+						</target>
 						<attribute name='type'>child</attribute>
 					</entity>
 				</array>
 			</relationships>
 			<clients>
 				<array name='clients' id='100010'>
-					<entity name='client' DTRulesId='100013' id='1001'>
-						<attribute name='programLevel'></attribute>
-						<attribute name='applying'>true</attribute>
-						<client>
-							<entity name='client'>self reference</entity>
-						</client>
-						<attribute name='mapping*key'>1001</attribute>
-						<incomes>
-							<array name='incomes' id='100014'>
-								<entity name='income' DTRulesId='100017' id='v3'>
-									<attribute name='amount'>1200</attribute>
-									<income>
-										<entity name='income'>self reference</entity>
-									</income>
-									<attribute name='mapping*key'>v3</attribute>
-									<attribute name='earned'>true</attribute>
-									<attribute name='type'>WA</attribute>
-								</entity>
-								<entity name='income' DTRulesId='100020' id='v4'>
-									<attribute name='amount'>800</attribute>
-									<income>
-										<entity name='income'>self reference</entity>
-									</income>
-									<attribute name='mapping*key'>v4</attribute>
-									<attribute name='earned'>false</attribute>
-									<attribute name='type'>CS</attribute>
-								</entity>
-							</array>
-						</incomes>
-						<attribute name='incomeGroupCount'>0</attribute>
-						<attribute name='eligible'>true</attribute>
-						<attribute name='totalGroupIncome'>0</attribute>
-						<attribute name='expectedChildren'>0</attribute>
-						<attribute name='validatedCitizenship'>true</attribute>
-						<attribute name='totalIncome'>0</attribute>
-						<attribute name='age'>50</attribute>
-						<attribute name='pregnant'>false</attribute>
-						<attribute name='gender'></attribute>
-						<attribute name='livesAtResidence'>true</attribute>
-						<attribute name='client_ID'>1001</attribute>
-						<notes>
-							<array name='notes' id='100015'></array>
-						</notes>
-						<attribute name='client_fpl'>0</attribute>
-						<attribute name='disabled'>false</attribute>
-					</entity>
-					<entity name='client' DTRulesId='100024' id='1002'>
-						<attribute name='programLevel'></attribute>
-						<attribute name='applying'>true</attribute>
-						<client>
-							<entity name='client'>self reference</entity>
-						</client>
-						<attribute name='mapping*key'>1002</attribute>
-						<incomes>
-							<array name='incomes' id='100025'></array>
-						</incomes>
-						<attribute name='incomeGroupCount'>0</attribute>
-						<attribute name='eligible'>true</attribute>
-						<attribute name='totalGroupIncome'>0</attribute>
-						<attribute name='expectedChildren'>0</attribute>
-						<attribute name='validatedCitizenship'>true</attribute>
-						<attribute name='totalIncome'>0</attribute>
-						<attribute name='age'>4</attribute>
-						<attribute name='pregnant'>false</attribute>
-						<attribute name='gender'></attribute>
-						<attribute name='livesAtResidence'>true</attribute>
-						<attribute name='client_ID'>1002</attribute>
-						<notes>
-							<array name='notes' id='100026'></array>
-						</notes>
-						<attribute name='client_fpl'>0</attribute>
-						<attribute name='disabled'>false</attribute>
-					</entity>
+					<entity name='client' DTRulesId='100013' id='1001'>multiple reference</entity>
+					<entity name='client' DTRulesId='100024' id='1002'>multiple reference</entity>
 				</array>
 			</clients>
 		</entity>

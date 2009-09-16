@@ -134,35 +134,61 @@ public class DTState {
        err.print(s);
        return true;
    }
-     
+   
+   /**
+    * Start the Trace
+    */
    public void traceStart(){
        setState(TRACE);
        out.opentag("DTRulesTrace");
    }
 
+   /**
+    * Stop the trace
+    * @throws RulesException
+    */
    public void traceEnd() throws RulesException {
        out.close();
        clearState(TRACE);
    }
-   
+   /**
+    * Internal use.  Begins a tagged trace section.
+    * @param tag
+    * @param attribs
+    */
    public void traceTagBegin(String tag, HashMap<String,Object> attribs){
        if(testState(TRACE)){
            out.opentag(tag,attribs);
        }
    }
-   
+   /**
+    * Internal use. Begins a tagged trace section.
+    * @param tag
+    */
    public void traceTagBegin(String tag){
        if(testState(TRACE)){
            out.opentag(tag);
        }
    }
-   
+   /**
+    * Internal use.  Begins a tagged trace section.
+    * @param tag
+    * @param name1
+    * @param value1
+    */
    public void traceTagBegin(String tag, String name1, String value1){
        if(testState(TRACE)){
            out.opentag(tag,name1,value1);
        }
    }
-   
+   /**
+    * internal use.  Begins a tagged trace section.
+    * @param tag
+    * @param name1
+    * @param value1
+    * @param name2
+    * @param value2
+    */
    public void traceTagBegin(String tag, 
            String name1, String value1, 
            String name2, String value2){
@@ -170,7 +196,16 @@ public class DTState {
            out.opentag(tag,name1,value1,name2,value2);
        }
    }
-   
+   /**
+    * Internal use.  Begins tagged section
+    * @param tag
+    * @param name1
+    * @param value1
+    * @param name2
+    * @param value2
+    * @param name3
+    * @param value3
+    */
    public void traceTagBegin(String tag, 
            String name1, String value1, 
            String name2, String value2,
@@ -179,15 +214,37 @@ public class DTState {
            out.opentag(tag,name1,value1,name2,value2,name3,value3);
        }
    }
-   
+
+   /**
+    * Internal use.  Prints some information into the trace file.
+    * @param tag
+    * @param body
+    */
    public void traceInfo(String tag, String body){
        if(testState(TRACE))out.printdata(tag, body);
    }
    
+   /**
+    * Internal use.  Prints some information into the trace file.
+    * 
+    * @param tag
+    * @param name1
+    * @param value1
+    * @param body
+    */
    public void traceInfo(String tag, String name1, String value1, String body){
        if(testState(TRACE))out.printdata(tag,name1,value1,body);
    }
-   
+   /**
+    * Internal use.  Prints some information into the trace file.
+    * 
+    * @param tag
+    * @param name1
+    * @param value1
+    * @param name2
+    * @param value2
+    * @param body
+    */
    public void traceInfo(String tag, 
            String name1, String value1,
            String name2, String value2,
@@ -195,6 +252,18 @@ public class DTState {
        if(testState(TRACE))out.printdata(tag,name1,value1,name2,value2,body);
    }
    
+   /**
+    * Internal use.  Prints some information into the trace file.
+    * 
+    * @param tag
+    * @param name1
+    * @param value1
+    * @param name2
+    * @param value2
+    * @param name3
+    * @param value3
+    * @param body
+    */
    public void traceInfo(String tag, 
            String name1, String value1,
            String name2, String value2,
@@ -203,6 +272,20 @@ public class DTState {
        if(testState(TRACE))out.printdata(tag,name1,value1,name2,value2,name3,value3,body);
    }
    
+   /**
+    * Internal use.  Prints some information into the trace file.
+    * 
+    * @param tag
+    * @param name1
+    * @param value1
+    * @param name2
+    * @param value2
+    * @param name3
+    * @param value3
+    * @param name4
+    * @param value4
+    * @param body
+    */
    public void traceInfo(String tag, 
            String name1, String value1,
            String name2, String value2,
@@ -212,28 +295,31 @@ public class DTState {
        if(testState(TRACE))out.printdata(tag,name1,value1,name2,value2,name3,value3,name4,value4,body);
    }
    
+   /**
+    * End the trace
+    */
    public void traceTagEnd(){
        if(testState(TRACE)){
            out.closetag();
        } 
    }
 
-   /**
-    * Prints a string to the output file if DEBUG is on.
-    * If ECHO is set, then the output is also echoed to 
-    * Standard out.
-    * Returns true if it printed something.
-    */
-  public boolean debug(String s){
-      if(testState(DEBUG)){
-          if(testState(ECHO) && outPs != System.out){
-              System.out.print(s);
+    /**
+     * Prints a string to the output file if DEBUG is on.
+     * If ECHO is set, then the output is also echoed to 
+     * Standard out.
+     * Returns true if it printed something.
+     */
+      public boolean debug(String s){
+          if(testState(DEBUG)){
+              if(testState(ECHO) && outPs != System.out){
+                  System.out.print(s);
+              }
+              out.printdata("dbg",s);
+              return true;
           }
-          out.printdata("dbg",s);
-          return true;
+          return false;
       }
-      return false;
-  }
 
       /**
        * Prints the Data Stack, Entity Stack, and Control Stack to
@@ -442,6 +528,11 @@ public class DTState {
      */
     public int cdepth(){ return ctrlstkptr; }
 
+    /**
+     * Internal use.  Pushes a frame onto the control stack from which 
+     * local variables can be allocated.
+     * @throws RulesException
+     */
     public void pushframe() throws RulesException{
         if(framestkptr>=stklimit){
             throw new RulesException("Control Stack Overflow", 
@@ -451,7 +542,11 @@ public class DTState {
         frames[framestkptr++] = currentframe;
         currentframe = ctrlstkptr;
     }
-    
+    /**
+     * Internal use. Pops a frame from the control stack, reclaiming storage used
+     * by local variables.
+     * @throws RulesException
+     */
     public void popframe() throws RulesException{
         if(framestkptr<=0){
             throw new RulesException("Control Stack Underflow", 
@@ -460,14 +555,25 @@ public class DTState {
         ctrlstkptr = currentframe;                  // Pop off this frame,
         currentframe = frames[--framestkptr];       // Then set the currentframe back to its previous value.
     }
-    
+    /**
+     * Internal Use only.
+     * Get a value from a frame location.
+     * @param i
+     * @return
+     * @throws RulesException
+     */
     public IRObject getFrameValue(int i) throws RulesException{
         if(currentframe+i >= ctrlstkptr){
             throw new RulesException("OutOfRange","getFrameValue","");
         }
         return getcs(currentframe+i);
     }
-
+    /**
+     * Internal Use.  Set a value within the stack frame.
+     * @param i
+     * @param value
+     * @throws RulesException
+     */
     public void setFrameValue(int i, IRObject value) throws RulesException{
         if(currentframe+i >= ctrlstkptr){
             throw new RulesException("OutOfRange","getFrameValue","");
@@ -476,7 +582,7 @@ public class DTState {
     }
     
     /**
-     * Push an Object onto the control stack.
+     * Internal use. Push an Object onto the control stack.
      * @param o
      */
     public void cpush(IRObject o){
@@ -492,7 +598,12 @@ public class DTState {
         ctrlstk[ctrlstkptr]= null;
         return r;
     }
-    
+    /**
+     * Internal use.  Pull a value off the control stack.
+     * @param i
+     * @return
+     * @throws RulesException
+     */
     public IRObject getcs(int i) throws RulesException{
         if(i>=ctrlstkptr){
             throw new RulesException("Control Stack Overflow","getcs", 
@@ -504,7 +615,13 @@ public class DTState {
         }
         return ctrlstk[i];
     }
- 
+    
+    /**
+     * Set a value at a location on the control stack.
+     * @param i
+     * @param v
+     * @throws RulesException
+     */
     public void setcs(int i, IRObject v) throws RulesException{
         if(i>=ctrlstkptr){
             throw new RulesException("Control Stack Overflow","setcs", 
@@ -659,14 +776,24 @@ public class DTState {
        }
        return false;
     }
+    
+    /**
+     * Get the current Decision Table under execution.
+     * @return
+     */
     public RDecisionTable getCurrentTable() {
         return currentTable;
     }
+    /**
+     * Internal Use.
+     * Set the current Decision Table under execution.
+     * @param currentTable
+     */
     public void setCurrentTable(RDecisionTable currentTable) {
         this.currentTable = currentTable;
     }
     /**
-     * Condition, Action, Context, etc.
+     * Get the current Decision Table section, i.e. Condition, Action, Context, etc.
      * @return the currentTableSection
      */
     public String getCurrentTableSection() {

@@ -258,13 +258,14 @@ public class RDecisionTable extends ARObject {
     }
 
     private void whatsUsed(){
-        columnsSpecified  = new boolean [conditiontable[0].length];
-	    columnsUsed       = new boolean [conditiontable[0].length];
-	    columnUnreachable = new boolean [conditiontable[0].length];
+        int conditionCnt  = conditiontable.length>0?conditiontable[0].length:0;
+        columnsSpecified  = new boolean [conditionCnt];
+	    columnsUsed       = new boolean [conditionCnt];
+	    columnUnreachable = new boolean [conditionCnt];
 	    conditionsUsed    = new boolean [conditions.length];
 	    actionsUsed       = new boolean [actions.length];
 	    
-	    for(int col=0; col < conditiontable[0].length; col++){   // For each column
+	    for(int col=0; col < conditionCnt; col++){   // For each column
 	        for(int row=0; row < conditiontable.length; row++) { // For each row
 	            if(    conditiontable[row][col].equalsIgnoreCase("y")||
 	                   conditiontable[row][col].equalsIgnoreCase("n")||
@@ -303,7 +304,9 @@ public class RDecisionTable extends ARObject {
 	    }                                                  //             this condition.
 	    if(node instanceof ANode){                         // If this is an Action Node... Look at its columns!    
 	        for (int col : ((ANode)node).columns){         // Simply grab the columns that might lead to this action...
-	            columnUnreachable[col-1]=false;            //    and mark them as reachable (i.e. not unreachable)
+	            if(col <= columnUnreachable.length){       //    and mark them as reachable (i.e. not unreachable)
+	                columnUnreachable[col-1]=false;        //    (but ignore all of this if the col number is out if range)
+	            }
 	        }
 	        if(((ANode)node).columns.size()==0) {          // If no column got us here, then this is a null column
 	            hasNullColumn = true;
@@ -624,7 +627,7 @@ public class RDecisionTable extends ARObject {
 			            throw e;
 			        }
 			    }else{
-			        state.traceTagEnd();
+			        executeTable(state);
 			    }
 			    
 			}else{

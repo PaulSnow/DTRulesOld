@@ -16,9 +16,11 @@
   
 package com.dtrules.interpreter.operators;
 
+import com.dtrules.entity.IREntity;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RBoolean;
+import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RString;
 import com.dtrules.session.DTState;
 
@@ -57,8 +59,25 @@ public class RBooleanOps {
 			new Strremove();
 			new Startswith();
 			new Req();
+			new InContext();
 		}
-		
+		/**
+		 * InContext ( name --> boolean ) 
+		 * Checks the context to see of an Entity with the given name is in the 
+		 * current context.
+		 * @author Paul Snow
+		 *
+		 */
+		static class InContext extends ROperator {
+            InContext(){super("InContext");}
+
+            public void execute(DTState state) throws RulesException {
+                RName       entityName  = state.datapop().rNameValue();
+                IREntity    entity      = state.findEntity(entityName);
+                state.datapush(entity);
+            }
+        } 
+
 	    /**
 	     * not( Boolean -- ~boolean )
 	     * Not Operator, returns the negation of the input value

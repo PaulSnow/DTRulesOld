@@ -105,7 +105,10 @@ public class Excel2XML {
      * Converts the RuleSet
      * @throws Exception
      */
-    public void convertRuleset() throws Exception {        
+    public void convertRuleset() throws Exception {    
+        if(ruleSet == null){
+            throw new Exception("The rule set '"+ruleset+"' could not be found");
+        }
         ImportRuleSets dt = new ImportRuleSets();
         dt.convertEDDs          (ruleSet, ruleSet.getSystemPath()+"/"+ruleSet.getExcel_edd(),     ruleSet.getFilepath()+ruleSet.getEDD_XMLName());
         dt.convertDecisionTables(ruleSet.getSystemPath()+"/"+ruleSet.getExcel_dtfolder(),ruleSet.getFilepath()+UDTFilename);
@@ -167,6 +170,7 @@ public class Excel2XML {
             
             while(idt.hasNext()){
                 RDecisionTable t = (RDecisionTable) dt.get(idt.next());
+                t.build(session.getState());
                 List<ICompilerError> errs = t.compile();
                 for (ICompilerError error : errs){
                     dtcompiler.logError(
@@ -248,6 +252,7 @@ public class Excel2XML {
      * @throws Exception
      */
     public void generateMap(int version, String mapping, String filename) throws Exception {
+        filename = filename.trim();
         RuleSet        rs   = getRuleSet();
         IMapGenerator   mgen;
         if(version == 1){
@@ -255,11 +260,22 @@ public class Excel2XML {
         }else{
             mgen = new MapGenerator2();
         }
+        if(!filename.toLowerCase().endsWith(".xml")){
+            filename += ".xml";
+        }
         mgen.generateMapping(
                 mapping,
-                rs.getFilepath()+rs.getEDD_XMLName(), 
-                rs.getWorkingdirectory()+"map.xml");
+                rs.getFilepath()+rs.getEDD_XMLName(),
+                rs.getWorkingdirectory()+filename);
     }
+    public static void compile (
+            String path, 
+            String rulesConfig, 
+            String ruleset,
+            String applicationRepositoryPath) throws Exception {
+        compile(path,rulesConfig,ruleset,applicationRepositoryPath,null);
+    }
+    
     
     /**
      * Helper function for compiling Rule Sets.
@@ -279,7 +295,8 @@ public class Excel2XML {
             String path, 
             String rulesConfig, 
             String ruleset,
-            String applicationRepositoryPath) throws Exception {
+            String applicationRepositoryPath,
+            String [] mappings) throws Exception {
         try{
             System.out.println("Starting: "+ new Date());
             Excel2XML converter     = new Excel2XML(path, rulesConfig, ruleset);
@@ -288,6 +305,10 @@ public class Excel2XML {
             System.out.println("Compiling: "+ new Date());
             converter.compile(2,System.out);
             System.out.println("Done: "+ new Date());
+            
+            if(mappings != null) for(String map : mappings){
+                converter.generateMap(0, map, "mapping_"+map);
+            }
             
             if(converter.getDTCompiler().getErrors().size()==0 && applicationRepositoryPath != null){
                 ChangeReport cr = new ChangeReport(

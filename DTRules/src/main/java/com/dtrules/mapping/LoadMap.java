@@ -227,35 +227,38 @@ class LoadMap implements IGenericXMLParser {
 	public void begin_setattribute(){
 		String        tag        = (String) _attribs.get("tag");				
 		String        type       = (String) _attribs.get("type");						
-		String        enclosure  = (String) _attribs.get("enclosure");		// This is an optional tag enclosure....
+		String        entity  = (String) _attribs.get("enclosure");		// This is an optional entity enclosure....		
+		if(entity == null){
+		              entity  = (String) _attribs.get("entity");         // This is an optional entity enclosure....
+		}		
 		String        rattribute = (String) _attribs.get("RAttribute");     // This is the Entity Attribute name 
 
 		if(rattribute == null)rattribute = tag;                             // If no rattribute name is specified, default to the tag.
 	   
-		if(enclosure!=null)enclosure = enclosure.toLowerCase();
+		if(entity!=null)entity = entity.toLowerCase();
 		
  	    AttributeInfo info = (AttributeInfo) this.map.setattributes.get(tag);
 	    if(info==null){
 	   		info = new AttributeInfo();
 	    }	    
 	    try {
-            IREntity e = ef.findRefEntity(RName.getRName(enclosure));
+            IREntity e = ef.findRefEntity(RName.getRName(entity));
             if(e==null){
-                if(!undefinedEntities.containsKey(enclosure)){
-                   System.out.println("The entity "+enclosure+" isn't defined in the EDD");
+                if(!undefinedEntities.containsKey(entity)){
+                   System.out.println("The entity "+entity+" isn't defined in the EDD");
                    loadSuccessful = false;
-                   undefinedEntities.put(enclosure, enclosure);
+                   undefinedEntities.put(entity, entity);
                 }   
             }else{
-                if(definedAttributes.containsKey(enclosure+"*"+rattribute)){
-                    System.out.println("The Entity "+enclosure+" and Attribute "+rattribute +" have multiple definitions");
+                if(definedAttributes.containsKey(entity+"*"+rattribute)){
+                    System.out.println("The Entity "+entity+" and Attribute "+rattribute +" have multiple definitions");
                     loadSuccessful = false;
                 }
                 if(e.getEntry(RName.getRName(rattribute))==null){
-                    System.out.println("The Attribute "+rattribute+" isn't defined by "+enclosure);
+                    System.out.println("The Attribute "+rattribute+" isn't defined by "+entity);
                     loadSuccessful = false;
                 }
-                info.add(state,tag, enclosure,rattribute.toLowerCase(),type);
+                info.add(state,tag, entity,rattribute.toLowerCase(),type);
             }    
         } catch (RulesException e) {}
            

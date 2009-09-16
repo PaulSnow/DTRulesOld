@@ -146,7 +146,6 @@ public abstract class ATestHarness implements ITestHarness {
     public void runTests(){
          
         try{
-            rpt = new PrintStream(getReportFileName());            
             // Delete old output files
             File dir         = new File(getOutputDirectory());
             File oldOutput[] = dir.listFiles();
@@ -157,6 +156,7 @@ public abstract class ATestHarness implements ITestHarness {
             throw new RuntimeException(e);
         }
         try {
+            rpt = new PrintStream(getReportFileName());            
              
              // Allocate a RulesDirectory.  This object can contain many different Rule Sets.
              // A Rule set is a set of decision tables defined in XML, 
@@ -180,16 +180,20 @@ public abstract class ATestHarness implements ITestHarness {
              
              for(File file : files){
                  if(file.isFile() && file.getName().endsWith(".xml")){
-                     rpt.println(dfcnt+" "+file.getName());
                      if(!Console())System.out.print(dfcnt+" ");
+                     Date now = new Date();
                      if(dfcnt%20==0){
-                         Date now = new Date();
                          long dt  = (now.getTime()-start.getTime())/dfcnt;
                          long sec = dt/1000;
                          long ms  = dt-(sec*1000);
                          System.out.println("\nAvg execution time: "+sec+"."+ms);
                      }
-                     runfile(rd,rs,dfcnt,dir.getAbsolutePath(),file.getName());
+                     String err = runfile(rd,rs,dfcnt,dir.getAbsolutePath(),file.getName());
+                     Date after = new Date();
+                     long dt  = (after.getTime()-now.getTime());
+                     long sec = dt/1000;
+                     rpt.println(dfcnt+"\t"+sec+"."+(dt-(sec*1000))+"\t"+file.getName());
+                     if(err!=null)rpt.println(err);
                      dfcnt++;
                  }
                  
@@ -203,7 +207,7 @@ public abstract class ATestHarness implements ITestHarness {
              
              {
                  Date now = new Date();
-                 long dt  = (now.getTime()-start.getTime())/dfcnt;
+                 long dt  = (now.getTime()-start.getTime())/(dfcnt-1);
                  long sec = dt/1000;
                  long ms  = dt-(sec*1000);
                  System.out.println("\nDone.  Avg execution time: "+sec+"."+ms);
@@ -236,8 +240,16 @@ public abstract class ATestHarness implements ITestHarness {
      }
     
      
-     
-     public void runfile(RulesDirectory rd, RuleSet rs,  int dfcnt, String path, String dataset) {
+     /**
+      * Returns the error if an error is thrown.  Otherwise, a null.
+      * @param rd
+      * @param rs
+      * @param dfcnt
+      * @param path
+      * @param dataset
+      * @return
+      */
+     public String runfile(RulesDirectory rd, RuleSet rs,  int dfcnt, String path, String dataset) {
          
          PrintStream    out          = null;
          OutputStream   tracefile    = null;
@@ -321,13 +333,13 @@ public abstract class ATestHarness implements ITestHarness {
               }
              
           } catch ( Exception ex ) {
-              rpt.println("An Error occurred while running the example:\n"+ex);
               System.out.print("<-ERR  ");
               if(Console()){
                   System.out.print(ex);
               }
-
+              return "\nAn Error occurred while running the example:\n"+ex+"\n";
           }
+          return null;
       }
     
     /**

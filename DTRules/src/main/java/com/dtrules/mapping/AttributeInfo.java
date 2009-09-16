@@ -83,13 +83,13 @@ class AttributeInfo {
     /**
 	 * We add an enclosure attribute pair to these arraylists.  An
 	 * exception is thrown if we get two of the same enclosures.
-	 * @param _enclosure
+	 * @param _entity
 	 * @param _attribute
 	 * @param _type
 	 */
 	public void add(DTState state, 
             final String tag, 
-            final String _enclosure, 
+            final String _entity, 
             final String _attribute,
                   String _type)throws RulesException {
                 
@@ -112,7 +112,7 @@ class AttributeInfo {
 			final Attrib attrib = (Attrib)iattribs.next();			
 			/* Duplicate attributes may be encountered in mapping xml. 
 			   So we won't throw this error. */
-			if(attrib.enclosure.equalsIgnoreCase(_enclosure))	{
+			if(attrib.enclosure.equalsIgnoreCase(_entity))	{
 				if (" ".equals(attrib.rAttribute)) {
 					attrib.rAttribute = _attribute;  
 				}
@@ -128,13 +128,13 @@ class AttributeInfo {
 					  thisisanerror = false;
 				}
 				if (thisisanerror){
-                    state.traceInfo("error", "Duplicate:" + _enclosure + "." + tag);
+                    state.traceInfo("error", "Duplicate:" + _entity + "." + tag);
                 }
                 state.traceInfo("error", 
 				         (thisisanerror?"ERROR: ":"WARNING: ") + "\n"+
-				          "The tag <"+tag+"> and enclosure <"+_enclosure+"> "+
+				          "The tag <"+tag+"> and enclosure <"+_entity+"> "+
 						  "have been encountered more than once in this mapping file\n"+
-				          "For "+ (_enclosure==""?"":"<"+_enclosure+"> ") +tag+"> \n"+
+				          "For "+ (_entity==""?"":"<"+_entity+"> ") +tag+"> \n"+
 						           "  Existing: RAttribute '"+attrib.rAttribute+"'\n"+
 						           "            type      '"+int2str[attrib.type]+"'\n"+
 						           "  New:      RAttribute '"+_attribute+"'\n"+
@@ -143,7 +143,7 @@ class AttributeInfo {
 			}
 		}	
 		final Attrib attrib = new Attrib();
-		attrib.enclosure  = _enclosure==null?"":_enclosure;
+		attrib.enclosure  = _entity==null?"":_entity;
 		attrib.rAttribute = _attribute;		
 		attrib.type       =  attribType;
 		tag_instances.add(attrib);

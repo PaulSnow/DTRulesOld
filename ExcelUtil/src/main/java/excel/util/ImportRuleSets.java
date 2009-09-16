@@ -127,7 +127,7 @@ public class ImportRuleSets {
             if(row > sheet.getLastRowNum()) return ""; 
             HSSFRow  theRow = sheet.getRow(row);
             if(theRow==null)return "";
-            HSSFCell cell = theRow.getCell((short)column);
+            HSSFCell cell = theRow.getCell(column);
             if(cell==null)return "";
             switch(cell.getCellType()){
                 case HSSFCell.CELL_TYPE_BLANK :     return "";
@@ -369,7 +369,7 @@ public class ImportRuleSets {
     void clearNumber(HSSFSheet sheet, int row){
         String numberFound = getNumber(sheet,row);
         if(numberFound.length()>0){
-            short field = (short) getColumn("number");
+            int field = getColumn("number");
             if(field!=-1){
                sheet.getRow(row).getCell(field).setCellValue(new HSSFRichTextString(""));
             }
@@ -386,31 +386,34 @@ public class ImportRuleSets {
      * @param row
      * @param label
      * @param count
+     * @return Return an error message, or null.
      */
-    private void printNumber(XMLPrinter out, HSSFSheet sheet, int row, String label, int count){
+    private String printNumber(XMLPrinter out, HSSFSheet sheet, int row, String label, int count){
         String numberFound = getNumber(sheet, row);
         int v;
+        String result = null;
         try {
             v = Integer.parseInt(numberFound);
         } catch (NumberFormatException e) {
-            System.out.println(" Invalid number "+label+" on the "+count);
+            result = " Invalid number "+label+" on the "+count;
             v = count;
-            short field = (short) getColumn("number");
+            int field = getColumn("number");
             if(field!=-1){
-               sheet.getRow(row).getCell(field).setCellType(HSSFCell.CELL_TYPE_STRING);
-               sheet.getRow(row).getCell(field).setCellValue(new HSSFRichTextString(count+""));
+               sheet.getRow(row).createCell(field, HSSFCell.CELL_TYPE_NUMERIC);
+               sheet.getRow(row).getCell(field).setCellValue((double)count);
             }
             CountsAreDirty = true;
         }
         if(v != count){
-            System.out.println(" Incorrect Count "+label+" on the "+count+".  Found "+numberFound);
-            short field = (short) getColumn("number");
+            result = " Incorrect Count "+label+" on the "+count+".  Found "+numberFound;
+            int field =  getColumn("number");
             if(field!=-1){
-               sheet.getRow(row).getCell(field).setCellValue(new HSSFRichTextString(count+""));
+               sheet.getRow(row).getCell(field).setCellValue((double)count);
             }
             CountsAreDirty = true;
         }
         out.printdata(label, numberFound);
+        return result;
     }
     
     /**
@@ -484,6 +487,8 @@ public class ImportRuleSets {
             		"A Corrected version has been written to the decision table directory");
             OutputStream output = new FileOutputStream(file.getAbsolutePath()+".fixedCounts");
             wb.write(output);
+        }else{
+            (new File(file.getAbsolutePath()+".fixedCounts")).delete();
         }
         return tablefound;
         
@@ -569,7 +574,10 @@ public class ImportRuleSets {
                 if(context != "") 
                 {
                     out.opentag("context_details");
-                    printNumber(out,sheet,rowIndex,"context_number",contextCount++);
+                    String err = printNumber(out,sheet,rowIndex,"context_number",contextCount++);
+                    if(err!=null){
+                        System.out.println(dtName+" : "+err);
+                    }
                     out.printdata("context_description",context);
                     out.closetag();
                 }else{  
@@ -593,8 +601,11 @@ public class ImportRuleSets {
                 if(initialActionDescription != "") 
                 {
                     out.opentag("initial_action_details");
-                    printNumber(out,sheet,rowIndex,"intial_action_number",iactionCount++);
-                    
+                    String err = printNumber(out,sheet,rowIndex,"intial_action_number",iactionCount++);
+                    if(err!=null){
+                        System.out.println(dtName+" : "+err);
+                    }
+
                     String initialActionComment = getComments(sheet, rowIndex);
                     out.printdata("initial_action_comment",initialActionComment);
     
@@ -623,8 +634,11 @@ public class ImportRuleSets {
 
         	if(conditionDescription != "") {
         		out.opentag("condition_details");
-                printNumber(out,sheet,rowIndex,"condition_number",conditionCount++);
-                	
+                String err = printNumber(out,sheet,rowIndex,"condition_number",conditionCount++);
+                if(err!=null){
+                    System.out.println(dtName+" : "+err);
+                }
+	
 	        	String conditionComment = getComments(sheet, rowIndex);
                 out.printdata("condition_comment",conditionComment);
                 
@@ -664,8 +678,11 @@ public class ImportRuleSets {
         	    String actionDescription = getDSL(sheet, rowIndex);  
                 if(actionDescription.length()>0){
                     out.opentag("action_details");
-                    printNumber(out,sheet,rowIndex,"action_number",actionCount++);
-                	
+                    String err = printNumber(out,sheet,rowIndex,"action_number",actionCount++);
+                    if(err!=null){
+                        System.out.println(dtName+" : "+err);
+                    }
+
                 	String actionComment = getComments(sheet, rowIndex); 
                     out.printdata("action_comment",actionComment);
                     

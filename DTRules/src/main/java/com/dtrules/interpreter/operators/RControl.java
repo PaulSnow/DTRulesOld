@@ -19,6 +19,7 @@ package com.dtrules.interpreter.operators;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.dtrules.decisiontables.RDecisionTable;
 import com.dtrules.entity.IREntity;
 import com.dtrules.entity.REntity;
 import com.dtrules.infrastructure.RulesException;
@@ -26,7 +27,10 @@ import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RArray;
 import com.dtrules.interpreter.RInteger;
 import com.dtrules.interpreter.RName;
+import com.dtrules.interpreter.RString;
 import com.dtrules.session.DTState;
+import com.dtrules.session.EntityFactory;
+import com.dtrules.session.IRSession;
 /**
  * Defines math operators.
  * @author paul snow
@@ -40,7 +44,8 @@ public class RControl {
         new Forr();         new Entityforall(); new Forfirst();  
         new Doloop();       new ForFirstElse(); new ExecuteTable(); 
         new Execute();      new Deallocate();   new Allocate();     
-        new Localfetch();   new Localstore();
+        new Localfetch();   new Localstore();   new PerformCatchError();
+        new Lookup();
     }
     
     /**
@@ -274,7 +279,7 @@ public class RControl {
             RArray   array = state.datapop().rArrayValue();
             IRObject test  = state.datapop();
             IRObject body  = state.datapop();
-            Iterator<REntity> ie = array.getIterator();
+            Iterator<REntity> ie = (Iterator<REntity>) array.getIterator();
             while(ie.hasNext()){
                 state.entitypush(ie.next());
                 test.execute(state);
@@ -427,4 +432,82 @@ public class RControl {
             state.setFrameValue(index, value);
         }
     }
+
+    /**
+     * performCatchError (table error_table error_entity -- )
+     * Executes the given table.  If a RulesException is thrown, a RulesException
+     * is created and put into the context.  Then the error_table is called.
+     * <br><br>
+     * Intended to support something like the following syntax:
+     * <br><br>
+     * perform TableX and on an error, add the ErrorDetails to the context and call Error_handling_table
+     * @author paul snow
+     *
+     */
+    static class PerformCatchError extends ROperator {
+        PerformCatchError(){super("performcatcherror");}
+
+        private IRObject p(String v) { return RString.newRString(v==null?"":v); }
+        private RName    n(String x) { return RName.getRName(x);}
+        
+        public void execute(DTState state) throws RulesException {
+            RName    error        = state.datapop().rNameValue();
+            RName    error_table  = state.datapop().rNameValue();
+            RName    table        = state.datapop().rNameValue();
+            
+            try{
+                state.find(table).execute(state);
+            }catch(NullPointerException e){
+                throw new RulesException("undefined", "PerformCatchError", 
+                        "The table '"+table.stringValue()+"' is undefined");
+            }catch(RulesException e){
+                IRSession     session       = state.getSession();
+                EntityFactory ef            = session.getEntityFactory();   
+                IREntity      errorEntity   = ef.findRefEntity(error).clone(session).rEntityValue();
+                state.entitypush(errorEntity);
+                
+                // If any of the following puts fail (because the given entity doesn't define them), then
+                // simply carry on your merry way.  The user can define these fields if they need them,
+                // and they don't need to define them if they don't need them.
+                
+                try { errorEntity.put(n("errortype"),     p(e.getErrortype()));                         }catch(RulesException ex){}
+                try { errorEntity.put(n("location"),      p(e.getLocation()));                          }catch(RulesException ex){}
+                try { errorEntity.put(n("message"),       p(e.getMessage()));                           }catch(RulesException ex){}
+                try { errorEntity.put(n("decisionTable"), p(e.getDecisionTable()));                     }catch(RulesException ex){}
+                try { errorEntity.put(n("formal"),        p(e.getErrortype()));                         }catch(RulesException ex){}
+                try { errorEntity.put(n("postfix"),       p(e.getPostfix()));                           }catch(RulesException ex){}
+                try { errorEntity.put(n("filename"),      p(e.getFilename()));                          }catch(RulesException ex){}
+                try { errorEntity.put(n("section"),       p(e.getSection()));                           }catch(RulesException ex){}
+                try { errorEntity.put(n("number"),        RInteger.getRIntegerValue(e.getNumber()));    }catch(RulesException ex){}
+                
+            }
+        }
+    }
+
+    /**
+     * ( name -- value ) Looks up and returns the value of the given attribute.
+     * Even if the value found is executable, it is still pushed to the 
+     * data stack.  If no value is found, an undefined exception is thrown.
+     * 
+     * @author paul snow
+     *
+     */
+    static class Lookup extends ROperator {
+        Lookup(){super("lookup");}
+
+        public void execute(DTState state) throws RulesException {
+            RName name = state.datapop().rNameValue();
+            IRObject value = state.find(name);
+            if(value == null){
+                throw new RulesException(
+                        "undefined",
+                        "Lookup",
+                        "Could not find a value for "+name.stringValue()+" in the current context."
+                );
+            }
+            state.datapush(value);
+        }
+    }
+
+    
 }

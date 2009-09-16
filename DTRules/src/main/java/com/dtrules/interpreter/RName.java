@@ -16,14 +16,14 @@
   
 package com.dtrules.interpreter;
 
-
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.session.DTState;
 
-@SuppressWarnings({"unchecked"})
 public class RName extends ARObject implements Comparable<RName>{
 	
 	final RName   entity;
@@ -31,9 +31,38 @@ public class RName extends ARObject implements Comparable<RName>{
 	final boolean executable;
     final int     hashcode;
     final RName   partner;		// RNames are created in pairs, executable and non-executable.
+
+    /** 
+     * I started with a Hashmap here.  However, we can deadlock with multiple threads.  So
+     * I tried two possible fixes, ConcurrentHashMap and Hashtable.  The latter gave me the
+     * better performance with a Rule Set eating a large set of data.  We may look into this
+     * further later... <br><br>
+     * Results from my testing:
+     * 
+     *       Hashtable
+     *      
+     *       1   134.797 Copy (2) of dataloadAUTOASSIGNMENT090811_173319_287.xml
+     *       2   135.547 Copy of dataloadAUTOASSIGNMENT090811_173319_287.xml
+     *       3   135.718 dataloadAUTOASSIGNMENT090811_173319_287.xml
+     *       
+     *       ConcurrentHashMap
+     *       
+     *       1   135.531 Copy (2) of dataloadAUTOASSIGNMENT090811_173319_287.xml
+     *       2   136.484 Copy of dataloadAUTOASSIGNMENT090811_173319_287.xml
+     *       3   137.407 dataloadAUTOASSIGNMENT090811_173319_287.xml
+     *       
+     *       
+     *       Hash Map
+     *       
+     *       1   135.703 Copy (2) of dataloadAUTOASSIGNMENT090811_173319_287.xml
+     *       2   135.813 Copy of dataloadAUTOASSIGNMENT090811_173319_287.xml
+     *       3   136.312 dataloadAUTOASSIGNMENT090811_173319_287.xml
+     */
     
-	static HashMap names = new HashMap();
-	
+//  static HashMap<String, RName> names = new HashMap<String,RName>();
+//  static ConcurrentHashMap<String, RName> names = new ConcurrentHashMap<String,RName>();
+    static Hashtable<String, RName> names = new Hashtable<String,RName>();
+    
 	/**
 	 * This constructor should only be called by the other RName constructor.
 	 * It is used to build its partner.  RNames are always created in pairs,

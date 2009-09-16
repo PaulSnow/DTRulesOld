@@ -31,6 +31,110 @@ public class RulesException extends RuleException {
     int    number;
     
     /**
+     * @return the errortype
+     */
+    public String getErrortype() {
+        return errortype;
+    }
+
+
+    /**
+     * @param errortype the errortype to set
+     */
+    public void setErrortype(String errortype) {
+        this.errortype = errortype;
+    }
+
+
+    /**
+     * @return the location
+     */
+    public String getLocation() {
+        return location;
+    }
+
+
+    /**
+     * @param location the location to set
+     */
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+
+    /**
+     * @return the message
+     */
+    public String getMessage() {
+        return message;
+    }
+
+
+    /**
+     * @param message the message to set
+     */
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+
+    /**
+     * @return the filename
+     */
+    public String getFilename() {
+        return filename;
+    }
+
+
+    /**
+     * @param filename the filename to set
+     */
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+
+    /**
+     * @return the formal
+     */
+    public String getFormal() {
+        return formal;
+    }
+
+
+    /**
+     * @param firstAction the firstAction to set
+     */
+    public void setFirstAction(boolean firstAction) {
+        this.firstAction = firstAction;
+    }
+
+
+    /**
+     * @param decisionTable the decisionTable to set
+     */
+    public void setDecisionTable(String decisionTable) {
+        this.decisionTable = decisionTable;
+    }
+
+
+    /**
+     * @param section the section to set
+     */
+    public void setSection(String section) {
+        this.section = section;
+    }
+
+
+    /**
+     * @param number the number to set
+     */
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+
+    /**
      * This method allows the trace facility to detect the first enclosing action (if 
      * there is one) for an error.
      * @return

@@ -66,13 +66,29 @@ public class ANode implements DTNode {
        }
        return new ANode(dt,col+1, list, numbers);
     }   
-    
+    /**
+     * Combines into this node the given node.  Used to collapse two
+     * nodes when both nodes should be executed.
+     */
     public void addNode(DTNode _node){
         if(!(_node instanceof ANode)){
             throw new RuntimeException("Shouldn't every call if Node types don't match!");
         }
         ANode node = (ANode)_node;
-        columns.addAll(node.columns);
+
+        for(Integer column : node.columns){
+            if(!columns.contains(column)) columns.add(column);
+            for(int i=columns.size()-1; i>0 ; i--){
+                for(int j=0; j<i; j++){
+                    if(columns.get(j)>columns.get(j+1)){
+                        Integer hld = columns.get(j);
+                        columns.set(j,columns.get(j+1));
+                        columns.set(j+1,hld);
+                    }
+                }
+            }
+        }
+       
         for(int i=0;i<node.anumbers.size(); i++){
             Integer index = node.anumbers.get(i);
             if(!anumbers.contains(index)){

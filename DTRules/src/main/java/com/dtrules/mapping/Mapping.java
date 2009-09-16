@@ -58,7 +58,7 @@ public class Mapping {
     ArrayList<String[]> attribute2listPairs = new ArrayList<String[]>();
     
 	/**
-	 * A List of entities that should be created at intialization and put on the Entity Stack.
+	 * A List of entities that should be created at initialization and put on the Entity Stack.
 	 */
 	ArrayList<String> entitystack   = new ArrayList<String>(); // Specifies what Entities should be on the Entity Stack to begin with.
    
@@ -131,7 +131,7 @@ public class Mapping {
     
     
     /**
-     * Constructor for creating a Mapping.  This has been deprecated because
+     * Constructor for creating a Mapping.  This has been depreciated because
      * building a map this way reloads the mapping file over and over.  Instead
      * you should use:
      * 
