@@ -433,6 +433,23 @@ public class ChangeReport {
        }
        return missing;
    }
+   
+   /**
+    * Helper function to simplify the following function.
+    * @param t
+    * @param attrib
+    * @return
+    */
+   private static String getName(Node t, String attrib){
+       String tname;
+       if(attrib == null){
+           tname = t.findTag("table_name").getBody();
+       }else{
+           tname = t.getAttributes().get(attrib); 
+       }
+       return tname;
+   }
+
    /**
     * It is interesting to find what nodes have been added, and which have been deleted.
     * This routine does that for us easily. We look for the nodes that have a matching 
@@ -452,20 +469,11 @@ public class ChangeReport {
        ArrayList<Node> missing = new ArrayList<Node>();
        for(int i = dts1.size()-1; i>=0; i--){
            Node t1 = dts1.get(i);
-           String t1name;
-           if(attrib == null){
-              t1name = t1.findTag("table_name").getBody();
-           }else{
-              t1name = t1.getAttributes().get(attrib); 
-           }
+           String t1name = getName(t1,attrib);
            Node match = null;
            for(Node t2: dts2){
-               String t2name;
-               if(attrib == null){
-                   t2name = t2.findTag("table_name").getBody();
-               }else{
-                   t2name = t2.getAttributes().get(attrib);
-               }
+               String t2name = getName(t2,attrib);
+               
                if(t1name.equals(t2name)){
                    match = t2;
                    break;
@@ -476,7 +484,13 @@ public class ChangeReport {
                dts1.remove(i);
            }else{
                dts2.remove(match);      // Now this insures dts2 is in the same order
-               dts2.add(0,match);       // as dts1!  We do assume no duplicate tables...
+               dts2.add(0,match);       // as dts1!  We do assume we might have duplicates ... remove all matches
+               for(int j = dts2.size()-1; j >0; j--){
+                   String t2name = getName(dts2.get(j),attrib);
+                   if(t1name.equals(t2name)){
+                       dts2.remove(j);
+                   }
+               }
            }
        }
        return missing;
@@ -750,56 +764,57 @@ public class ChangeReport {
            report.closetag();
            return differences;
        }
-       
+   
        Node root1 = rules1.getMappingRoot();
        Node root2 = rules2.getMappingRoot();
+       {        
+           ArrayList<Node> attributes1 = findnodes("setattribute",root1,null);
+           ArrayList<Node> attributes2 = findnodes("setattribute",root2,null);
            
-       ArrayList<Node> attributes1 = findnodes("setattribute",root1,null);
-       ArrayList<Node> attributes2 = findnodes("setattribute",root2,null);
-       
-       if(attributes1.size()==0){
-           report.printdata("empty","no attributes mapped in map file for "+rules1.description);
-       }
-       if(attributes2.size()==0){
-           report.printdata("empty","no attributes mapped in map file for "+rules2.description);
-       }
-       
-       XMLTree.sortByAttribute(true,attributes1,"enclosure");
-       XMLTree.sortByAttribute(true,attributes1,"RAttribute");
-       XMLTree.sortByAttribute(true,attributes1,"tag");
-       XMLTree.sortByAttribute(true,attributes2,"enclosure");
-       XMLTree.sortByAttribute(true,attributes2,"RAttribute");
-       XMLTree.sortByAttribute(true,attributes2,"tag");
-       
-       String attribs2match[] = {"tag","RAttribute","enclosure"};
-       {
-           ArrayList<Node> missing;
-           missing = ChangeReport.findMissingNodes(attribs2match,attributes1,attributes2);
-           if(missing.size()>0)differences = true;
-           {for(Node m : missing){ report.printdata("NewMappings",m.getAttributes().get("tag")+" now maps to "+
-                   m.getAttributes().get("enclosure")+"."+m.getAttributes().get("RAttribute"));}}
-           missing = ChangeReport.findMissingNodes(attribs2match,attributes2,attributes1);
-           if(missing.size()>0)differences = true;
-           {for(Node m : missing){ report.printdata("DeletedMappings",m.getAttributes().get("tag")+" no longer maps to "+
-                   m.getAttributes().get("enclosure")+"."+m.getAttributes().get("RAttribute"));}}
-       }
-       
-       ArrayList<Integer> diffs = new ArrayList<Integer>(); 
-       
-       if(attributes1.size() > 0 ){
-           report.opentag("ModifiedMappings");
-           for(int i = 0; i < attributes1.size();  i++){
-               HashMap <String,String> attribs = attributes1.get(i).getAttributes();
-               if(  !attributes1.get(i).absoluteMatch(attributes2.get(i),false) ){
-                   String name1 = attribs.get("tag")+" maps "+attribs.get("enclosure")+"."+attribs.get("RAttribute")+" (now type "+attribs.get("type")+")";
-                   diffs.add(i);
-                   differences = true;
-                   report.printdata("MapTypeChanged",name1);
-               }
+           if(attributes1.size()==0){
+               report.printdata("empty","no attributes mapped in map file for "+rules1.description);
            }
-           report.closetag();   
-       } 
+           if(attributes2.size()==0){
+               report.printdata("empty","no attributes mapped in map file for "+rules2.description);
+           }
            
+           XMLTree.sortByAttribute(true,attributes1,"enclosure");
+           XMLTree.sortByAttribute(true,attributes1,"RAttribute");
+           XMLTree.sortByAttribute(true,attributes1,"tag");
+           XMLTree.sortByAttribute(true,attributes2,"enclosure");
+           XMLTree.sortByAttribute(true,attributes2,"RAttribute");
+           XMLTree.sortByAttribute(true,attributes2,"tag");
+           
+           String attribs2match[] = {"tag","RAttribute","enclosure"};
+           {
+               ArrayList<Node> missing;
+               missing = ChangeReport.findMissingNodes(attribs2match,attributes1,attributes2);
+               if(missing.size()>0)differences = true;
+               {for(Node m : missing){ report.printdata("NewMappings",m.getAttributes().get("tag")+" now maps to "+
+                       m.getAttributes().get("enclosure")+"."+m.getAttributes().get("RAttribute"));}}
+               missing = ChangeReport.findMissingNodes(attribs2match,attributes2,attributes1);
+               if(missing.size()>0)differences = true;
+               {for(Node m : missing){ report.printdata("DeletedMappings",m.getAttributes().get("tag")+" no longer maps to "+
+                       m.getAttributes().get("enclosure")+"."+m.getAttributes().get("RAttribute"));}}
+           }
+           
+           ArrayList<Integer> diffs = new ArrayList<Integer>(); 
+           
+           if(attributes1.size() > 0 ){
+               report.opentag("ModifiedMappings");
+               for(int i = 0; i < attributes1.size();  i++){
+                   HashMap <String,String> attribs = attributes1.get(i).getAttributes();
+                   if(  !attributes1.get(i).absoluteMatch(attributes2.get(i),false) ){
+                       String name1 = attribs.get("tag")+" maps "+attribs.get("enclosure")+"."+attribs.get("RAttribute")+" (now type "+attribs.get("type")+")";
+                       diffs.add(i);
+                       differences = true;
+                       report.printdata("MapTypeChanged",name1);
+                   }
+               }
+               report.closetag();   
+           } 
+       }
+       
        ArrayList<Node> datamaps1 = findnodes("do2entitymap",root1,null);
        ArrayList<Node> datamaps2 = findnodes("do2entitymap",root2,null);
        
