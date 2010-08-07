@@ -1,5 +1,5 @@
 set path=%path%;jflex-1.4.3\bin;
-set JFLEX_HOME=jflex-1.4.3
+set JFLEX_HOME=.\
 set JAVA_HOME=c:\Program Files\Java\jdk1.6.0_18
 set CLPATH=%JFLEX_HOME%\libJFlex.jar
 echo .
