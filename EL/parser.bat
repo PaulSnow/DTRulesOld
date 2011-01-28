@@ -45,3 +45,4 @@ del xxx.tmp > nul
 
 
 cd %projectDirectory%
+pause

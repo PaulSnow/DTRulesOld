@@ -1,5 +1,7 @@
 /** 
- * Copyright 2004-2009 DTRules.com, Inc.
+ * Copyright 2004-2011 DTRules.com, Inc.
+ * 
+ * See http://DTRules.com for updates and documentation for the DTRules Rules Engine  
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -12,7 +14,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- **/ 
+ **/
 
 package com.dtrules.testsupport;
 
@@ -21,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.io.FileInputStream;
 
@@ -36,14 +39,16 @@ import com.dtrules.session.RulesDirectory;
 import com.dtrules.xmlparser.XMLPrinter;
 import com.dtrules.xmlparser.XMLTree;
 import com.dtrules.xmlparser.XMLTree.Node;
+import com.dtrules.xmlparser.XMLTree.Node.MATCH;
 import com.dtrules.mapping.DataMap;
 
 public abstract class ATestHarness implements ITestHarness {
  
 	
-    DataMap 	datamap     = null;
-    AutoDataMap autoDataMap = null;
-    String      currentfile = "";
+    protected DataMap     datamap     = null;
+    protected AutoDataMap autoDataMap = null;
+    protected String      currentfile = "";
+    protected int         filecnt     = 0;
     
     @Override
     /**
@@ -157,6 +162,14 @@ public abstract class ATestHarness implements ITestHarness {
     public boolean Verbose() { return true; }
     
     /**
+     * If numbered, we will number the files generated (result files, trace files, 
+     * etc.)
+     * 
+     * @return By default we do not number generated files.
+     */
+    public boolean numbered() { return false; }
+    
+    /**
      * By default, we will trace your code.
      */
     public boolean Trace() { return true; }
@@ -174,6 +187,34 @@ public abstract class ATestHarness implements ITestHarness {
      */
     public String getReportFileName() { 
         return getOutputDirectory()+"report.txt"; 
+    }
+    
+    @Override
+    public File [] getFiles(){
+    	File   dir      = new File(getTestDirectory());
+        File   files[]  = dir.listFiles();
+        
+		for (int i = 0; i < files.length-1; i++){
+			for(int j = 0; j < files.length-1-i; j++){
+				if(files[j].getName().compareTo(files[j+1].getName())>0 || !files[j].getName().endsWith(".xml")){
+					File hld = files[j];
+					files[j] = files[j+1];
+					files[j+1] = hld;
+				}
+			}
+		}
+		ArrayList<File> simFiles = new ArrayList<File>();
+		for(int i = 0; i < files.length; i++){
+			File afile = files[i];
+			if(afile != null && afile.getName().endsWith(".xml")){
+				simFiles.add(files[i]);
+			}
+		}
+		File [] returnfiles = new File[simFiles.size()];
+		for(int i = 0; i< simFiles.size(); i++){
+			returnfiles[i]=simFiles.get(i);
+		}
+		return returnfiles;
     }
     
     PrintStream rpt=null; // Report file where summaries are written.
@@ -205,8 +246,8 @@ public abstract class ATestHarness implements ITestHarness {
              String         ruleset  = getRuleSetName();
              RName          rsName   = RName.getRName(ruleset);
              RuleSet        rs       = rd.getRuleSet(rsName);
-             File           dir      = new File(getTestDirectory());
-             File           files[]  = dir.listFiles();
+         	 File           dir      = new File(getTestDirectory());
+             File           files[]  = getFiles();
              int            dfcnt    = 1;
              
              if(rs == null){
@@ -219,33 +260,35 @@ public abstract class ATestHarness implements ITestHarness {
              {
                  System.out.println(start);  
                  for(File file : files){
-                     if(file.isFile() && file.getName().endsWith(".xml")){
-                         if(!Console())System.out.print(dfcnt+" ");
-                         Date now = new Date();
-                         if(dfcnt%20==0){
-                             long dt  = (now.getTime()-start.getTime())/dfcnt;
-                             long sec = dt/1000;
-                             long ms  = dt-(sec*1000);
-                             System.out.println("\nAvg execution time: "+sec+"."+ms);
-                         }
-                         String err = runfile(rd,rs,dfcnt,dir.getAbsolutePath(),file.getName());
-                         Date after = new Date();
-                         long dt  = (after.getTime()-now.getTime());
+                     if(!Console())System.out.print(dfcnt+" ");
+                     Date now = new Date();
+                     if(dfcnt%20==0){
+                         long dt  = (now.getTime()-start.getTime())/dfcnt;
                          long sec = dt/1000;
-                         rpt.println(dfcnt+"\t"+sec+"."+(dt-(sec*1000))+"\t"+file.getName());
-                         if(err!=null)rpt.println(err);
-                         dfcnt++;
+                         long lms  = dt-(sec*1000);
+                         String ms = lms<100 ? lms<10 ? "00"+lms : "0"+lms : ""+lms;
+                         System.out.println("\nAvg execution time: "+sec+"."+ms);
                      }
+                     String err = runfile(rd,rs,dfcnt,dir.getAbsolutePath(),file.getName());
+                     Date after = new Date();
+                     long dt  = (after.getTime()-now.getTime());
+                     long sec = dt/1000;
+                     long lms  = dt-(sec*1000);
+                     String ms = lms<100 ? lms<10 ? "00"+lms : "0"+lms : ""+lms;
+                     rpt.println(dfcnt+"\t"+sec+"."+ms+"\t"+file.getName());
+                     if(err!=null)rpt.println(err);
+                     dfcnt++;
                  }
                  Date end = new Date();
                  long dt = end.getTime() - start.getTime();
-                 long ms = dt%1000;
                  dt /= 1000;
                  long sec = dt%60;
                  dt /= 60;
                  long min = dt%60;
                  dt /= 60;
                  long hour = dt;
+                 long lms  = dt-(sec*1000);
+                 String ms = lms<100 ? lms<10 ? "00"+lms : "0"+lms : ""+lms;
                  System.out.println("\r\n\r\nTotal Execution Time (h:m:s.ms): "+hour+":"+min+":"+sec+"."+ms);
              }
              
@@ -261,7 +304,8 @@ public abstract class ATestHarness implements ITestHarness {
                  if(filecnt == 0) filecnt = 1;
                  long dt  = (now.getTime()-start.getTime())/(filecnt);
                  long sec = dt/1000;
-                 long ms  = dt-(sec*1000);
+                 long lms  = dt-(sec*1000);
+                 String ms = lms<100 ? lms<10 ? "00"+lms : "0"+lms : ""+lms;
                  System.out.println("\nDone.  Avg execution time: "+sec+"."+ms);
              }
              
@@ -318,14 +362,31 @@ public abstract class ATestHarness implements ITestHarness {
          OutputStream   entityfile   = null;
          
          currentfile = dataset;
+  
+         String root = dataset;
+         int offset = dataset.indexOf(".");
          
-         String root = dataset.substring(0,dataset.indexOf("."));
-
+         if(offset >= 0){
+        	 root = dataset.substring(0,offset);
+         }
+  
+         /** Adding in the number will do nothing if we are not numbered. **/
+         String number = "";
+         
+         /** But if we are numbered, put number in the format of "0001_" **/
+         if(numbered()){
+        	 filecnt++;
+        	 if(filecnt < 10  ) number += "0";
+        	 if(filecnt < 100 ) number += "0";
+        	 if(filecnt < 1000) number += "0";
+        	 number += filecnt+"_";
+         }
+         
          try {
               
-              out        = new PrintStream     (getOutputDirectory()+root+"_results.xml");
+              out        = new PrintStream     (getOutputDirectory()+number+root+"_results.xml");
               if(Trace()){
-                tracefile  = new FileOutputStream(getOutputDirectory()+root+"_trace.xml");
+                  tracefile  = new FileOutputStream(getOutputDirectory()+number+root+"_trace.xml");
               }
               IRSession      session    = rs.newSession();
               DTState        state      = session.getState();
@@ -343,16 +404,16 @@ public abstract class ATestHarness implements ITestHarness {
               
               if(Verbose()){
             	  if(harnessVersion() < 2){
-                     datamap.print(new FileOutputStream(getOutputDirectory()+root+"_datamap.xml"));
+                     datamap.print(new FileOutputStream(getOutputDirectory()+number+root+"_datamap.xml"));
             	  }else{
-            		 autoDataMap.printDataLoadXML(new FileOutputStream(getOutputDirectory()+root+"_datamap.xml"));
+            		 autoDataMap.printDataLoadXML(new FileOutputStream(getOutputDirectory()+number+root+"_datamap.xml"));
             	  }
-                  entityfile = new FileOutputStream(getOutputDirectory()+root+"_entities_before.xml");
+                  entityfile = new FileOutputStream(getOutputDirectory()+number+root+"_entities_before.xml");
                   RArray entitystack = new RArray(0,false,false);
                   for(int i=0; i< session.getState().edepth()-2; i++){
                       entitystack.add(session.getState().entityfetch(i));
                   }
-                  session.printEntityReport(new XMLPrinter(entityfile), false, session.getState(), "entitystack", entitystack);
+                  session.printEntityReport(new XMLPrinter(entityfile), false, false, session.getState(), "entitystack", entitystack);
               }
               
               // Once the data is loaded, execute the rules.
@@ -365,12 +426,12 @@ public abstract class ATestHarness implements ITestHarness {
               
               // Then if asked, dump the entities.
               if(Verbose()){
-                  entityfile = new FileOutputStream(getOutputDirectory()+root+"_entities_after.xml");
+                  entityfile = new FileOutputStream(getOutputDirectory()+number+root+"_entities_after.xml");
                   RArray entitystack = new RArray(0,false,false);
                   for(int i=0; i< session.getState().edepth()-2; i++){
                       entitystack.add(session.getState().entityfetch(i));
                   }
-                  session.printEntityReport(new XMLPrinter(entityfile), false, session.getState(), "entitystack", entitystack);
+                  session.printEntityReport(new XMLPrinter(entityfile),false, false, session.getState(), "entitystack", entitystack);
                }
               
               if(ex!=null)throw ex;
@@ -421,7 +482,7 @@ public abstract class ATestHarness implements ITestHarness {
         for(int i=0; i< session.getState().edepth()-2; i++){
             entitystack.add(session.getState().entityfetch(i));
         }
-        session.printEntityReport(new XMLPrinter(out), false, session.getState(), "entitystack", entitystack);
+        session.printEntityReport(new XMLPrinter(out),true, false, session.getState(), "entitystack", entitystack);
     }
 
     public String referenceRulesDirectoryFile ()       { return null; }; 
@@ -438,17 +499,62 @@ public abstract class ATestHarness implements ITestHarness {
         }
     }
 
-    public boolean compareNodes(Node thisResult, Node oldResult){
-         return thisResult.absoluteMatch(oldResult, false);
+    /**
+     * Returns a message about the difference between the nodes.
+     * If there is no difference, a null is returned.
+     */
+    public String compareNodes(Node thisResult, Node oldResult){
+         MATCH v = thisResult.compareToNode(oldResult, false); 
+    	 if(MATCH.match == v) {
+    		 // If this node matches, check all the children of this node.
+    		 if(thisResult.getTags()!= null){
+    			 for(int i=0; i < thisResult.getTags().size(); i++){
+    				 String r = compareNodes(thisResult.getTags().get(i),
+    						                  oldResult .getTags().get(i));
+    				 if(r!=null){	// If any of the children do not match,
+    					 return r;	//   return the message found, and quit
+    				 }				//   checking.
+    			 }
+    		 }
+    		 return null;	// We only get here if all matches; claim all 
+    	 }					//    matches.
+    	 String msg ="";
+         switch(v){
+	         case differentAttributes : msg = "Different Attributes"; break;
+	         case differentBody       : msg = "Different Body";       break;
+	         case differentType       : msg = "Different Type";       break;
+         }
+         String message = msg+" found on a tag: new:{" +thisResult.getName()+"} old:{"+oldResult.getName()+"} "
+        		        + "with a body: new:{" + thisResult.getBody() + "} old:{"+oldResult.getBody()+"}" ;
+         return message;
      }
+    
+    public void removeIds(Node node){
+    	//Remove any DTRules
+    	node.getAttributes().remove("DTRulesId");
+    	node.getAttributes().remove("id");
+    	if(   node.getName().equals("mapping_key") 
+    	   && node.getAttributes().get("name")!=null
+    	   && node.getAttributes().get("name").equals("mapping*key")){
+    		node.setBody("");
+    	}
+    	if(node.getTags()!=null) for( Node child : node.getTags()){
+    		removeIds(child);
+    	}
+    }
      
     public void compareTestResults() throws Exception {
         XMLPrinter report = new XMLPrinter(compareTestResultsReport());
+        
+        System.out.println();
+        
         report.opentag("results");
         File outputs = new File(getOutputDirectory());
         if(outputs == null || !outputs.isDirectory()){
             System.out.println("'"+getOutputDirectory()+"' does not exist or is not a directory");
         }
+        boolean changes = false;
+        boolean missingResults = false;
         File files[] = outputs.listFiles();
         for(File file : files){
             if(file.getName().endsWith("_results.xml")){
@@ -457,20 +563,40 @@ public abstract class ATestHarness implements ITestHarness {
                     result1 = XMLTree.BuildTree(new FileInputStream(file),false,false);
                     result2 = XMLTree.BuildTree(new FileInputStream(getResultDirectory()+file.getName()),false, false);
                     if(result1 != null && result2 != null){
-                        if(compareNodes(result1,result2)){
+                        removeIds(result1);
+                        removeIds(result2);
+                        String msg = compareNodes(result1,result2);
+                        if(msg == null){
                             report.printdata("match","file",file.getName(),"");
                         }else{
-                            report.printdata("resultChanged","file",file.getName(),"");
+                        	changes = true;
+                        	System.out.flush(); 
+                        	System.err.println(file.getName()+"--> "+msg);
+                        	System.err.flush();
+                        	report.printdata("resultChanged","file",file.getName(),msg);
                         }
                     }else{
+                    	System.out.flush();
+                    	System.err.println(file.getName()+" has no result file; No compare done.");
+                    	System.err.flush();
                         report.printdata("error","file",file.getName(),"");
                     }
                 }catch (Exception e){
+                	missingResults = true;
                     report.printdata("unknown","file",file.getName(),"Missing Files to do the compare");
                 }
             }
         }
         report.closetag();
+        
+        if(changes){
+        	System.err.println("\nSome results have changed.  Check the TestResults.xml for all results.");
+        }else{
+        	System.out.println("\nALL PASS: No changes found when compared to results files.");
+        }
+        if(missingResults){
+        	System.err.println("\nSome tests have no results with which to compare.  Check the TestResults.xml for details.");
+        }
     }
 
     /**

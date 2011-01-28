@@ -1,5 +1,7 @@
 /** 
- * Copyright 2004-2009 DTRules.com, Inc.
+ * Copyright 2004-2011 DTRules.com, Inc.
+ * 
+ * See http://DTRules.com for updates and documentation for the DTRules Rules Engine  
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -12,10 +14,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- **/ 
+ **/
+
 
 package com.dtrules.testsupport;
 
+import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
@@ -61,13 +65,6 @@ public interface ITestHarness {
      * @return
      */
     String getPath();
-    /**
-     * This is the directory where the Rule Set is defined.  By default in
-     * the Abstract class, we get it relative to the Project Path.  But you
-     * can override this.
-     * @return
-     */
-    String getXMLDirectory();
     /**
      * Get the path to the Rules Directory Control File.
      */
@@ -139,6 +136,13 @@ public interface ITestHarness {
     boolean Verbose();
     
     /**
+     * If true, then the files generated will have a number attached to them.
+     * This is important if the test run will execute a set of files multiple times,
+     * and for whatever reason, you want all the results and traces of each run.   
+     */
+    boolean numbered();
+    
+    /**
      * If you want to trace a run, this function should return true;
      * @return
      */
@@ -166,12 +170,15 @@ public interface ITestHarness {
     
     /**
      * Once the two XML results are returned, this test is used to check 
-     * if they are the same.
+     * if they are the same.  If the two nodes are equal, this method must
+     * return a null.  Anything else will be interpreted as being different,
+     * and the String will be used to report that difference.
      * @param thisResult
      * @param oldResult
-     * @return
+     * @return null if the nodes are equal, or a String detailing the differences
+     * if the Nodes are not the same.
      */
-    boolean compareNodes(Node thisResult, Node oldResult);
+    String compareNodes(Node thisResult, Node oldResult);
     
     /**
      * When we compare the results of one run of a set of tests against another,
@@ -232,4 +239,13 @@ public interface ITestHarness {
      */
     public String getCurrentFile();
 
+    /**
+     * Returns the set of files to run as part of the test, in the order
+     * provided.  By overriding this method, a test routine can be 
+     * written to avoid certain files, repeat the execution of files, or
+     * run files in a different order.
+     * @return
+     */
+    public File [] getFiles();
+    
 }

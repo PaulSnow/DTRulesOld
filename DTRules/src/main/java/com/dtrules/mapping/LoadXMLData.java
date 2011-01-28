@@ -1,5 +1,7 @@
 /** 
- * Copyright 2004-2009 DTRules.com, Inc.
+ * Copyright 2004-2011 DTRules.com, Inc.
+ * 
+ * See http://DTRules.com for updates and documentation for the DTRules Rules Engine  
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -12,7 +14,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- **/  
+ **/
   
 package com.dtrules.mapping;
 /**
@@ -141,7 +143,7 @@ public class LoadXMLData implements IGenericXMLParser {
 		//		 If a fixed entity name is specified,
 		//		 or the tag name, use it.  Otherwise use the multiple name
 		if(info!=null){										
-			Object objCode = attribs.get(info.id);
+			Object objCode = attribs == null ? null : attribs.get(info.id);
             String code = objCode==null?"":objCode.toString();
 			String eName = info.name;
 			if (eName == null || eName.length() <= 0)

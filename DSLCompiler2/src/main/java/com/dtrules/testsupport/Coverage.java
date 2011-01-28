@@ -1,5 +1,7 @@
 /** 
- * Copyright 2004-2009 DTRules.com, Inc.
+ * Copyright 2004-2011 DTRules.com, Inc.
+ * 
+ * See http://DTRules.com for updates and documentation for the DTRules Rules Engine  
  *   
  * Licensed under the Apache License, Version 2.0 (the "License");  
  * you may not use this file except in compliance with the License.  
@@ -12,23 +14,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
  * See the License for the specific language governing permissions and  
  * limitations under the License.  
- **/ 
+ **/
 
 package com.dtrules.testsupport;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import com.dtrules.admin.RulesAdminService;
 import com.dtrules.decisiontables.RDecisionTable;
-import com.dtrules.decisiontables.RDecisionTable.Type;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.RName;
 import com.dtrules.session.IRSession;
@@ -43,6 +42,8 @@ import com.dtrules.xmlparser.XMLPrinter;
  *
  */
 public class Coverage {
+    
+    String currentFile = "";
     
     public static class Stats {
 
@@ -71,6 +72,8 @@ public class Coverage {
     RuleSet                 rs;
     String                  traceFiles; 
     ArrayList<String>       traceFilesProcessed = new ArrayList<String>();
+    ArrayList<String>       minFilesNeeded      = new ArrayList<String>();
+    
     HashMap<String,Stats>   tables = new HashMap<String,Stats>();
     
     public Coverage(RuleSet rs, String traceFiles)throws RulesException {
@@ -111,13 +114,24 @@ public class Coverage {
            Stats stats   = tables.get(currentDT());
            
            if(columns.length()==0){             // If no column is specified, no column
+               if(stats.noColumns == 0){
+                   if(!minFilesNeeded.contains(currentFile)){
+                       minFilesNeeded.add(currentFile);
+                   }
+               }
                stats.noColumns++;               //   was executed.  Count that too.
                return;
            }
            
            String cols[] = columns.split(" ");
            for (String col : cols){
-               stats.columnHits[Integer.parseInt(col)-1]++;
+               int index = Integer.parseInt(col)-1;
+               if(stats.columnHits[index]==0){
+                   if(!minFilesNeeded.contains(currentFile)){
+                       minFilesNeeded.add(currentFile);
+                   }                   
+               }
+               stats.columnHits[index]++;
            }
         }
         
@@ -136,6 +150,7 @@ public class Coverage {
             File files[] = dir.listFiles();
             for(File file : files){
                 if(file.getName().endsWith("_trace.xml")){
+                    System.out.println(file.getName());
                     traceFilesProcessed.add(file.getName());
                     coverage(file);
                 }
@@ -143,7 +158,8 @@ public class Coverage {
         }
     }
     
-    private void initTables() throws RulesException {
+    @SuppressWarnings("unchecked")
+	private void initTables() throws RulesException {
         IRSession session = rs.newSession();
         RulesAdminService admin = new RulesAdminService(session,rs.getRulesDirectory());
         List tables = admin.getDecisionTables(rs.getName());
@@ -160,12 +176,19 @@ public class Coverage {
     }
     
     private void coverage(File f) throws Exception {
+        currentFile = f.getName();
         GenericXMLParser.load(new FileInputStream(f),new TraceLoad());
     }
     
     public void printReport(PrintStream o){
         XMLPrinter xout = new XMLPrinter(o);
         xout.opentag("coverage");
+        
+        xout.opentag("minimum_files_for_coverage");
+        for(String file : minFilesNeeded){
+            xout.printdata("trace_file",file);
+        }
+        xout.closetag();
         
         xout.opentag("trace_files");
         for(String file : traceFilesProcessed){
@@ -228,13 +251,13 @@ public class Coverage {
     }
     
     public static void main(String arg[]) throws Exception {
-        String         path     = "C:\\eb\\eb_dev2\\rulesDevelopment\\eb-newyork\\";
+        String         path     = "C:\\maximus\\eb_dev2\\rulesDevelopment\\eb-newyork\\";
         RulesDirectory rd       = new RulesDirectory(path,"DTRules.xml");
-        RName          rsName   = RName.getRName("enrollment");
+        RName          rsName   = RName.getRName("autoassign");
         RuleSet        rs       = rd.getRuleSet(rsName);
         
         try {
-            Coverage c = new Coverage(rs,path+"ny-enrollment\\testfiles\\output\\");
+            Coverage c = new Coverage(rs,path+"ny-autoassign\\testfiles\\output\\");
             c.compute();
             c.printReport(System.out);
         } catch (RulesException e) {
