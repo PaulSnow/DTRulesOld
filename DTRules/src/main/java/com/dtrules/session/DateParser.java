@@ -20,7 +20,6 @@ package com.dtrules.session;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

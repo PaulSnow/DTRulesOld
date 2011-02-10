@@ -224,12 +224,8 @@ public class LoadXMLData implements IGenericXMLParser {
 			{
 				Date       date;
 				try {
-                    if(false && body.indexOf("7777")>=0){
-                        date = new Date(0x7FFFFFFFFFFFL);
-                    }else{
-                        date = df_in.parse(body);
-                    }    
-				} catch (ParseException e) {
+                    date = df_in.parse(body);
+                } catch (ParseException e) {
                     try{
                        date = df_out.parse(body);
                     }catch (ParseException e2){

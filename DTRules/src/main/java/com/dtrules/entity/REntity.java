@@ -31,7 +31,6 @@ import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RXmlValue;
 import com.dtrules.mapping.XMLNode;
-import com.dtrules.session.DTState;
 import com.dtrules.session.IRSession;
 import com.dtrules.session.RSession;
 

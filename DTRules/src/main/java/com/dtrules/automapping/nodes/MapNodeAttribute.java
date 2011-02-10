@@ -18,11 +18,9 @@
 
 package com.dtrules.automapping.nodes;
 import java.util.HashMap;
-import java.util.List;
 
 import com.dtrules.automapping.AutoDataMap;
 import com.dtrules.automapping.AutoDataMapDef;
-import com.dtrules.automapping.Group;
 import com.dtrules.automapping.LabelMap;
 import com.dtrules.automapping.access.AAttribute;
 import com.dtrules.automapping.access.IAttribute;
@@ -135,7 +133,6 @@ public class MapNodeAttribute extends AMapNode {
     }
 
     public void printDataLoadXML(AutoDataMap autoDataMap, XMLPrinter xout) {
-        String type = getAttribute().getTypeText();
         xout.printdata(getAttribute().getName(),
                 "node", "attribute",
                 "type", getAttribute().getTypeText(), 

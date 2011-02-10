@@ -28,14 +28,10 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import com.dtrules.decisiontables.RDecisionTable;
-import com.dtrules.entity.IREntity;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.RName;
 import com.dtrules.xmlparser.AGenericXMLParser;
 import com.dtrules.xmlparser.GenericXMLParser;
-import com.dtrules.xmlparser.IGenericXMLParser;
 
 @SuppressWarnings({"unchecked"})
 public class RulesDirectory {

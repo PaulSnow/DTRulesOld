@@ -22,15 +22,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.dtrules.automapping.AutoDataMap;
 import com.dtrules.automapping.AutoDataMapDef;
-import com.dtrules.automapping.Group;
 import com.dtrules.automapping.Label;
 import com.dtrules.automapping.LabelMap;
-import com.dtrules.automapping.MapType;
 import com.dtrules.automapping.nodes.IMapNode;
 import com.dtrules.automapping.nodes.MapNodeAttribute;
 import com.dtrules.automapping.nodes.MapNodeList;
@@ -50,7 +47,6 @@ import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;
 import com.dtrules.interpreter.RTable;
 import com.dtrules.interpreter.RTime;
-import com.dtrules.session.IRSession;
 
 /**
  * @author Paul Snow
@@ -180,7 +176,7 @@ public class DTRulesTarget implements IDataTarget {
      * primitive objects (like strings, integers, dates, numbers, etc.) and lists of
      * objects (like clients, addresses, providers, etc.).
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "deprecation" })
     @Override
     public Object mapList(AutoDataMap autoDataMap, LabelMap labelMap, MapNodeList node) {
         IAttribute a = node.getAttribute();

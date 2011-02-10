@@ -18,8 +18,6 @@
   
 package com.dtrules.interpreter;
 
-import java.util.Map;
-
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.operators.ROperator;
 import com.dtrules.session.DTState;

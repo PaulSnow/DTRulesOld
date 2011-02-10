@@ -50,7 +50,6 @@ public class AutoDataMapDef {
     // These are our supported Object types.  The basic two are Java and DTRules.
     // However, we want to simulate both of these using XML
     private Map<String,Label>       labels          = new HashMap<String,Label>();
-    private Map<String,Label>       bySpecs         = new HashMap<String,Label>();
     
     private Map<String,Group>       groups          = new HashMap<String,Group>();
    

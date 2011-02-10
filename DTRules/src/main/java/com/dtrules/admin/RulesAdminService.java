@@ -158,7 +158,6 @@ public class RulesAdminService implements IRulesAdminService{
 	/* (non-Javadoc)
 	 * @see com.dtrules.admin.IRulesAdminService#getAttributes(java.lang.String, java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	public List getAttributes(String rulesetname, String entityName) {
         if(rd==null)return null;
         try {
@@ -198,7 +197,6 @@ public class RulesAdminService implements IRulesAdminService{
         }
 	}
 	
-    @SuppressWarnings("unchecked")
     private List getList(Iterator iterator){
         List list = new ArrayList();
         while(iterator.hasNext()){

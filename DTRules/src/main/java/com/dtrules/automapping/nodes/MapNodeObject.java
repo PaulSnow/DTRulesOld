@@ -18,9 +18,7 @@
 
 package com.dtrules.automapping.nodes;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
 import com.dtrules.automapping.AutoDataMap;
 import com.dtrules.automapping.Group;
 import com.dtrules.automapping.Label;

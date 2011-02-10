@@ -222,7 +222,6 @@ public abstract class ARObject implements IRObject {
     /**
      * @see com.dtrules.interpreter.IRObject#tableValue()
      */
-    @SuppressWarnings({"unchecked"})
     public Map<IRObject,IRObject> tableValue() throws RulesException {
         throw new RulesException("Undefined","Not Supported","No Table value exists for "+RSession.typeInt2Str(this.type()));
     }

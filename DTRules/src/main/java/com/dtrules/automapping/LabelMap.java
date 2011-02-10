@@ -20,7 +20,6 @@ package com.dtrules.automapping;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import com.dtrules.xmlparser.XMLPrinter;
 

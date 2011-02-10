@@ -18,9 +18,7 @@
 
 package com.dtrules.automapping.access;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Map;
 
 import com.dtrules.automapping.Label;
 import com.dtrules.automapping.MapType;
@@ -38,7 +36,8 @@ public class JavaAttribute implements IAttribute {
     private String   setter;                // Setter name
     private Method   getMethod=null;        // getMethod for accessing this attribute
     private Method   setMethod=null;        // getMethod for accessing this attribute
-    private Class    typeClass;             // Class of the property
+    @SuppressWarnings("unchecked")
+	private Class    typeClass;             // Class of the property
     private MapType  type;                  // This is the property type.  The return 
     private String   typeText;				//   type for a getter, or parameter type for a setter.
     private MapType  subType;               // If a List or direct reference to a class, we need the subtype.
@@ -198,7 +197,8 @@ public class JavaAttribute implements IAttribute {
      * @param type
      * @return
      */
-    public static JavaAttribute newAttribute(
+    @SuppressWarnings("unchecked")
+	public static JavaAttribute newAttribute(
             Label   label, 
             String  name, 
             String  getter, 

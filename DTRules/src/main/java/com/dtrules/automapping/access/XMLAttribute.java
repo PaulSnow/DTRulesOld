@@ -22,11 +22,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.dtrules.automapping.AutoDataMapDef;
 import com.dtrules.automapping.Label;
 import com.dtrules.automapping.MapType;
-import com.dtrules.mapping.XMLNode;
 import com.dtrules.xmlparser.XMLPrinter;
 import com.dtrules.xmlparser.XMLTree.Node;
 

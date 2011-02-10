@@ -20,11 +20,8 @@ package com.dtrules.automapping.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.dtrules.automapping.AutoDataMap;
-import com.dtrules.automapping.LabelMap;
 import com.dtrules.automapping.access.IAttribute;
-import com.dtrules.xmlparser.XMLPrinter;
 
 /**
  * @author ps24876

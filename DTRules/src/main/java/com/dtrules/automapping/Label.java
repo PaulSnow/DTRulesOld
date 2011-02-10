@@ -18,13 +18,8 @@
 
 package com.dtrules.automapping;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-import com.dtrules.automapping.access.JavaAttribute;
 import com.dtrules.automapping.access.IAttribute;
 import com.dtrules.xmlparser.XMLPrinter;
 
@@ -38,7 +33,6 @@ public class Label {
                                          //   the name of the JavaObject; In fact it often will not!)
     Group                group;          // The group to which this label belongs.
     private String       spec;           // Has to be a valid class name, if a CLASS.  If an entity,
-    @SuppressWarnings("unchecked")       //   and spec is null, objName is used as the Entity name. 
     private String       key;            // The object attribute to be used as a key
     private boolean      singular;       // True of only one of these labels should be created.
 

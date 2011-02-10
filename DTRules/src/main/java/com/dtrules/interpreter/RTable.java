@@ -21,7 +21,6 @@ package com.dtrules.interpreter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.session.DTState;

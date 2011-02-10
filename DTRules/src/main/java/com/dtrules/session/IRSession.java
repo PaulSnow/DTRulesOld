@@ -19,7 +19,6 @@
 package com.dtrules.session;
 
 import java.io.PrintStream;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import com.dtrules.entity.IREntity;

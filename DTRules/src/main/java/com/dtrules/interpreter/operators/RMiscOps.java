@@ -22,10 +22,8 @@ import java.util.Date;
 
 import com.dtrules.decisiontables.RDecisionTable;
 import com.dtrules.entity.IREntity;
-import com.dtrules.entity.REntity;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.IRObject;
-import com.dtrules.interpreter.RBoolean;
 import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;

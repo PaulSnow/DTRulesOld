@@ -18,19 +18,15 @@
 
 package com.dtrules.session;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.dtrules.mapping.Mapping;
 import com.dtrules.automapping.AutoDataMap;
 import com.dtrules.automapping.AutoDataMapDef;
-import com.dtrules.decisiontables.RDecisionTable;
-import com.dtrules.entity.IREntity;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.RName;
 /**

@@ -20,7 +20,6 @@ package com.dtrules.automapping.access;
 
 import com.dtrules.automapping.AutoDataMap;
 import com.dtrules.automapping.LabelMap;
-import com.dtrules.automapping.nodes.IMapNode;
 import com.dtrules.automapping.nodes.MapNodeAttribute;
 import com.dtrules.automapping.nodes.MapNodeList;
 import com.dtrules.automapping.nodes.MapNodeMap;

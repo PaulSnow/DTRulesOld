@@ -28,7 +28,6 @@ import com.dtrules.mapping.XMLNode;
 import com.dtrules.mapping.XMLTag;
 import com.dtrules.session.DTState;
 
-@SuppressWarnings("unchecked")
 public class RXmlValueOps {
 	    static {
 	    	new SetXmlAttribute();
@@ -89,7 +88,7 @@ public class RXmlValueOps {
                 XMLNode   xmlNode    = state.datapop().xmlTagValue();
                 if(xmlNode == null) {
                     state.datapush(RNull.getRNull());
-                    state.traceInfo("GetXmlAttribute","tag",xmlNode.getTag(),"attribute",attribute,"value","null",null);
+                    state.traceInfo("GetXmlAttribute","tag","nullTag","attribute",attribute,"value","null",null);
                     return;
                 }
                 String    value     = (String) xmlNode.getAttribs().get(attribute);

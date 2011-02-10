@@ -18,7 +18,6 @@
 
 package com.dtrules.automapping.access;
 
-import com.dtrules.automapping.Label;
 import com.dtrules.automapping.MapType;
 import com.dtrules.automapping.nodes.MapNodeAttribute;
 import com.dtrules.xmlparser.XMLPrinter;

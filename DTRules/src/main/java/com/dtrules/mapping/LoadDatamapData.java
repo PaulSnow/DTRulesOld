@@ -167,11 +167,7 @@ public class LoadDatamapData extends LoadXMLData {
         String     sbody = o.toString();
         Date       date;
         try {
-            if(false && sbody.indexOf("7777")>=0){
-                date = new Date(0x7FFFFFFFFFFFL);
-            }else{
                 date = df_in.parse(sbody);
-            }    
         } catch (ParseException e) {
             try{
                date = df_out.parse(sbody);
