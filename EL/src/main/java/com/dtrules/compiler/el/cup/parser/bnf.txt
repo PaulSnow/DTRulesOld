@@ -583,6 +583,5 @@
   0 non-terminals declared but not used.
   0 productions never reduced.
   0 conflicts detected (0 expected).
-  Code written to "nul:.java", and "nul:.java".
+  Code written to "DTRulesParser.java", and "sym.java".
 ---------------------------------------------------- (v0.11a beta 20060608)
-
