@@ -60,33 +60,7 @@ public class ChangeReport {
            "condition_postfix",
            "condition_column",
            "action_column",
-    };
-    
-  /** 
-    private String numbered [] = {
-           "context_postfix",
-           "initial_action_postfix", 
-           "condition_postfix",
-           "condition_column",
-           "action_column",
-    };
-   
-    private String checkNumber[] = {
-           "context_number",
-           "intial_action_number",
-           "condition_number",
-           "action_number"
-    };
-  **/
-    
-    private String checkFields[]= {
-            "name",
-            "type",
-            "subtype",
-            "access",
-            "default_value",
-    };
-    
+    };    
     
     public class RulesConfig {
         protected String       ruleSetName   = "";
@@ -720,28 +694,6 @@ public class ChangeReport {
            }
        } 
        report.closetag();
-   }
-   
-   private boolean fieldsChanged(String[]fields,Node one, Node two){
-       for(String attrib : fields){
-           if(!one.getAttributes().get(attrib).equals(two.getAttributes().get(attrib))){
-               return true;
-           }
-       }
-       return false;
-   }
-   
-   private boolean functionChanged(Node e1, Node e2){
-       ArrayList<Node> fields1 = e1.getTags();
-       ArrayList<Node> fields2 = e2.getTags();
-       if(fields1.size()!= fields2.size())return true;
-       for(int i=0;i<fields1.size();i++){
-           if(fieldsChanged(checkFields,fields1.get(i),fields2.get(i))){
-               return true;
-           }
-       }
-       
-       return false;
    }
    
    

@@ -61,7 +61,7 @@ public class DTCompiler implements IGenericXMLParser{
     public ArrayList<CompileError> getErrors()  { return errors; }
     public ArrayList<Changed>      getChanges() { return changes; }
     
-    void printStartTag(String tag, HashMap attribs){
+    void printStartTag(String tag, HashMap<String,String> attribs){
         if(!newline)out.println();
         out.print("<"); out.print(tag);
         if(attribs!=null){
@@ -83,7 +83,7 @@ public class DTCompiler implements IGenericXMLParser{
         out.print("</"); out.print(tag); out.print(">");   
     }
     
-    public void beginTag(String[] tagstk, int tagstkptr, String tag, HashMap attribs) throws IOException, Exception {
+    public void beginTag(String[] tagstk, int tagstkptr, String tag, HashMap<String,String> attribs) throws IOException, Exception {
         if(!tag.equals("condition_postfix") && 
            !tag.equals("action_postfix")){
               printStartTag(tag, attribs);
@@ -150,7 +150,7 @@ public class DTCompiler implements IGenericXMLParser{
         }
         oldpostfix="None in XML";
     }
-    public void endTag(String[] tagstk, int tagstkptr, String tag, String body, HashMap attribs) throws Exception, IOException {
+    public void endTag(String[] tagstk, int tagstkptr, String tag, String body, HashMap<String,String> attribs) throws Exception, IOException {
         if(!tag.equals("condition_postfix") && 
                 !tag.equals("action_postfix")){
                    printEndTag(tag, body);

@@ -125,10 +125,6 @@ public class Excel2XML {
         copyFile(ruleSet.getFilepath()+UDTFilename,ruleSet.getFilepath()+ruleSet.getDT_XMLName());
         reset();
     }   
-
-    private void insureWorkingDirectory(){
-        File workingSet = new File(ruleSet.getWorkingdirectory());
-    }
     
     /**
      * Copy a file
