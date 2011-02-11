@@ -160,7 +160,7 @@ public class RControl {
             IRObject body = state.datapop();                 // Get the body
             for(int i=length - 1;i>=0;i--){                  // For each element in array,
                  IRObject o = (IRObject) array.get(i);
-                 int      t = o.type();
+                 int      t = o.type().getId();
                  if(t== iNull)continue;
                  if(t!=iEntity){
                     throw new RulesException("Type Check", "Forallr", "Encountered a non-Entity entry in array: "+o);
@@ -189,7 +189,7 @@ public class RControl {
             IRObject body = state.datapop();        // Get the body
             
             for(IRObject o : array){
-                 int      t = o.type();
+                 int      t = o.type().getId();
                  if(t== iNull)continue;
                  if(t!=iEntity){
                      throw new RulesException("Type Check", "Forallr", "Encountered a non-Entity entry in array: "+o);

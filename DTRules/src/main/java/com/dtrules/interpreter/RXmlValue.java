@@ -33,6 +33,9 @@ import com.dtrules.session.DTState;
  *
  */
 public class RXmlValue extends ARObject {
+	
+	static RType type = RType.newType("xmlvalue");
+
     XMLNode tag;
     DTState state;
     int     id;
@@ -80,9 +83,14 @@ public class RXmlValue extends ARObject {
     public String stringValue() {
         return toString();
     }
-    public int type() {
-        return iXmlValue;
-    }
+    
+	/**
+	 * Returns the type for this object.
+	 */
+	public RType type() {
+		return type;
+	}
+
 
     public ArrayList<IRObject> arrayValue() throws RulesException {
         ArrayList<IRObject> a = new ArrayList<IRObject>();

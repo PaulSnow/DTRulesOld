@@ -52,7 +52,7 @@ public class RTableOps {
          public void execute(DTState state) throws RulesException {
              int cnt = 0;
              int d = state.ddepth();
-             while(state.getds(--d).type()!=iTable)cnt++;
+             while(state.getds(--d).type().getId()!=iTable)cnt++;
              RName []keys = new RName[cnt];
              for(int i=0;i<cnt;i++){
                 keys[i]= state.datapop().rNameValue();
@@ -120,7 +120,7 @@ public class RTableOps {
              IRObject  v   = state.datapop();               // Get the value to store
              int       d   = state.ddepth()-1;              // Get current depth of data stack less one for the value.
              
-             while(state.getds(--d).type()==iTable)cnt++;   // Count the keys (index1, index2, etc.)
+             while(state.getds(--d).type().getId()==iTable)cnt++;   // Count the keys (index1, index2, etc.)
              
              if(cnt != 1){
                  IRObject []keys = new IRObject[cnt];           // Get an array big enough to hold the keys
@@ -183,8 +183,7 @@ public class RTableOps {
          public void execute(DTState state) throws RulesException {
              String type  = state.datapop().stringValue();
              RName  name  = state.datapop().rNameValue();
-             int    itype = RSession.typeStr2Int(type,"","");
-             RTable table = RTable.newRTable(state.getSession().getEntityFactory(),name,"",itype);
+             RTable table = RTable.newRTable(state.getSession().getEntityFactory(),name,"");
              state.datapush(table);
          }
      }

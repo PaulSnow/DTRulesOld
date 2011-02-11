@@ -70,7 +70,7 @@ public class RArrayOps {
                 String   pattern = state.datapop().stringValue();
                 IRObject obj1    = state.datapop();
                 String   v       = "";
-                if(obj1.type() != IRObject.iNull){
+                if(obj1.type().getId() != IRObject.iNull){
                    v = obj1.stringValue().trim();
                 }   
                 String [] results = v.split(pattern);
@@ -352,44 +352,44 @@ public class RArrayOps {
 	     * sortentities( Array field boolean --> )
 	     * Sortentities Operator, 
 	     */		
-		static class Sortentities extends ROperator {
-			Sortentities() {super("sortentities");}
-			
-			public void execute(DTState state) throws RulesException {
-				boolean asc  = state.datapop().booleanValue();
-				RName rname = state.datapop().rNameValue();
-				RArray rarray  = state.datapop().rArrayValue();
-				ArrayList<IRObject> array = rarray.arrayValue();
-				if(state.testState(DTState.TRACE)){
-	               state.traceInfo("sortentities", 
-	                       "length",   array.size()+"",
-	                       "by",       rname.stringValue(),
-	                       "arrayID",  rarray.getID()+"",
-	                       asc ? "true" : "false");
-	            }
-				REntity temp = null;
-				int size = array.size();
-                int greaterthan = asc ? 1 : -1;
-				for(int i=0; i<size; i++){
-                    boolean done = true;
-					for(int j=0; j<size-1-i; j++){
-                        try {
-                        IRObject v1 = ((REntity) array.get(j)).get(rname);
-                        IRObject v2 = ((REntity) array.get(j+1)).get(rname);
-						if(v1.compare(v2)==greaterthan){	
-							temp = (REntity)array.get(j);
-							array.set(j, (REntity)array.get(j+1));
-							array.set(j+1, temp);
-                            done = false;
-						}
-                        }catch(RuntimeException e){
-                            throw new RulesException("undefined","sort","Field is undefined: "+rName);
-                        }
-					}
-                    if(done)return;
-				}
+	static class Sortentities extends ROperator {
+		Sortentities() {
+			super("sortentities");
+		}
+
+		public void execute(DTState state) throws RulesException {
+			boolean asc = state.datapop().booleanValue();
+			RName rname = state.datapop().rNameValue();
+			RArray rarray = state.datapop().rArrayValue();
+			ArrayList<IRObject> array = rarray.arrayValue();
+			if (state.testState(DTState.TRACE)) {
+				state.traceInfo("sortentities", "length", array.size() + "", "by", rname.stringValue(), "arrayID",
+				        rarray.getID() + "", asc ? "true" : "false");
 			}
-		}		
+			REntity temp = null;
+			int size = array.size();
+			int greaterthan = asc ? 1 : -1;
+			for (int i = 0; i < size; i++) {
+				boolean done = true;
+				for (int j = 0; j < size - 1 - i; j++) {
+					try {
+						IRObject v1 = ((REntity) array.get(j)).get(rname);
+						IRObject v2 = ((REntity) array.get(j + 1)).get(rname);
+						if (v1.compare(v2) == greaterthan) {
+							temp = (REntity) array.get(j);
+							array.set(j, (REntity) array.get(j + 1));
+							array.set(j + 1, temp);
+							done = false;
+						}
+					} catch (RuntimeException e) {
+						throw new RulesException("undefined", "sort", "Field is undefined: " + rname);
+					}
+				}
+				if (done)
+					return;
+			}
+		}
+	}		
 		
 	    /**
 	     * add_no_dups( Array item --> )
@@ -471,7 +471,7 @@ public class RArrayOps {
 
             public void execute(DTState state) throws RulesException {
                int im = state.ddepth()-1;                   // Index of top of stack
-               while(im>=0 && state.getds(im).type()!=iMark)im--; // Index of mark
+               while(im>=0 && state.getds(im).type().getId()!=iMark)im--; // Index of mark
                RArray newarray = new RArray(state.getSession().getUniqueID(),true,false);    // Create a new array      
                int newdepth = im++;                         // skip the mark (remember its index)
                while(im<state.ddepth()){                    // copy elements to the array

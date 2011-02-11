@@ -34,6 +34,7 @@ import com.dtrules.interpreter.RArray;
 import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;
+import com.dtrules.interpreter.RType;
 import com.dtrules.session.DTState;
 import com.dtrules.session.EntityFactory;
 import com.dtrules.session.IDecisionTableError;
@@ -56,6 +57,8 @@ import com.dtrules.xmlparser.GenericXMLParser;
  */
 public class RDecisionTable extends ARObject {
     
+	public static RType dttype = RType.getType("decisiontable");
+	
     public static final String DASH = "-";      // Using a constant reduces our footprint, and increases our speed.
     
     private final  RName    dtname;             // The decision table's name.
@@ -927,8 +930,8 @@ public class RDecisionTable extends ARObject {
     /**
 	 * The type is Decision Table.
 	 */
-	public int type() {
-		return iDecisiontable;
+	public RType type() {
+		return dttype;
 	}
 
 	/**
@@ -1337,7 +1340,7 @@ public class RDecisionTable extends ARObject {
     
     private void addTables(IRObject action,List<RArray> stack, List<RDecisionTable> tables){
         if(action==null)return;
-        if(action.type()==iArray){
+        if(action.type().getId()==iArray){
             RArray array = (RArray)action;
             if(stack.contains(array))return;    // We have already been here.
             stack.add(array);
@@ -1349,7 +1352,7 @@ public class RDecisionTable extends ARObject {
                 }
             } catch (RulesException e) { }
         }
-        if(action.type()==iDecisiontable && !tables.contains(action)){
+        if(action.type().getId()==iDecisiontable && !tables.contains(action)){
             tables.add((RDecisionTable)action);
         }
     }

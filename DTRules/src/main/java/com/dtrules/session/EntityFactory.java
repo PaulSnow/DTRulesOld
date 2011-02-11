@@ -43,6 +43,7 @@ import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;
 import com.dtrules.interpreter.RTable;
 import com.dtrules.interpreter.RTime;
+import com.dtrules.interpreter.RType;
 import com.dtrules.xmlparser.GenericXMLParser;
 import com.dtrules.xmlparser.XMLPrinter;
 
@@ -104,7 +105,7 @@ public class EntityFactory {
      */
     public RDecisionTable newDecisionTable(RName name, IRSession session)throws RulesException{
         IRObject table = decisiontables.get(name);
-        if(table !=null && table.type() != IRObject.iDecisiontable){
+        if(table !=null && table.type().getId() != IRObject.iDecisiontable){
             throw new RulesException("ParsingError","New Decision Table","For some reason, "+name.stringValue()+" isn't a decision table");
         }
         if(table != null){
@@ -112,7 +113,7 @@ public class EntityFactory {
         }
         RDecisionTable dtTable = new RDecisionTable(session,name.stringValue());
         decisiontablelist.add(name);
-        decisiontables.addAttribute(name, "", dtTable, false, true, IRObject.iDecisiontable,null,"","","");
+        decisiontables.addAttribute(name, "", dtTable, false, true, RDecisionTable.dttype ,null,"","","");
         decisiontables.put(null, name, dtTable);
         return dtTable;
     }
@@ -149,7 +150,7 @@ public class EntityFactory {
      */
     public RDecisionTable getDecisionTable(RName name)throws RulesException{
         IRObject dt = decisiontables.get(name);
-        if(dt==null || dt.type()!=IRObject.iDecisiontable){
+        if(dt==null || dt.type().getId()!=IRObject.iDecisiontable){
             return null;
         }
         return (RDecisionTable) dt;
@@ -230,7 +231,7 @@ public class EntityFactory {
      */
     public RDecisionTable findDecisionTable(RName dt){
         IRObject dttable = decisiontables.get(dt);
-        if(dttable==null || dttable.type()!=IRObject.iDecisiontable){
+        if(dttable==null || dttable.type().getId()!=IRObject.iDecisiontable){
             return null;
         }
         return (RDecisionTable) dttable;
@@ -294,7 +295,7 @@ public class EntityFactory {
                REntityEntry entry = entity.getEntry(attribute);
                
                String name          = attribute.stringValue();
-               String type          = entry.getTypeValue();
+               String type          = entry.getType().toString();
                String subtype       = entry.getSubtype();
                String access        = (entry.readable ? "r":"") + (entry.writable ? "w":"");
                String input         = entry.getInput();
@@ -316,14 +317,20 @@ public class EntityFactory {
     }
     
     
-	public static IRObject computeDefaultValue(IRSession session, EntityFactory ef, String defaultstr, int type) throws RulesException {
+	public static IRObject computeDefaultValue(IRSession session, EntityFactory ef, String defaultstr, RType type) throws RulesException {
         		
         if(defaultstr==null ) defaultstr="";
         defaultstr = defaultstr.trim();
     	if(defaultstr.equalsIgnoreCase("null")) defaultstr="";
     	
-        switch(type){
-            case IRObject.iEntity : {
+    	int itype;
+    	if (type == null){
+    		itype = IRObject.iNull;
+    	}else{
+    		itype = type.getId();
+    	}
+    	
+        if(itype == IRObject.iEntity) {
                 if(defaultstr.length()==0)return RNull.getRNull();
                 IREntity e = ef.findcreateRefEntity(false,RName.getRName(defaultstr));
                 if(e==null)throw new RulesException(
@@ -331,8 +338,8 @@ public class EntityFactory {
                         "EntityFactory.computeDefaultValue()",
                         "Entity Factory does not define an entity '"+defaultstr+"'");
                 return e;
-            }
-            case IRObject.iArray : {
+        }
+        if(itype == IRObject.iArray) {
                 if(defaultstr.length()==0) return new RArray(ef.getUniqueID(), true,false);
                 RArray rval;
                 try{
@@ -344,28 +351,30 @@ public class EntityFactory {
                             "\r\nWe tried to interpret the string \r\n'"+defaultstr+"'\r\nas an array, but could not.\r\n"+e.toString());
                 }
                 return rval;
-            }
-        	case IRObject.iString :
+        }
+        if(itype == IRObject.iString){
                 if(defaultstr.length()==0)return RNull.getRNull();
         		return RString.newRString(defaultstr);
-        	case IRObject.iName :
+        }
+        if(itype == IRObject.iName){
                 if(defaultstr.length()==0)return RNull.getRNull();
         		return RName.getRName(defaultstr.trim(),false);
-        	case IRObject.iBoolean : {
+        }
+        if(itype == IRObject.iBoolean) {
                 if(defaultstr.length()==0)return RNull.getRNull();
                 return RBoolean.getRBoolean(defaultstr);
-        	}	
-        	case IRObject.iDouble : {
+        }	
+        if(itype == IRObject.iDouble ) {
                 if(defaultstr.length()==0)return RNull.getRNull();
         		double value = Double.parseDouble(defaultstr);
         		return RDouble.getRDoubleValue(value);
-        	}	
-        	case IRObject.iInteger : {
+        }	
+        if(itype == IRObject.iInteger ) {
                 if(defaultstr.length()==0)return RNull.getRNull();
         		long value = Long.parseLong(defaultstr);
         		return RInteger.getRIntegerValue(value);
-        	}	
-            case IRObject.iTime : {
+        }	
+        if(itype == IRObject.iTime ) {
                 if(defaultstr.length()==0) return RNull.getRNull();
                 SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy");
                 try {
@@ -374,15 +383,16 @@ public class EntityFactory {
                 } catch (ParseException e) {
                     throw new RulesException("Invalid Date Format","EntityFactory.computeDefaultValue","Only support dates in 'MM/dd/yyyy' form.");
                 }
-            }
-            case IRObject.iTable : {
-                RTable table = RTable.newRTable(ef, null, defaultstr, -1);
+        }
+        if(itype == IRObject.iTable ) {
+                RTable table = RTable.newRTable(ef, null, defaultstr);
                 if(defaultstr.length()==0) return table;
                 table.setValues(session, defaultstr);
                 return table;
-            }
-            default: return RNull.getRNull();
-    	}
+        }
+        
+        return RNull.getRNull();
+    	
     }
     /**
      * EntityFactories create things that need IDs.  The EntityFactory

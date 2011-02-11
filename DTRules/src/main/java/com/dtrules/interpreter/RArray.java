@@ -48,6 +48,7 @@ public class RArray extends ARObject implements Collection<IRObject> {
     boolean   dups;  
     int       id;
     
+    static    RType   type = RType.newType("array");
     
     public void uncache(){
     	if(array == null){
@@ -214,8 +215,8 @@ public class RArray extends ARObject implements Collection<IRObject> {
     /**
      * Returns the iArray type for Array Objects
      */
-	public int type() {
-		return iArray;
+	public RType type() {
+		return type;
 	}
 	/**
 	 * Add an element to this Array
@@ -276,7 +277,7 @@ public class RArray extends ARObject implements Collection<IRObject> {
 	 */
 	public boolean equals(IRObject o) throws RulesException {
 		uncache();
-		if(o.type() != iArray) return false;
+		if(o.type() != type) return false;
 		return ((RArray)o).array == array;
 	}
 	
@@ -309,7 +310,7 @@ public class RArray extends ARObject implements Collection<IRObject> {
         }
         for(int cnt=0; cnt < code.length; cnt++){
             IRObject obj = code[cnt];
-            if(!obj.isExecutable() || obj.type()==iArray ){
+            if(!obj.isExecutable() || obj.type()==type ){
 				state.datapush(obj);
 			}else{
 			    try{

@@ -268,7 +268,7 @@ public class RBooleanOps {
 
 			public void execute(DTState state) throws RulesException 
 			{
-				state.datapush(RBoolean.getRBoolean(state.datapop().type()==IRObject.iNull));
+				state.datapush(RBoolean.getRBoolean(state.datapop().type().getId()==IRObject.iNull));
 			}
 		}
 

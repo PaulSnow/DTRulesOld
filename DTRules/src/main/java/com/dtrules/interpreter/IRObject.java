@@ -44,6 +44,24 @@ import com.dtrules.session.IRSession;
 public interface IRObject {
 
 	/**
+	 * Useful constants;  We may eliminate these going forward.
+	 */
+	static final int    iOperator       = RType.newType("operator").getId();
+	static final int	iString	        = RType.newType("string").getId();
+	static final int	iInteger	    = RType.newType("integer").getId();
+	static final int	iDouble	        = RType.newType("double").getId();
+	static final int	iName	        = RType.newType("name").getId();
+	static final int	iTime	        = RType.newType("time").getId();
+	static final int	iBoolean	    = RType.newType("boolean").getId();
+	static final int	iNull	        = RType.newType("null").getId();
+	static final int	iArray	        = RType.newType("array").getId();
+	static final int	iTable	        = RType.newType("table").getId();
+	static final int	iEntity	        = RType.newType("entity").getId();
+	static final int	iDecisiontable	= RType.newType("decisiontable").getId();
+	static final int    iMark           = RType.newType("mark").getId();
+	static final int    iXmlValue       = RType.newType("xmlvalue").getId();
+      
+	/**
 	 * Clone implements a shallow copy of a structure.  This the elements of an
 	 * array or table will not themselves be cloned.
 	 * 
@@ -53,60 +71,6 @@ public interface IRObject {
 	 */
     public IRObject clone(IRSession s) throws RulesException;
     
-	//  *************** NOTE !!!!!!
-	//  You can't put static methods on an interface. So the String to integer conversion
-	//  for types is a static method on the RSession class.
- 	/**
- 	 * Every Object in the Rules Engine has a Type, as listed here.  Each type
- 	 * has an integer value, which we actually use in the code (specified in the
- 	 * types[] array.  This code predates Enumerations in Java, and perhaps we
- 	 * should fix that sometime in the future.
- 	 * @author Paul Snow
- 	 */
-	final String rBoolean       = "boolean",
-	             rString        = "string",
-	             rInteger       = "integer",
-	             rFloat         = "float",
-	             rEntity        = "entity",
-	             rName          = "name",
-	             rArray         = "array",
-	             rDecisiontable = "decisiontable",
-	             rNull          = "null",
-	             rMark          = "mark",
-	             rOperator      = "operator",
-                 rTime          = "time",
-                 rTable         = "table",
-                 rXmlValue      = "xmlvalue";
-	
-	/**
-	 * The String types in this array are associated with the integer values
-	 * of the types.
-	 */
-	final String types[] = { rBoolean, rString, rInteger, rFloat,
-			                 rEntity,  rName,   rArray,   rDecisiontable,  
-			                 rNull,    rMark,   rOperator, rTime,
-                             rTable, rXmlValue};
-	
-    /**
-     * These integer values are used to check object types by the Rules Interpreter.
-     * They can be converted to a name using static methods typeInt2Str() and 
-     * typeStr2Int() found on the RSession class.
-     */
-	final int    iBoolean       = 0,
-	             iString        = 1,
-	             iInteger       = 2,
-	             iDouble        = 3,
-	             iEntity        = 4,
-	             iName          = 5,
-	             iArray         = 6,
-	             iDecisiontable = 7,
-	             iNull          = 8,
-	             iMark          = 9,
-	             iOperator      = 10,
-                 iTime          = 11,
-                 iTable         = 12,
-                 iXmlValue      = 13;
- 	
 	/**
 	 * This method defines the executable behavior of a object within the 
 	 * Rules Interpreter.
@@ -179,7 +143,7 @@ public interface IRObject {
      * Return the integer type of this object
      * @return
      */
-    public int type();
+    public RType type();
 	
     /**
      * Clone the Rules Engine object.  For many types (boolean, integer, Strings), 

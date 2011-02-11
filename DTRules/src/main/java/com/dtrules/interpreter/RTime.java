@@ -27,10 +27,17 @@ import com.dtrules.session.DTState;
 import com.dtrules.session.IRSession;
 
 public class RTime extends ARObject {
+	
+	static RType type = RType.newType("time");
+
     final Date time;
-    public int type() {
-        return iTime;
-    }
+	/**
+	 * Returns the type for this object.
+	 */
+	public RType type() {
+		return type;
+	}
+
     
     @Override
     public double doubleValue() throws RulesException {

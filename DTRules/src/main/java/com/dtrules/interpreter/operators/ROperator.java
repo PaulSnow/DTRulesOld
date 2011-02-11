@@ -24,6 +24,7 @@ import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.ARObject;
 import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RName;
+import com.dtrules.interpreter.RType;
 
 /**
  * This Class creates the primities entity in a rather cute way.  The actual operators
@@ -40,6 +41,8 @@ import com.dtrules.interpreter.RName;
  */
 public class ROperator extends ARObject {
     
+	public static RType type = RType.getType("operator");
+	
 	static final REntity primitives = new REntity(1,true,RName.getRName("primities",false));
     
 	static {
@@ -59,8 +62,11 @@ public class ROperator extends ARObject {
 	}
     
 	final RName name;
-    public int type() { return iOperator; }
     
+	public RType type(){
+		return type;
+	}
+	
     /**
      * Puts another entry into the primitives entity under a different name.  This is
      * useful for operators that we would like to define under two names (such as "pop" and

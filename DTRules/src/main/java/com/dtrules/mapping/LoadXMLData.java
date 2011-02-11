@@ -248,7 +248,7 @@ public class LoadXMLData implements IGenericXMLParser {
                     if(enclosingEntity!=null){
                         
                     
-    					int type = enclosingEntity.getEntry(a).type;
+    					int type = enclosingEntity.getEntry(a).type.getId();
     					
     					if(type == IRObject.iInteger){
     						value = RInteger.getRIntegerValue(body.length()==0? "0" : body);
@@ -310,9 +310,6 @@ public class LoadXMLData implements IGenericXMLParser {
                 break;
 			default:    
 			    String type = "(Unknown Code: "+attrib.type+")";
-                try{
-                  type = RSession.typeInt2Str(attrib.type);
-                }catch(RulesException e){} // Ignore errors.
                 throw new RuntimeException("Bad Type Code "+type+" in com.dtrules.mapping.AttributeInfo: "+attrib.rAttribute);
 		}
 	}
@@ -337,7 +334,7 @@ public class LoadXMLData implements IGenericXMLParser {
             // Look for all Array Lists on the Entity Stack that look like lists of this Entity
             IREntity entity = state.getes(i);
             IRObject elist = entity.get(listname);
-            if(elist!=null && elist.type()==IRObject.iArray){
+            if(elist!=null && elist.type().getId()==IRObject.iArray){
                 // If not a member of this list, then add it.
                 if(!((RArray)elist).contains(e)){
                    ((RArray)elist).add(e);
