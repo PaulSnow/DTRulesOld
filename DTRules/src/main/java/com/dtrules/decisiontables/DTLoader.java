@@ -74,7 +74,7 @@ public class DTLoader implements IGenericXMLParser {
 	 *  or more than 16 actions.  Tables larger than that are too hard to 
 	 *  understand to be useful.
 	 **/  
-	static final int LIMIT = 100;
+	static final int LIMIT = 500;
 	
 	// Temp Space for collecting data for the decision tables
 	String context_formal  []  = new String[LIMIT];

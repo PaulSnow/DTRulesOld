@@ -57,7 +57,7 @@ import com.dtrules.xmlparser.GenericXMLParser;
  */
 public class RDecisionTable extends ARObject {
     
-	public static RType dttype = RType.getType("decisiontable");
+	public static RType dttype = RType.newType("decisiontable");
 	
     public static final String DASH = "-";      // Using a constant reduces our footprint, and increases our speed.
     

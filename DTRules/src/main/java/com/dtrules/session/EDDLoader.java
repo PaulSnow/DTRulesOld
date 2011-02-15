@@ -25,6 +25,7 @@ import com.dtrules.entity.REntity;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RName;
+import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RType;
 import com.dtrules.xmlparser.IGenericXMLParser;
 
@@ -112,6 +113,7 @@ public class EDDLoader implements IGenericXMLParser {
 		  if(!writeable && !readable){
 		      errorMsgs +="\nThe attribute "+attribute+" has to be either readable or writable\r\n";
 		      succeeded=false;
+		      rtype = RNull.type;
 		  }
 		  
 		  // Now the type.  An easy thing.
@@ -135,6 +137,7 @@ public class EDDLoader implements IGenericXMLParser {
           if(!RType.isType(type)){
         	  errorMsgs += "Bad Type: '"+type+"' encountered on entity: '"+entityname+"' attribute: '"+attribute+"' \n";
         	  succeeded = false;
+        	  rtype2 = RNull.type;
           }else{
         	  rtype2 = RType.getType(type);
 		  }  

@@ -30,7 +30,7 @@ import com.dtrules.interpreter.RBoolean;
 import com.dtrules.interpreter.RInteger;
 import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;
-import com.dtrules.interpreter.RTime;
+import com.dtrules.interpreter.RDate;
 import com.dtrules.session.DTState;
 
 /**
@@ -78,7 +78,7 @@ public class RDateTimeOps {
 			    IRObject obj   = state.datapop();
 			    String   date  = obj.stringValue();
 				try{
-					RTime rdate = RTime.getRDate(state.getSession(), date);
+					RDate rdate = RDate.getRDate(state.getSession(), date);
 					state.datapush(rdate);
 				}catch(RulesException e){
 					state.datapush(RNull.getRNull());
@@ -97,7 +97,7 @@ public class RDateTimeOps {
             public void execute(DTState state) throws RulesException {
                 int  days = state.datapop().intValue();
                 long time = days * 24* 60 * 60 * 1000;
-                state.datapush(RTime.getRTime(new Date(time)));
+                state.datapush(RDate.getRTime(new Date(time)));
             }
         } 
 
@@ -116,7 +116,7 @@ public class RDateTimeOps {
                 state.calendar.set(Calendar.HOUR, 0);
                 state.calendar.set(Calendar.MINUTE, 0);
                 state.calendar.set(Calendar.MILLISECOND, 0);  
-                state.datapush(RTime.getRTime(state.calendar.getTime()));
+                state.datapush(RDate.getRTime(state.calendar.getTime()));
             }
         } 
         /**
@@ -135,7 +135,7 @@ public class RDateTimeOps {
                 state.calendar.set(Calendar.HOUR, 0);
                 state.calendar.set(Calendar.MINUTE, 0);
                 state.calendar.set(Calendar.MILLISECOND, 0);  
-                state.datapush(RTime.getRTime(state.calendar.getTime()));
+                state.datapush(RDate.getRTime(state.calendar.getTime()));
             }
         } 
         /**
@@ -155,7 +155,7 @@ public class RDateTimeOps {
                 state.calendar.set(Calendar.MINUTE, 0);
                 state.calendar.set(Calendar.MILLISECOND, 0);  
                 Date result = state.calendar.getTime();
-                state.datapush(RTime.getRTime(result));
+                state.datapush(RDate.getRTime(result));
             }
         } 
         /**
@@ -172,7 +172,7 @@ public class RDateTimeOps {
                 Date  date  = state.datapop().timeValue();
                 state.calendar.setTime(date);
                 state.calendar.add(Calendar.YEAR, years);
-                state.datapush(RTime.getRTime(state.calendar.getTime()));
+                state.datapush(RDate.getRTime(state.calendar.getTime()));
             }
         } 
 
@@ -194,7 +194,7 @@ public class RDateTimeOps {
                 state.calendar.setTime(date);
                 state.calendar.add(Calendar.MONTH, months);
                 Date  newdate = state.calendar.getTime();
-                state.datapush(RTime.getRTime(newdate));
+                state.datapush(RDate.getRTime(newdate));
             }
         } 
 
@@ -211,7 +211,7 @@ public class RDateTimeOps {
                 Date  date  = state.datapop().timeValue();
                 state.calendar.setTime(date);
                 state.calendar.add(Calendar.DATE, days);
-                state.datapush(RTime.getRTime(state.calendar.getTime()));
+                state.datapush(RDate.getRTime(state.calendar.getTime()));
             }
         } 
 
@@ -382,7 +382,7 @@ public class RDateTimeOps {
             public void execute(DTState state) throws RulesException {
                 long date2 = state.datapop().timeValue().getTime();
                 long date1 = state.datapop().timeValue().getTime();
-                state.datapush(RTime.getRTime(new Date(date1+date2)));
+                state.datapush(RDate.getRTime(new Date(date1+date2)));
             }
             
         }
@@ -397,7 +397,7 @@ public class RDateTimeOps {
             public void execute(DTState state) throws RulesException {
                 long date2 = state.datapop().timeValue().getTime();
                 long date1 = state.datapop().timeValue().getTime();
-                state.datapush(RTime.getRTime(new Date(date1-date2)));
+                state.datapush(RDate.getRTime(new Date(date1-date2)));
             }
             
         }

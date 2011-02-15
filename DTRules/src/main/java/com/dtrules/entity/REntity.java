@@ -29,6 +29,7 @@ import com.dtrules.interpreter.ARObject;
 import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RNull;
+import com.dtrules.interpreter.RString;
 import com.dtrules.interpreter.RType;
 import com.dtrules.interpreter.RXmlValue;
 import com.dtrules.mapping.XMLNode;
@@ -52,7 +53,7 @@ import com.dtrules.session.RSession;
  */
 public class REntity extends ARObject implements IREntity {
 
-	static RType type = RType.getType("entity");
+	public static RType type = RType.newType("entity");
 	
     public void removeAttribute(RName attrib) {
         attributes.remove(attrib);
@@ -138,9 +139,7 @@ public class REntity extends ARObject implements IREntity {
             }
         }
    }
-    
-    static final RType strType = RType.getType("string");
-    
+       
     /**
      * Regular Constructor.  This should only be called when building the EntityFactory.
      * However, we make it public so the EntityFactory can be defined in the Session
@@ -154,7 +153,7 @@ public class REntity extends ARObject implements IREntity {
 		name       = _name;
         attributes = new HashMap<RName,REntityEntry>();
         this.addAttribute(_name, "", this, false, true, type(),null,"Self Reference","","");  // Add a reference to self!
-        this.addAttribute(mappingKey,"",RNull.getRNull(),false, true, strType, null,"Mapping Key","","");
+        this.addAttribute(mappingKey,"",RNull.getRNull(),false, true, RString.type, null,"Mapping Key","","");
 	}
 
 	/* (non-Javadoc)
@@ -262,7 +261,7 @@ public class REntity extends ARObject implements IREntity {
             else if (entrytype == iEntity)       value = value.rEntityValue();                 
             else if (entrytype == iName)         value = value.rNameValue();             
             else if (entrytype == iString)       value = value.rStringValue();           
-            else if (entrytype == iTime)         value = value.rTimeValue(session);                          
+            else if (entrytype == iDate)         value = value.rTimeValue(session);                          
             
 		}
 		values.set(entry.index,value);

@@ -42,6 +42,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import com.dtrules.decisiontables.RDecisionTable;
+import com.dtrules.infrastructure.RulesException;
 import com.dtrules.session.EntityFactory;
 import com.dtrules.session.RuleSet;
 import com.dtrules.xmlparser.XMLPrinter;
@@ -224,7 +225,7 @@ public class ImportRuleSets {
         // If the EDD is an XML file, We assume no conversion is necessary.
         if(excelFileName.endsWith(".xml")){
             ef.loadedd(rs.newSession(), excelFileName, input);
-            // Transfer bytes from in to out
+        	// Transfer bytes from in to out
             return;
             
         }else if(! (excelFileName.endsWith(".xls"))) throw new Exception("EDD Excel File name is invalid"); 

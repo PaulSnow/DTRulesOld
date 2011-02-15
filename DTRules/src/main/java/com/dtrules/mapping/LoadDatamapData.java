@@ -35,7 +35,7 @@ import com.dtrules.interpreter.RDouble;
 import com.dtrules.interpreter.RInteger;
 import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RString;
-import com.dtrules.interpreter.RTime;
+import com.dtrules.interpreter.RDate;
 import com.dtrules.interpreter.RXmlValue;
 import com.dtrules.mapping.XMLNode;
 import com.dtrules.session.DTState;
@@ -132,10 +132,10 @@ public class LoadDatamapData extends LoadXMLData {
 						value = RDouble.getRDoubleValue(getDouble(body)); 
 					} else if (type == IRObject.iBoolean){
                         value = RBoolean.getRBoolean(body.toString());
-                    } else if (type == IRObject.iTime){
+                    } else if (type == IRObject.iDate){
                         Date date = cvd(body);
                         if(date != null ){
-                            value = RTime.getRTime( cvd(body) );
+                            value = RDate.getRTime( cvd(body) );
                         }else{
                             throw new RuntimeException("Bad Date encountered: ("+tag+")="+body);
                         }

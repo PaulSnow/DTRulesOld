@@ -22,7 +22,7 @@ import com.dtrules.infrastructure.RulesException;
 
 public class RNull extends ARObject {
 	
-	static RType type = RType.newType("null");
+	public static RType type = RType.newType("null");
 
     /**
      * returns 0 if both are equal. -1 Otherwise.  A Null is considered

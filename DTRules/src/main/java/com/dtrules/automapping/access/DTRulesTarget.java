@@ -46,7 +46,7 @@ import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;
 import com.dtrules.interpreter.RTable;
-import com.dtrules.interpreter.RTime;
+import com.dtrules.interpreter.RDate;
 import com.dtrules.interpreter.RType;
 
 /**
@@ -140,7 +140,7 @@ public class DTRulesTarget implements IDataTarget {
         }else if (object instanceof Integer){
             return RInteger.getRIntegerValue((Integer)object);
         }else if (object instanceof Date){
-            return RTime.getRTime((Date)object);
+            return RDate.getRTime((Date)object);
         }else if (object instanceof Double){
             return RDouble.getRDoubleValue((Double) object);
         }else if (object instanceof Long){
@@ -165,7 +165,7 @@ public class DTRulesTarget implements IDataTarget {
             if(otype == IRObject.iInteger) return object.longValue();
             if(otype == IRObject.iDouble)  return object.doubleValue();
             if(otype == IRObject.iName)    return object.stringValue();
-            if(otype == IRObject.iTime)    return object.timeValue();
+            if(otype == IRObject.iDate)    return object.timeValue();
             if(otype == IRObject.iBoolean) return object.booleanValue();
             if(otype == IRObject.iNull)    return null;
             

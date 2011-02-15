@@ -42,7 +42,7 @@ import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;
 import com.dtrules.interpreter.RTable;
-import com.dtrules.interpreter.RTime;
+import com.dtrules.interpreter.RDate;
 import com.dtrules.interpreter.RType;
 import com.dtrules.xmlparser.GenericXMLParser;
 import com.dtrules.xmlparser.XMLPrinter;
@@ -374,12 +374,12 @@ public class EntityFactory {
         		long value = Long.parseLong(defaultstr);
         		return RInteger.getRIntegerValue(value);
         }	
-        if(itype == IRObject.iTime ) {
+        if(itype == IRObject.iDate ) {
                 if(defaultstr.length()==0) return RNull.getRNull();
                 SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy");
                 try {
                     Date date = fmt.parse(defaultstr);
-                    return RTime.getRTime(date);
+                    return RDate.getRTime(date);
                 } catch (ParseException e) {
                     throw new RulesException("Invalid Date Format","EntityFactory.computeDefaultValue","Only support dates in 'MM/dd/yyyy' form.");
                 }

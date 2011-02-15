@@ -59,12 +59,12 @@ public abstract class ARObject implements IRObject {
     /**
      * @see com.dtrules.interpreter.IRObject#rTimeValue()
      */
-    public RTime rTimeValue() throws RulesException {
-        return RTime.getRTime(timeValue());
+    public RDate rTimeValue() throws RulesException {
+        return RDate.getRTime(timeValue());
     }
 
-    public RTime rTimeValue (IRSession session) throws RulesException {
-    	return RTime.getRTime(timeValue());
+    public RDate rTimeValue (IRSession session) throws RulesException {
+    	return RDate.getRTime(timeValue());
     }
 
     /**

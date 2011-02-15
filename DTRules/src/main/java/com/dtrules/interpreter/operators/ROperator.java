@@ -41,7 +41,7 @@ import com.dtrules.interpreter.RType;
  */
 public class ROperator extends ARObject {
     
-	public static RType type = RType.getType("operator");
+	public static RType type = RType.newType("operator");
 	
 	static final REntity primitives = new REntity(1,true,RName.getRName("primities",false));
     

@@ -157,8 +157,8 @@ public class RXmlValue extends ARObject {
         return RString.newRString(stringValue());
     }
 
-    public RTime rTimeValue() throws RulesException {
-        return RTime.getRTime(timeValue());
+    public RDate rTimeValue() throws RulesException {
+        return RDate.getRTime(timeValue());
     }
 
     public Date timeValue() throws RulesException {

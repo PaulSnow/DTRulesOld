@@ -27,7 +27,7 @@ import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;
-import com.dtrules.interpreter.RTime;
+import com.dtrules.interpreter.RDate;
 import com.dtrules.session.DTState;
 import com.dtrules.session.RSession;
 
@@ -623,7 +623,7 @@ public class RMiscOps {
             }catch(Exception e){
                 Date d =    state.getSession().getDateParser().getDate(o.stringValue());
                 if(d!=null){
-                    v = RTime.getRTime(d);
+                    v = RDate.getRTime(d);
                 }
             }
             state.datapush(v);    

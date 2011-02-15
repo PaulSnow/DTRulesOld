@@ -24,8 +24,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dtrules.decisiontables.RDecisionTable;
 import com.dtrules.entity.IREntity;
+import com.dtrules.entity.REntity;
 import com.dtrules.infrastructure.RulesException;
+import com.dtrules.interpreter.operators.ROperator;
 import com.dtrules.mapping.XMLNode;
 import com.dtrules.session.DTState;
 import com.dtrules.session.IRSession;
@@ -46,20 +49,20 @@ public interface IRObject {
 	/**
 	 * Useful constants;  We may eliminate these going forward.
 	 */
-	static final int    iOperator       = RType.newType("operator").getId();
-	static final int	iString	        = RType.newType("string").getId();
-	static final int	iInteger	    = RType.newType("integer").getId();
-	static final int	iDouble	        = RType.newType("double").getId();
-	static final int	iName	        = RType.newType("name").getId();
-	static final int	iTime	        = RType.newType("time").getId();
-	static final int	iBoolean	    = RType.newType("boolean").getId();
-	static final int	iNull	        = RType.newType("null").getId();
-	static final int	iArray	        = RType.newType("array").getId();
-	static final int	iTable	        = RType.newType("table").getId();
-	static final int	iEntity	        = RType.newType("entity").getId();
-	static final int	iDecisiontable	= RType.newType("decisiontable").getId();
-	static final int    iMark           = RType.newType("mark").getId();
-	static final int    iXmlValue       = RType.newType("xmlvalue").getId();
+	static final int    iOperator       = ROperator.type.getId();
+	static final int	iString	        = RString.type.getId();
+	static final int	iInteger	    = RInteger.type.getId();
+	static final int	iDouble	        = RDouble.type.getId();
+	static final int	iName	        = RName.type.getId();
+	static final int	iDate	        = RDate.type.getId();
+	static final int	iBoolean	    = RBoolean.type.getId();
+	static final int	iNull	        = RNull.type.getId();
+	static final int	iArray	        = RArray.type.getId();
+	static final int	iTable	        = RTable.type.getId();
+	static final int	iEntity	        = REntity.type.getId();
+	static final int	iDecisiontable	= RDecisionTable.dttype.getId();
+	static final int    iMark           = RMark.type.getId();
+	static final int    iXmlValue       = RXmlValue.type.getId();
       
 	/**
 	 * Clone implements a shallow copy of a structure.  This the elements of an
@@ -258,7 +261,7 @@ public interface IRObject {
      * @return
      * @throws RulesException
      */
-    public RTime                rTimeValue ()   throws RulesException;
+    public RDate                rTimeValue ()   throws RulesException;
     
     /**
      * Date conversions need the session
@@ -266,7 +269,7 @@ public interface IRObject {
      * @return
      * @throws RulesException
      */
-    public RTime                rTimeValue (IRSession session) throws RulesException;
+    public RDate                rTimeValue (IRSession session) throws RulesException;
     /**
      * Return a Date representation of this object.  
      * A Rules Exception will be thrown if no such representation exists.

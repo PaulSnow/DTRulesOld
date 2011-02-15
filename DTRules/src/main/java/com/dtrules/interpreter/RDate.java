@@ -26,9 +26,9 @@ import com.dtrules.infrastructure.RulesException;
 import com.dtrules.session.DTState;
 import com.dtrules.session.IRSession;
 
-public class RTime extends ARObject {
+public class RDate extends ARObject {
 	
-	static RType type = RType.newType("time");
+	static RType type = RType.newType("date");
 
     final Date time;
 	/**
@@ -67,7 +67,7 @@ public class RTime extends ARObject {
 
 
 
-    private RTime(Date t){
+    private RDate(Date t){
         time = t;
     }
    
@@ -78,16 +78,16 @@ public class RTime extends ARObject {
      * @param s
      * @return
      */
-    public static RTime getRDate(IRSession session, String s) throws RulesException {
+    public static RDate getRDate(IRSession session, String s) throws RulesException {
         Date d = session.getDateParser().getDate(s);
         if(d==null){
             throw new RulesException("Bad Date Format","getRDate","Could not parse: '"+s+"' as a Date or Time value");
         }
-        return new RTime(d);
+        return new RDate(d);
     }
     
-    public static RTime getRTime(Date t){
-        return new RTime(t);
+    public static RDate getRTime(Date t){
+        return new RDate(t);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class RTime extends ARObject {
      * Returns self.
      */
     @Override
-    public RTime rTimeValue() throws RulesException {
+    public RDate rTimeValue() throws RulesException {
         return this;
     }
 

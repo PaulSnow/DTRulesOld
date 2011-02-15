@@ -41,7 +41,7 @@ import com.dtrules.interpreter.RInteger;
 import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;
-import com.dtrules.interpreter.RTime;
+import com.dtrules.interpreter.RDate;
 import com.dtrules.session.DTState;
 import com.dtrules.session.IRSession;
 import com.dtrules.session.RSession;
@@ -256,9 +256,9 @@ public class LoadXMLData implements IGenericXMLParser {
     						value = RDouble.getRDoubleValue(body.length()==0? "0" : body); 
     					} else if (type == IRObject.iBoolean){
                             value = RBoolean.getRBoolean(body.length()==0? "false" : body);
-                        } else if (type == IRObject.iTime){
+                        } else if (type == IRObject.iDate){
                             if(body.trim().length()>0){
-                              value = RTime.getRDate(session,body);
+                              value = RDate.getRDate(session,body);
                               if(value == null){
                                 throw new RulesException("MappingError","LoadXMLData","Bad Date... Could not parse '"+body+"'");
                               }

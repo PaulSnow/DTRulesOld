@@ -328,8 +328,8 @@ public class RString extends ARObject {
 	}
 	
     @Override
-    public RTime rTimeValue(IRSession session) throws RulesException {
-        return RTime.getRDate(session, value);    
+    public RDate rTimeValue(IRSession session) throws RulesException {
+        return RDate.getRDate(session, value);    
     }
 	
 	
