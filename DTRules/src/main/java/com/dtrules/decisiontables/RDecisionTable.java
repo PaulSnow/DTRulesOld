@@ -1416,4 +1416,23 @@ public class RDecisionTable extends ARObject {
         }
         return tables;
     }
+
+    public String[] getPolicystatements() {
+        return policystatements;
+    }
+
+    public String[] getPolicystatementsPostfix() {
+        return policystatementsPostfix;
+    }
+
+    public IRObject[] getRpolicystatements() {
+        return rpolicystatements;
+    }
+
+    public DTNode getDecisiontree() {
+        return decisiontree;
+    }
+    
+    
+    
 }

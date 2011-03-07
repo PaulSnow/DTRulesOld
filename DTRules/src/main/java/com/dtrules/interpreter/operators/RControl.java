@@ -39,13 +39,13 @@ import com.dtrules.session.IRSession;
 @SuppressWarnings("unchecked")
 public class RControl {
     static {
-        new If();           new Ifelse();       new While();        
-        new Forallr();      new Forall();       new For();          
-        new Forr();         new Entityforall(); new Forfirst();  
-        new Doloop();       new ForFirstElse(); new ExecuteTable(); 
-        new Execute();      new Deallocate();   new Allocate();     
-        new Localfetch();   new Localstore();   new PerformCatchError();
-        new Lookup();
+        new If();           new Ifelse();           new While();        
+        new Forallr();      new Forall();           new For();          
+        new Forr();         new Entityforall();     new Forfirst();  
+        new Doloop();       new ForFirstElse();     new ExecuteTable(); 
+        new Execute();      new Deallocate();       new Allocate();     
+        new Localfetch();   new Localstore();       new PerformCatchError();
+        new Lookup();       new PolicyStatements();
     }
     
     /**
@@ -508,5 +508,33 @@ public class RControl {
         }
     }
 
+    /**
+     * ( -- array ) Returns the list of policy statements in this decision table that
+     * resulted in the execution of this particular action.
+     * 
+     * @author paul snow
+     *
+     */
+    static class PolicyStatements extends ROperator {
+        PolicyStatements(){super("policystatements");}
+
+        public void execute(DTState state) throws RulesException {
+            RArray ra = new RArray(state.getSession().getUniqueID(),true,false);
+            state.datapush(ra);
+            if(!state.getCurrentTable().equals(state.getAnode().getrDecisionTable())){
+                return;
+            }
+            ArrayList<Integer> columns = state.getAnode().getColumns();
+            for(int column : columns){
+                if(column+1 < state.getCurrentTable().getRpolicystatements().length){
+                   IRObject ps = state.getCurrentTable().getRpolicystatements()[column+1];
+                   if(ps != null)
+                   state.evaluate(ps);
+                   ps = state.datapop();
+                   ra.add(ps);
+                }
+            }
+        }
+    }
     
 }

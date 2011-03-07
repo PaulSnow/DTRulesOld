@@ -32,7 +32,7 @@ import com.dtrules.session.DTState;
  *
  */
 public class ANode implements DTNode {
-    RDecisionTable       dtable;                               // The Decision Table to which this ANode belongs
+    RDecisionTable       rDecisionTable;                       // The Decision Table to which this ANode belongs
     ArrayList<IRObject>  action   = new ArrayList<IRObject>(); // The action postfix
     ArrayList<Integer>   anumbers = new ArrayList<Integer>();  // The action numbers (for tracing purposes)
     ArrayList<Integer>   columns  = new ArrayList<Integer>();  // Keep track of the columns that send us here, for tracing
@@ -40,7 +40,7 @@ public class ANode implements DTNode {
     
     
     public DTNode cloneDTNode(){
-        ANode newANode = new ANode(dtable);
+        ANode newANode = new ANode(rDecisionTable);
         newANode.action.addAll(this.action);
         newANode.anumbers.addAll(this.anumbers);
         newANode.columns.addAll(this.columns);
@@ -99,7 +99,7 @@ public class ANode implements DTNode {
                 int pos = 0;
                 while(pos< anumbers.size() && anumbers.get(pos).intValue()<v) pos++;
                 anumbers.add(pos,index);
-                action.add(pos,dtable.ractions[v]);
+                action.add(pos,rDecisionTable.ractions[v]);
             }
         }
     }
@@ -109,14 +109,14 @@ public class ANode implements DTNode {
     }
     
     private ANode(RDecisionTable dt, int column, ArrayList<IRObject> objects, ArrayList<Integer> numbers){
-        dtable      = dt;
+        rDecisionTable      = dt;
     	columns.add(new Integer(column));
-    	action      = objects;
-        anumbers    = numbers;
+    	action              = objects;
+        anumbers            = numbers;
     }
     
     public ANode(RDecisionTable dt){
-        dtable      = dt;
+        rDecisionTable      = dt;
     }
     
     /** Give the list of columns that got us to this ANode.  Unbalanced tables
@@ -137,13 +137,15 @@ public class ANode implements DTNode {
         if(state.testState(DTState.TRACE)){
             state.traceTagBegin("column", "n",prtColumns(columns));
         }
+        ANode oldANode = state.getAnode();
         int num = 0;
         try {
+            state.setAnode(this);
             if(state.testState(DTState.TRACE)){
                 for(IRObject v : action){
                     num = inum.next().intValue();
                     state.traceTagBegin("action","n",(num+1)+"");
-                        state.traceInfo("formal",dtable.getActions()[num]);
+                        state.traceInfo("formal",rDecisionTable.getActions()[num]);
                         int d = state.ddepth();                
                         String section = state.getCurrentTableSection();
                         int    numhld  = state.getNumberInSection();
@@ -151,7 +153,8 @@ public class ANode implements DTNode {
                         state.evaluate(v);
                         state.setCurrentTableSection(section, numhld);
                         if(d!=state.ddepth()){
-                            throw new RulesException("data stack unbalanced","ANode Execute","Action "+(num+1)+" in table "+dtable.getDtname());
+                            state.setAnode(oldANode);
+                            throw new RulesException("data stack unbalanced","ANode Execute","Action "+(num+1)+" in table "+rDecisionTable.getDtname());
                         }
                     state.traceTagEnd();
                 }
@@ -174,7 +177,8 @@ public class ANode implements DTNode {
                 state.traceTagEnd();
             }
             e.setSection("Action",num+1);
-            e.setFormal(dtable.getActions()[num]);
+            e.setFormal(rDecisionTable.getActions()[num]);
+            state.setAnode(oldANode);
             throw e;
         } catch (Exception e){
             RulesException re = new RulesException(e.getClass().getName(), e.getStackTrace()[0].getClassName(), e.getMessage());
@@ -184,14 +188,15 @@ public class ANode implements DTNode {
                 state.traceTagEnd();
             }
             re.setSection("Action",num+1);
-            re.setFormal(dtable.getActions()[num]);
+            re.setFormal(rDecisionTable.getActions()[num]);
+            state.setAnode(oldANode);
             throw re;
         }
-
 
         if(state.testState(DTState.TRACE)){
             state.traceTagEnd();
         }
+        state.setAnode(oldANode);
 	}
 
 	public Coordinate validate() {
@@ -218,6 +223,14 @@ public class ANode implements DTNode {
 
     public ANode getCommonANode(DTState state) {
         return this;
+    }
+
+    public RDecisionTable getrDecisionTable() {
+        return rDecisionTable;
+    }
+
+    public ArrayList<Integer> getColumns() {
+        return columns;
     }
     
     

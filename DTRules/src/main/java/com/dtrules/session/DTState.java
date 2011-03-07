@@ -26,6 +26,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Random;
 
+import com.dtrules.decisiontables.ANode;
 import com.dtrules.decisiontables.RDecisionTable;
 import com.dtrules.entity.IREntity;
 import com.dtrules.entity.REntityEntry;
@@ -48,7 +49,8 @@ public class DTState {
     private RDecisionTable currentTable;
     private String         currentTableSection;
     private int            numberInSection;
-
+    private ANode          anode;                   // The current Anode under execution.                           
+    
     /**
      * The interpreter is a stack based interpreter.  The implementation
      * is much like a Postscript Interpreter.  
@@ -852,6 +854,22 @@ public class DTState {
      */
     public void setNumberInSection(int numberInSection) {
         this.numberInSection = numberInSection;
+    }
+    
+    /**
+     * Return the current ANode under execution.
+     * @return
+     */
+    public ANode getAnode() {
+        return anode;
+    }
+    
+    /**
+     * Set the current ANode under execution.
+     * @param anode
+     */
+    public void setAnode(ANode anode) {
+        this.anode = anode;
     }
     
 }
