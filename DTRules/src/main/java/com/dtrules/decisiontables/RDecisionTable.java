@@ -89,30 +89,41 @@ public class RDecisionTable extends ARObject {
 	private boolean  compiled=false;            // The decision table isn't compiled
 												//   until fully constructed.  And
 												//   it won't be if compilation fails.
-    String [][] conditiontable;
-	String   [] conditions;                     // The conditions in formal.  The formal langauge is compiled to get the postfix
+
+    String   [] contexts;                       // Contexts in which to execute this table.
+    String   [] contextsPostfix;                // The Postfix for each context statement.
+    String      contextsrc;                     // For Tracing...
+    IRObject    rcontext;                       //  lists of entities.  It is best if this is done within the table than
+                                                //  by the calling table.	
+
+    String   [] initialActions;                 // A list of actions to be executed each time the 
+                                                //   decision table is executed before the conditions
+                                                //   are evaluated.
+    String   [] initialActionsPostfix;          // Compiled Initial Actions
+    String   [] initialActionsComment;          // Comment for Initial Actions
+    IRObject [] rinitialActions;                // The compiled version of the initial action
+
+	
+	String [][] conditiontable;
+	String   [] conditions;                     // The conditions in formal.  This is compiled to get the postfix
 	String   [] conditionsPostfix;              // The conditions in postfix. derived from the formal
 	String   [] conditionsComment;              // A comment per condition.
 	IRObject [] rconditions;					// Each compiled condition
 	
-    String [][] actiontable;
-	String   [] actions;
-	String   [] actionsComment;
-	String   [] actionsPostfix;
+    String [][] actiontable;                    // Indicates which actions should be executed
+	String   [] actions;                        // The actions in the language specified
+	String   [] actionsComment;                 // A free form comment for the action
+	String   [] actionsPostfix;                 // The compiled postfix version of the action
 	IRObject [] ractions;						// Each compiled action
 	
+	// While actions and conditions are 0 based arrays, the policy statements are 1 based.
+	// The zero'th index is the default value (if no columns match).
+	String   [] policystatements;               // The Policy statements as defined in the Decision Table.
+	String   [] policystatementsPostfix;        // Generally, a policy statement will be a string, but can have values
+	IRObject [] rpolicystatements;              // The IRObject that returns a string for a policy statement.
 	
-	String   [] initialActions;                 // A list of actions to be executed each time the 
-	                                            // decision table is executed before the conditions
-	                                            // are evaluated.
-	IRObject [] rinitialActions;
-	String   [] initialActionsPostfix;          // Compiled Initial Actions
-    String   [] initialActionsComment;          // Comment for Initial Actions
-	String   [] contexts;                       // Contexts in which to execute this table.
-	String   [] contextsPostfix;                // The Postfix for each context statement.
-	String      contextsrc;                     // For Tracing...
-	IRObject    rcontext;                       //  lists of entities.  It is best if this is done within the table than
-	                                            //  by the calling table.
+	
+	
 	boolean  [] columnsSpecified  = null;       // Columns defined in the XML
 	boolean  [] columnsUsed       = null;       // These are the columns really used in the executable form of the table.
 	boolean  [] conditionsUsed    = null;       // We mark conditions which might be evaluated

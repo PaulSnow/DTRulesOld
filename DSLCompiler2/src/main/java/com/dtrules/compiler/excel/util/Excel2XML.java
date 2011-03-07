@@ -237,7 +237,7 @@ public class Excel2XML {
      * Generates a default Mapping File.  This file is not complete, but 
      * requires adjustments to match XML tags if they differ from the 
      * Attribute names used in the EDD.  Also, the initial Entity Stack and
-     * frequence of Entity types must be examined and updated.
+     * frequency of Entity types must be examined and updated.
      * 
      * @param mapping	Tag for the mapping file.  Attributes with this tag in the
      * 					EDD will be mapped in the generated mapping

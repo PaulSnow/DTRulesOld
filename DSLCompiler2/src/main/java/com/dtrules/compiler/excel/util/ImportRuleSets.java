@@ -376,6 +376,19 @@ public class ImportRuleSets {
         return value.trim();
     }
     /**
+     * Get Policy Statement 
+     * 
+     * @param sheet
+     * @param row
+     * @return
+     */
+    private String getPolicyStatement(HSSFSheet sheet, int row){        
+        int field = getColumn("comments");
+        if(field==-1)throw new RuntimeException("No Comment or Policy Column"); 
+        String value = getCellValue(sheet,row, field);
+        return value.trim();
+    }
+    /**
      * Returns the contents of the Comment column... You don't have to have one
      * of these.
      *  
@@ -533,7 +546,12 @@ public class ImportRuleSets {
      * @param sb
      * @return
      */
-    private boolean convertOneSheet(StringBuffer data, String filename, HSSFSheet sheet,XMLPrinter out, int depth){    
+    private boolean convertOneSheet(
+            StringBuffer    data, 
+            String          filename, 
+            HSSFSheet       sheet,
+            XMLPrinter      out, 
+            int             depth    ) throws Exception{    
         columns = defaultColumns;
         
         // The first row of a decision table has to provide the decision table name.  This is required!
@@ -681,14 +699,14 @@ public class ImportRuleSets {
 	        		if(columnValue.equals("") || columnValue.equals(RDecisionTable.DASH)){
 	        		    columnValue = RDecisionTable.DASH;
 	        		}
-	        		if ((columnValue == RDecisionTable.DASH)    || 
-	                    (columnValue.equalsIgnoreCase("*"))     ||
+	        		if ((columnValue.equalsIgnoreCase("*"))     ||
 	        		    (columnValue.equalsIgnoreCase("y"))     || 
 	        		    (columnValue.equalsIgnoreCase("n"))) {	               
 	        		    out.printdata("condition_column","column_number",""+(j+1),"column_value",columnValue,null);
+	        		}else if (columnValue.equalsIgnoreCase(RDecisionTable.DASH)){
 	        		}else{
-	//        			if(columnValue != "")
-	//	                throw new Exception("Undesired value in the condition matrix");
+	        			if(columnValue != "")
+		                throw new Exception("Undesired value in the condition matrix");
 	        		}
 	        	}
                 out.closetag();
@@ -741,8 +759,28 @@ public class ImportRuleSets {
             	
         	}
             out.closetag();
+            
+            rowIndex = nextBlock(sheet, rowIndex);
+            attrib = getNextAttrib(sheet, rowIndex);
+            rowIndex++;
+            
+            out.opentag("policy_statements");
+            int pscnt = 0;
+                while(isPolicy(sheet,rowIndex)){
+                    String policyStatement = getPolicyStatement(sheet, rowIndex);  
+                    if(policyStatement.length()>0){
+                        String ps_num = getNumber(sheet, rowIndex);
+                        out.opentag("policy_statement","column",ps_num);
+                        out.printdata("policy_description",policyStatement);
+                        out.closetag();
+                    }    
+                    rowIndex++;  
+                }
             out.closetag();
-        	return true;
+                        
+            
+        out.closetag();
+        return true;
 	}
 	
 	/**
@@ -758,6 +796,20 @@ public class ImportRuleSets {
 		 if(rowIndex > sheet.getLastRowNum()) return false;
 	     return true;
 	}
+	
+	/**
+     * We used to do something really smart.  Now we just return false at the end of the spread
+     * sheet or if we encounter another block.
+     * @param sheet
+     * @param rowIndex
+     * @return
+     */
+    private boolean isPolicy(HSSFSheet sheet, int rowIndex){
+         String attrib = getNextAttrib(sheet, rowIndex);
+         if (attrib.length()>0) return false;
+         if(rowIndex > sheet.getLastRowNum()) return false;
+         return true;
+    }
 	
     /**
      * We used to do something really smart.  Now we just return false at the end of the spread

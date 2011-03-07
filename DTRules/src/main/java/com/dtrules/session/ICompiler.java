@@ -83,6 +83,14 @@ public interface ICompiler {
     public abstract String compileCondition(String condition) throws Exception;
 
     /**
+     * Copmiles a single Policy Statement.  Returns the postfix string needed by the Rules Engine.
+     * @param policyStatement
+     * @return
+     * @throws Exception
+     */
+    public String compilePolicyStatement(String policyStatement) throws Exception;
+    
+    /**
      * Returns the types HashMap.
      * @return
      */
