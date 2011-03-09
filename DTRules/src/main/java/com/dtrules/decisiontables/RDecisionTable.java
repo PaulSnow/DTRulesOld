@@ -382,25 +382,35 @@ public class RDecisionTable extends ARObject {
     @Override
     public IRObject clone(IRSession s) throws RulesException {
         RDecisionTable dt = new RDecisionTable(s, dtname.stringValue());
+        
         dt.numberOfRealColumns      = numberOfRealColumns;
+        
+        dt.contexts                 = contexts.clone();
+        dt.contextsPostfix          = contextsPostfix.clone();
+        dt.contextsrc               = contextsrc;
+        dt.rcontext                 = rcontext.clone(s);
+        
+        dt.rinitialActions          = rinitialActions.clone();
+        dt.initialActions           = initialActions.clone();
+        dt.initialActionsComment    = initialActionsComment.clone();
+        dt.initialActionsPostfix    = initialActionsPostfix.clone();
+        
         dt.conditiontable           = conditiontable.clone();
         dt.conditions               = conditions.clone();
         dt.conditionsPostfix        = conditionsPostfix.clone();
         dt.conditionsComment        = conditionsComment.clone();
         dt.rconditions              = rconditions.clone();
+        
         dt.actiontable              = actiontable.clone();
         dt.actions                  = actions.clone();
         dt.actionsComment           = actionsComment.clone();
         dt.actionsPostfix           = actionsPostfix.clone();
         dt.ractions                 = ractions.clone();
-        dt.rinitialActions          = rinitialActions.clone();
-        dt.initialActions           = initialActions.clone();
-        dt.initialActionsComment    = initialActionsComment.clone();
-        dt.initialActionsPostfix    = initialActionsPostfix.clone();
-        dt.contexts                 = contexts.clone();
-        dt.contextsPostfix          = contextsPostfix.clone();
-        dt.contextsrc               = contextsrc;
-        dt.rcontext                 = rcontext.clone(s);
+        
+        dt.policystatements         = policystatements.clone();
+        dt.policystatementsPostfix  = policystatementsPostfix.clone();
+        dt.rpolicystatements        = rpolicystatements.clone();
+        
         return dt;
     }
     /**
@@ -593,7 +603,7 @@ public class RDecisionTable extends ARObject {
                 }
                 if(out!=null)out.println("  *** Column "+(i+1)+" cannot be reached.");
                 
-		        //errorlist.add(                              // Print warings about unreachable code.
+		        //errorlist.add(                              // Print warnings about unreachable code.
                 //        new CompilerError(
                 //                ICompilerError.Type.TABLE,
                 //                "Column "+(i+1)+" cannot be reached.",
@@ -783,18 +793,28 @@ public class RDecisionTable extends ARObject {
 		   return;
 		}
        
-		decisiontree = new CNode(this,0,0, rconditions[0]);                          // Allocate a root node.
+		decisiontree = new CNode(this,0,0, rconditions[0]);     // Allocate a root node.
        
-        for(int col=0;col<maxcol;col++){						// For each column, we are going to run down the
-																				//   column building that path through the tree.
+        for(int col=0;col<maxcol;col++){                        // For each column, we are going to run down the
+                                                                //   column building that path through the tree.
 			boolean laststep = conditiontable[0][col].equalsIgnoreCase("y");	// Set the test for the root condition.
-			CNode   last     = (CNode) decisiontree;							// The last node will start as the root.					
+			CNode   last     = (CNode) decisiontree;            // The last node will start as the root.					
 
-			for(int i=1; i<conditiontable.length; i++){							// Now go down the rest of the conditions.
-				String t = conditiontable[i][col];								// Get this conditions truth table entry.
-				boolean yes = t.equalsIgnoreCase("y");
+			boolean star = false;                               // Once you find a star, you can't do something else.
+			for(int i=1; i<conditiontable.length; i++){         // Now go down the rest of the conditions.
+				String t = conditiontable[i][col];              // Get this conditions truth table entry.
+				
+				
+				boolean yes  = t.equalsIgnoreCase("y");
+				boolean no   = t.equalsIgnoreCase("n");
+				if(star){
+				    new CompilerError(IDecisionTableError.Type.TABLE,"You can't follow a '*' with a '"+t+"' ",i,col);
+				}
+				star = t.equalsIgnoreCase("*");
+				
 				boolean invalid = false;
-				if(yes || t.equalsIgnoreCase("n")){			                    // If this condition should be considered...
+				
+				if(yes || no ){                                // If this condition should be considered...
 					CNode here=null;
 					try {
 						if(laststep){
@@ -802,7 +822,8 @@ public class RDecisionTable extends ARObject {
 						}else{
 							here = (CNode) last.iffalse;
 						}
-						if(here == null){									    // Missing a CNode?  Create it!
+						
+						if(here == null){                       // Missing a CNode?  Create it!
 							here = new CNode(this,col,i,rconditions[i]);
 							if(laststep){
 								last.iftrue  = here;
@@ -810,6 +831,7 @@ public class RDecisionTable extends ARObject {
 								last.iffalse = here;
 							}
 						}
+						
 					} catch (RuntimeException e) {
                         invalid = true;        
 					}
@@ -1184,7 +1206,7 @@ public class RDecisionTable extends ARObject {
                            0,0)
            );        
        }
-       if( conditiontable[0].length==0 || conditiontable[0][0].trim().equals("*"))return;
+
        /**
         * 
         */
@@ -1204,7 +1226,7 @@ public class RDecisionTable extends ARObject {
            }
            if(nonemptycolumn){    
              try {
-                processCol(type,top,0,col);                         // Process all other columns.
+                processCol(type,top,0,col,false);                    // Process all other columns.
              } catch (Exception e) {
                 /** Any error detected is recorded in the errorlist.  Nothing to do here **/                                            
              }
@@ -1273,36 +1295,66 @@ public class RDecisionTable extends ARObject {
      * @param here
      * @param row
      * @param col
+     * @param star -- Have we encountered a star as a column value yet.
      * @return
      */
-    private DTNode processCol(UnbalancedType code, DTNode here, int row, int col) throws Exception{
+    private DTNode processCol(UnbalancedType code, DTNode here, int row, int col, boolean star) throws Exception{
+        
         if(row >= conditions.length){                                 // Ah, end of the column!
-            ANode thisCol = ANode.newANode(this, col);                // Get a new ANode for the column
+            
                                        
             if(here!=null && code == UnbalancedType.FIRST){           // If we execute only the First, we are done!
-                thisCol = (ANode) here;
+               return (ANode) here;
             }
-            if(here!=null && code == UnbalancedType.ALL){             // If Some path lead here, fold the
+
+            ANode thisCol = ANode.newANode(this, col);                // Get a new ANode for the column
+            thisCol.setStar(star);
+            
+            if( here!=null                                            // Is there anything here?   
+                && !here.getStar() && !star                           //   and this isn't a stared column  
+                && code == UnbalancedType.ALL){                       // If Some path lead here, fold the
                 thisCol.addNode((ANode)here);           			  //    old stuff in with this column.
+            }
+            
+            if( here!= null){                                         // Don't stomp existing columns  
+                return here;
             }
             return thisCol;                                           // Return the mix!
         }
 
         String v      = conditiontable[row][col];                     // Get the value from the condition table
+        
         boolean dcare = v == DASH;                                    // Standardize Don't cares.
+        boolean yes   = v.equalsIgnoreCase("y");
+        boolean no    = v.equalsIgnoreCase("n");
         
-        if(!v.equalsIgnoreCase("y") && !v.equalsIgnoreCase("n") && !dcare){
+        if(star && (yes | no )){
             errorlist.add(
-                    new CompilerError (
-                            IDecisionTableError.Type.CONTEXT,
-                            "Bad value in Condition Table '"+v+"' at row "+(row+1)+" column "+(col+1),
-                            v,0));
+               new CompilerError (
+                    IDecisionTableError.Type.CONDITION,
+                    "Cannot follow a '*' with a '"+v+"' at row "+(row+1)+" column "+(col+1),v,0));
         }
-        if((here==null || here.getRow()!= row ) && dcare){            // If we are a don't care, but not on a row
-            return processCol(code,here,row+1,col);                   //   that matches us, we skip this row for now.
+
+        star  = v.equalsIgnoreCase("*");
+        
+        if(!star && !yes && !no && !dcare){
+            errorlist.add(
+                new CompilerError (
+                        IDecisionTableError.Type.CONDITION,
+                        "Bad value in Condition Table '"+v+"' at row "+(row+1)+" column "+(col+1),v,0));
         }
         
-        if(here==null){                                               // If this node is null, and I need
+        if((here==null || here.getRow()!= row ) && dcare){            // If we are a don't care, but not on a row
+            return processCol(code,here,row+1,col,star);              //   that matches us, we skip this row for now.
+        }
+        
+        if(star){                                                     // If a star, then return the action node  
+            DTNode t = processCol(code,here,row+1,col,star);          //   for this position.
+            t.setStar(true);
+            return t;
+        }         
+        
+        if(here==null){                                               // If this node is null,
             here = new CNode(this,col,row,rconditions[row]);          //   a condition node, create it!
         }else if (here!=null && here.getRow()!= row ){                // If this is the wrong node, and I need 
             CNode t = new CNode(this,col,row,rconditions[row]);       //   a condition node, create a new one and insert it.
@@ -1311,14 +1363,34 @@ public class RDecisionTable extends ARObject {
             here = t;                                                 // Continue with the new node.  
         }
         
-        if(v.equalsIgnoreCase("y") || dcare){                         // If 'y' or a don't care,
-            DTNode next = ((CNode) here).iftrue;                      // Recurse on the True Branch.
-            ((CNode) here).iftrue = processCol(code,next,row+1,col);
+        if(yes || dcare){                                                   // If 'y' or a don't care,
+            DTNode next = ((CNode) here).iftrue;                            // Recurse on the True Branch.
+            DTNode t    = processCol(code,next,row+1,col,false);
+            ((CNode) here).iftrue = t;
+            if(yes && t.getStar()){
+                errorlist.add(
+                   new CompilerError (
+                        IDecisionTableError.Type.CONDITION,
+                        "Cannot follow a 'Y' with a '*' at row "+(row+1)+" column "+(col+1),v,0));
+            }
         }
-        if (v.equalsIgnoreCase("n")|| dcare){                         // If 'n' or a don't care,  
-            DTNode next = ((CNode) here).iffalse;                     // Recurse on the False branch.  Note that
-            ((CNode) here).iffalse = processCol(code,next,row+1,col); // Don't care branches both ways.
+        if (no || dcare){                                                   // If 'n' or a don't care,  
+            DTNode next = ((CNode) here).iffalse;                           // Recurse on the False branch.  Note that
+            int numerrs = errorlist.size();                                 // If a dcare, we only want to log errors
+                                                                            //   once.
+            DTNode t    = processCol(code,next,row+1,col,false);
+            ((CNode) here).iffalse = t;
+            if(no && t.getStar()){                                          
+                errorlist.add(
+                   new CompilerError (
+                        IDecisionTableError.Type.CONDITION,
+                        "Cannot follow a 'N' with a '*' at row "+(row+1)+" column "+(col+1),v,0));
+            }
+            while(dcare && errorlist.size()>numerrs){                       // If dcare, then remove all extra errors.
+                errorlist.remove(errorlist.size()-1);
+            }
         }
+        
         return here;                                                  // Return the Condition node.
     }
     

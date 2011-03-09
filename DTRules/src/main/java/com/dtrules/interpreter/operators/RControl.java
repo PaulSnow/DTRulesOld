@@ -524,10 +524,12 @@ public class RControl {
             if(!state.getCurrentTable().equals(state.getAnode().getrDecisionTable())){
                 return;
             }
+
             ArrayList<Integer> columns = state.getAnode().getColumns();
-            for(int column : columns){
-                if(column+1 < state.getCurrentTable().getRpolicystatements().length){
-                   IRObject ps = state.getCurrentTable().getRpolicystatements()[column+1];
+            IRObject rps [] = state.getCurrentTable().getRpolicystatements();
+            if(rps!= null) for(int column : columns){
+                if(column+1 < rps.length){
+                   IRObject ps = rps[column+1];
                    if(ps != null)
                    state.evaluate(ps);
                    ps = state.datapop();

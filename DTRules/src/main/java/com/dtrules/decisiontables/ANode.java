@@ -37,7 +37,7 @@ public class ANode implements DTNode {
     ArrayList<Integer>   anumbers = new ArrayList<Integer>();  // The action numbers (for tracing purposes)
     ArrayList<Integer>   columns  = new ArrayList<Integer>();  // Keep track of the columns that send us here, for tracing
     String               section;                              // What section we are being called from.
-    
+    boolean              star = false;
     
     public DTNode cloneDTNode(){
         ANode newANode = new ANode(rDecisionTable);
@@ -74,9 +74,11 @@ public class ANode implements DTNode {
      * nodes when both nodes should be executed.
      */
     public void addNode(DTNode _node){
+        
         if(!(_node instanceof ANode)){
             throw new RuntimeException("Shouldn't every call if Node types don't match!");
         }
+        
         ANode node = (ANode)_node;
 
         for(Integer column : node.columns){
@@ -231,6 +233,17 @@ public class ANode implements DTNode {
 
     public ArrayList<Integer> getColumns() {
         return columns;
+    }
+
+    @Override
+    public boolean getStar() {
+        return star;
+    }
+
+    @Override
+    public void setStar(boolean star) {
+        this.star = star;
+        
     }
     
     
