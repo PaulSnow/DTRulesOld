@@ -1322,7 +1322,7 @@ public class RDecisionTable extends ARObject {
             // (used and unused) through the decision table (the "always" option).
             if(istar>=0){
                 
-                starColumn = istar;             // Record the star column for error checking purposes.
+                starColumn = col;             // Record the star column for error checking purposes.
                 
                 boolean otherwise =    conditions[istar].trim().equalsIgnoreCase("otherwise")
                                     || conditions[istar].trim().equalsIgnoreCase("default");
@@ -1362,11 +1362,9 @@ public class RDecisionTable extends ARObject {
 
             if( here!=null && code == UnbalancedType.ALL){            // If Some path lead here, fold the
                 thisCol.addNode((ANode)here);           			  //    old stuff in with this column.
+                return thisCol;
             }
             
-            if( here!= null){                                         // Don't stomp existing columns  
-                return here;
-            }
             return thisCol;                                           // Return the mix!
         }
 
@@ -1406,7 +1404,7 @@ public class RDecisionTable extends ARObject {
         
         if(here==null){                                               // If this node is null,
             here = new CNode(this,col,row,rconditions[row]);          //   a condition node, create it!
-        }else if (here!=null && here.getRow()!= row ){                // If this is the wrong node, and I need 
+        }else if ( here.getRow()!= row ){                             // If this is the wrong node, and I need 
             CNode t = new CNode(this,col,row,rconditions[row]);       //   a condition node, create a new one and insert it.
             t.iffalse = here;                                         // Put the node I have on the false tree
             t.iftrue  = here.cloneDTNode();                           //   and its clone on the true path.
