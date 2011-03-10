@@ -132,6 +132,8 @@ public class RDecisionTable extends ARObject {
 	boolean     hasNullColumn     = false;      // Not all tables have a null column.  This is true if 
 	                                            //   this table has one.
 	
+	int starColumn = -1;                        // Column where a star is found (defaulted to none).	
+	
 	public boolean getHasNullColumn(){
 	    return hasNullColumn;
 	}
@@ -849,7 +851,7 @@ public class RDecisionTable extends ARObject {
 					laststep = yes;
 				}
             }    
-			if(laststep){														// Once we have traced the column, add the actions.
+			if(laststep){										// Once we have traced the column, add the actions.
 				last.iftrue=ANode.newANode(this,col);	
 			}else{
 				last.iffalse=ANode.newANode(this,col);
@@ -1211,8 +1213,7 @@ public class RDecisionTable extends ARObject {
         * 
         */
        CNode top = new CNode(this,1,0,this.rconditions[0]);
-       int defaultCol = -1;         // The Index of the Default Column
-       int allCol     = -1;         // The Index of the "All" Column (executed on all conditions)
+     
        for(int col=0;col<maxcol;col++){                             // Look at each column.
            boolean nonemptycolumn = false;
            for(int row=0; row<conditions.length; row++){
@@ -1225,21 +1226,21 @@ public class RDecisionTable extends ARObject {
                }
            }
            if(nonemptycolumn){    
-             try {
-                processCol(type,top,0,col,false);                    // Process all other columns.
+             try {                          
+                int numerrs = errorlist.size()+1;                   // Ignore all but the first error in a column 
+                processCol(type,top,0,col,-1);                      // Process a column.
+                while(errorlist.size()>numerrs){                    // Throw away all but one.
+                    errorlist.remove(errorlist.size()-1);
+                }
+       
              } catch (Exception e) {
                 /** Any error detected is recorded in the errorlist.  Nothing to do here **/                                            
              }
            }
        }
        ANode defaults;
-       if(defaultCol >= 0){
-           defaults = ANode.newANode(this,defaultCol);
-       }else{    
-           defaults = new ANode(this);
-       }    
+       defaults = new ANode(this);
        addDefaults(top,defaults);                                   // Add defaults to all unmapped branches
-       if(allCol >= 0) addAll(top, ANode.newANode(this,allCol));    // Add to all branches the All actions
        decisiontree = optimize(state, top);                                // Optimize the given tree.
     }     
 
@@ -1298,21 +1299,68 @@ public class RDecisionTable extends ARObject {
      * @param star -- Have we encountered a star as a column value yet.
      * @return
      */
-    private DTNode processCol(UnbalancedType code, DTNode here, int row, int col, boolean star) throws Exception{
+    private DTNode processCol(UnbalancedType code, DTNode here, int row, int col, int istar) throws Exception{
         
-        if(row >= conditions.length){                                 // Ah, end of the column!
+        if (starColumn >=0 && col>starColumn){   
+            int rowX = 0;
             
-                                       
+            for(;conditiontable[rowX][col] == DASH;rowX++);
+            
+            errorlist.add(
+                    new CompilerError (
+                         IDecisionTableError.Type.TABLE,
+                         "Only one 'star' column is allowed, and it must be the last column.","*",rowX));
+        }
+        
+        if(row >= conditions.length){                           // Ah, end of the column!
+            
+            ANode thisCol = ANode.newANode(this, col);          // Get a new ANode for this column
+            thisCol.setStar(istar>=0);
+            
+            // Star columns can do one of two things.  They can fill all unused paths through
+            // the decision table (the "Otherwise" or "default" option), or they can fill all paths 
+            // (used and unused) through the decision table (the "always" option).
+            if(istar>=0){
+                
+                starColumn = istar;             // Record the star column for error checking purposes.
+                
+                boolean otherwise =    conditions[istar].trim().equalsIgnoreCase("otherwise")
+                                    || conditions[istar].trim().equalsIgnoreCase("default");
+                
+                boolean always    =    conditions[istar].trim().equalsIgnoreCase("always");
+                
+                if (!always && !otherwise){
+                    errorlist.add(
+                            new CompilerError (
+                                 IDecisionTableError.Type.CONDITION,
+                                 "A row with a star ('*') must have a condition with a value"+
+                                 " of 'default', 'otherwise', or 'always'","*",0));
+                                 
+                }
+                
+                if(here == null){               // If here is null, then this is an unused path.
+                    return thisCol;             // This will be the only path out for "Otherwise", but 
+                }                               // "Always" is going to cover it too.
+                
+                // Okay, this path is covered by some path.  We will leave it unchanged for "otherwise".
+                if(otherwise){
+                    return here;
+                }    
+                
+                // Okay, this path is covered by some path, so we will add to it for "always".
+                if (always){
+                    thisCol.addNode((ANode)here);
+                    return thisCol;
+                }
+                
+            }
+            
+            
             if(here!=null && code == UnbalancedType.FIRST){           // If we execute only the First, we are done!
-               return (ANode) here;
+               return here;
             }
 
-            ANode thisCol = ANode.newANode(this, col);                // Get a new ANode for the column
-            thisCol.setStar(star);
-            
-            if( here!=null                                            // Is there anything here?   
-                && !here.getStar() && !star                           //   and this isn't a stared column  
-                && code == UnbalancedType.ALL){                       // If Some path lead here, fold the
+            if( here!=null && code == UnbalancedType.ALL){            // If Some path lead here, fold the
                 thisCol.addNode((ANode)here);           			  //    old stuff in with this column.
             }
             
@@ -1327,17 +1375,19 @@ public class RDecisionTable extends ARObject {
         boolean dcare = v == DASH;                                    // Standardize Don't cares.
         boolean yes   = v.equalsIgnoreCase("y");
         boolean no    = v.equalsIgnoreCase("n");
-        
-        if(star && (yes | no )){
+                
+        if(istar>=0 && (yes | no )){
             errorlist.add(
                new CompilerError (
                     IDecisionTableError.Type.CONDITION,
                     "Cannot follow a '*' with a '"+v+"' at row "+(row+1)+" column "+(col+1),v,0));
         }
 
-        star  = v.equalsIgnoreCase("*");
+        if(v.equalsIgnoreCase("*")){
+            istar = row;
+        }
         
-        if(!star && !yes && !no && !dcare){
+        if(istar<0 && !yes && !no && !dcare){
             errorlist.add(
                 new CompilerError (
                         IDecisionTableError.Type.CONDITION,
@@ -1345,14 +1395,14 @@ public class RDecisionTable extends ARObject {
         }
         
         if((here==null || here.getRow()!= row ) && dcare){            // If we are a don't care, but not on a row
-            return processCol(code,here,row+1,col,star);              //   that matches us, we skip this row for now.
+            return processCol(code,here,row+1,col,istar);             //   that matches us, we skip this row for now.
         }
         
-        if(star){                                                     // If a star, then return the action node  
-            DTNode t = processCol(code,here,row+1,col,star);          //   for this position.
+        if(istar>=0){                                                 // If a star, then return the action node  
+            DTNode t = processCol(code,here,row+1,col,istar);         //   for this position.
             t.setStar(true);
             return t;
-        }         
+        } 
         
         if(here==null){                                               // If this node is null,
             here = new CNode(this,col,row,rconditions[row]);          //   a condition node, create it!
@@ -1365,7 +1415,7 @@ public class RDecisionTable extends ARObject {
         
         if(yes || dcare){                                                   // If 'y' or a don't care,
             DTNode next = ((CNode) here).iftrue;                            // Recurse on the True Branch.
-            DTNode t    = processCol(code,next,row+1,col,false);
+            DTNode t    = processCol(code,next,row+1,col,-1);
             ((CNode) here).iftrue = t;
             if(yes && t.getStar()){
                 errorlist.add(
@@ -1376,18 +1426,13 @@ public class RDecisionTable extends ARObject {
         }
         if (no || dcare){                                                   // If 'n' or a don't care,  
             DTNode next = ((CNode) here).iffalse;                           // Recurse on the False branch.  Note that
-            int numerrs = errorlist.size();                                 // If a dcare, we only want to log errors
-                                                                            //   once.
-            DTNode t    = processCol(code,next,row+1,col,false);
+            DTNode t    = processCol(code,next,row+1,col,-1);
             ((CNode) here).iffalse = t;
             if(no && t.getStar()){                                          
                 errorlist.add(
                    new CompilerError (
                         IDecisionTableError.Type.CONDITION,
                         "Cannot follow a 'N' with a '*' at row "+(row+1)+" column "+(col+1),v,0));
-            }
-            while(dcare && errorlist.size()>numerrs){                       // If dcare, then remove all extra errors.
-                errorlist.remove(errorlist.size()-1);
             }
         }
         

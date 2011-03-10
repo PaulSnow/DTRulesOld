@@ -56,8 +56,7 @@ public class DTLoader implements IGenericXMLParser {
     private int     context_cnt = 0;        // Count of contexts
     private int     ia_cnt      = 0;        // Count of initial actions.
     private int     c_cnt       = 0;        // Count of conditions
-    private int     c_col       = 0;        // Count of conditions
-	private int     a_cnt       = 0;        // Count of actions
+ 	private int     a_cnt       = 0;        // Count of actions
 	private int     col_cnt     = 1;        // Count of columns (We assume at least one column)
 	private int     col         = 0;        // Current column
 	private int     ps_col      = 0;        // Current Policy Statement Count
@@ -197,11 +196,12 @@ public class DTLoader implements IGenericXMLParser {
 			dt.conditionsComment[i]  = c_comment.size()<=i || c_comment.get(i)==null?"":c_comment.get(i);
 			dt.conditionsPostfix[i]  = c_postfix.size()<=i || c_postfix.get(i)==null?"":c_postfix.get(i);
 			for(int j=0;j<col_cnt;j++){
-                String v = null;
+                String v = " ";
                 if(c_table.size()> i && c_table.get(i)!= null && c_table.get(i).size() > j){
                     v = c_table.get(i).get(j);
+                    v = v==null ? " " : v;
                 }
-				dt.conditiontable[i][j]=   v==null ? " " : v ;
+				dt.conditiontable[i][j] = v ;
 			}
 		}
 		
@@ -255,20 +255,6 @@ public class DTLoader implements IGenericXMLParser {
             }
 		}    
     }
-    	
-	
-	/*
-	 * Handle each condition in turn. 
-	 *
-	 */
-	
-	public void end_condition_number(){
-		col= Integer.parseInt(_body);
-		if(col>col_cnt){                          // Look and see if this is the biggest column we have seen.
-		    col_cnt = col;                        // remember it if it is.
-		}
-		col--;                                    // Make our column zero based.
-	}
 	
 	public void end_context_description(){
 	    adjust(context_formal,context_cnt);
@@ -321,10 +307,14 @@ public class DTLoader implements IGenericXMLParser {
 	}
 	
 	public void begin_condition_column() throws RulesException {
-		if(col>=col_cnt){
-		    col_cnt++;
-		}
-		int theCol = Integer.parseInt((String)_attribs.get("column_number"))-1;
+		
+		int theCol = Integer.parseInt((String)_attribs.get("column_number"));
+		
+		if(theCol > col_cnt){  // This check works because the column_number is one based. 
+            col_cnt = theCol;
+        }
+		
+		theCol--;              // Make our column index zero based.
 		
 		adjust(c_table,c_cnt);
 		if(c_table.get(c_cnt)==null)c_table.set(c_cnt,new ArrayList<String>());
