@@ -1333,7 +1333,7 @@ public class RDecisionTable extends ARObject {
                     errorlist.add(
                             new CompilerError (
                                  IDecisionTableError.Type.CONDITION,
-                                 "A row with a star ('*') must have a condition with a value"+
+                                 "A condition row with a star ('*') must have a condition with a value"+
                                  " of 'default', 'otherwise', or 'always'","*",0));
                                  
                 }
