@@ -59,7 +59,7 @@ public class DTLoader implements IGenericXMLParser {
  	private int     a_cnt       = 0;        // Count of actions
 	private int     col_cnt     = 1;        // Count of columns (We assume at least one column)
 	private int     col         = 0;        // Current column
-	private int     ps_col      = 0;        // Current Policy Statement Count
+	private int     ps_col      = 0;        // Current Policy Statement Column;  The count is the number of columns.
 	
 	private boolean processing_fields = false;  // This boolean is only set within the <attribute_fields> tag.
 	                                            // Any tag within this tag is interpreted as an attribute of
@@ -215,6 +215,14 @@ public class DTLoader implements IGenericXMLParser {
 				dt.actiontable[i][j]=  v==null ? " " : v;
 			}
 		}
+		
+		adjust(ps_formal,col_cnt);
+		adjust(ps_postfix,col_cnt);
+        dt.policystatements = new String [col_cnt];
+        dt.policystatements = ps_formal.toArray(dt.policystatements);
+        dt.policystatementsPostfix = new String [col_cnt];
+        dt.policystatementsPostfix = ps_postfix.toArray(dt.policystatementsPostfix);
+        
 	}
 	
 	/**
@@ -374,14 +382,18 @@ public class DTLoader implements IGenericXMLParser {
 		a_cnt++;
 	}
 	
-	public void begin_policy_statements(){
+	public void begin_policy_statement(){
 	    String num = _attribs.get("column");
+	    ps_col = 0;
 	    if(num != null && num.length()>0){
  	       try{ 
  	           ps_col = Integer.parseInt(num); 
  	       } catch(Exception e){
  	           System.err.println("Invalid column index: '"+num+"'");
  	       }
+	    }
+	    if(ps_col<0 || ps_col > col_cnt){
+	        throw new RuntimeException("The column value for a Policy Statement '"+ps_col+"' is out of range");
 	    }
 	}
 	
@@ -390,7 +402,7 @@ public class DTLoader implements IGenericXMLParser {
 	    ps_formal.set(ps_col, _body);
 	}
 
-	public void end_policy_postfix(){
+	public void end_policy_statement_postfix(){
         adjust(ps_postfix, ps_col);
         ps_postfix.set(ps_col, _body);
     }

@@ -132,7 +132,9 @@ public class RDecisionTable extends ARObject {
 	boolean     hasNullColumn     = false;      // Not all tables have a null column.  This is true if 
 	                                            //   this table has one.
 	
-	int starColumn = -1;                        // Column where a star is found (defaulted to none).	
+	int starColumn      = -1;                   // Column where a star is found (defaulted to none).	
+	int otherwiseColumn = -1;
+	int alwaysColumn    = -1;
 	
 	public boolean getHasNullColumn(){
 	    return hasNullColumn;
@@ -521,6 +523,7 @@ public class RDecisionTable extends ARObject {
     		rconditions       = new IRObject[conditionsPostfix.length];
     		ractions          = new IRObject[actionsPostfix.length];
     		rinitialActions   = new IRObject[initialActionsPostfix.length];
+    		rpolicystatements = new IRObject[policystatementsPostfix.length];
     		
     		for(int i=0; i< initialActions.length; i++){
                  try {
@@ -571,6 +574,24 @@ public class RDecisionTable extends ARObject {
     				ractions[i]=RNull.getRNull();
     			}
     		}
+    		
+    		for(int i=0;i<policystatementsPostfix.length;i++){
+                try {
+                    rpolicystatements[i]= RString.compile(session, policystatementsPostfix[i],true);
+                } catch (RulesException e) {
+                    errorlist.add(
+                            new CompilerError(
+                               IDecisionTableError.Type.POLICYSTATEMENT,
+                               "Postfix Interpretation Error: "+e,
+                               policystatementsPostfix[i],
+                               i
+                            )
+                         );
+                    compiled=false;
+                    rpolicystatements[i]=RNull.getRNull();
+                }
+            }
+    		
 	    }catch(Exception e){
             errorlist.add(
                     new CompilerError(
@@ -1344,11 +1365,13 @@ public class RDecisionTable extends ARObject {
                 
                 // Okay, this path is covered by some path.  We will leave it unchanged for "otherwise".
                 if(otherwise){
+                    otherwiseColumn = col;      // Remember which column is the "otherwise" column.
                     return here;
                 }    
                 
                 // Okay, this path is covered by some path, so we will add to it for "always".
                 if (always){
+                    alwaysColumn = col;         // Remember which column is the "always" column.
                     thisCol.addNode((ANode)here);
                     return thisCol;
                 }

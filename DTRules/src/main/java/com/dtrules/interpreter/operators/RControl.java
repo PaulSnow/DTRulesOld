@@ -27,6 +27,7 @@ import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RArray;
 import com.dtrules.interpreter.RInteger;
 import com.dtrules.interpreter.RName;
+import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RString;
 import com.dtrules.session.DTState;
 import com.dtrules.session.EntityFactory;
@@ -527,13 +528,29 @@ public class RControl {
 
             ArrayList<Integer> columns = state.getAnode().getColumns();
             IRObject rps [] = state.getCurrentTable().getRpolicystatements();
-            if(rps!= null) for(int column : columns){
-                if(column+1 < rps.length){
-                   IRObject ps = rps[column+1];
-                   if(ps != null)
-                   state.evaluate(ps);
-                   ps = state.datapop();
-                   ra.add(ps);
+            if(rps!= null) { 
+                for(int column : columns){
+                    if(column < rps.length){
+                       IRObject ps = rps[column];
+                       if(ps != null){
+                          ps.execute(state);
+                          ps = state.datapop();
+                          if(ps != RNull.getRNull()){
+                              ra.add(ps);
+                          }
+                       }
+                    }
+                }
+                if(columns.size()==0){
+                    IRObject ps = rps[0];
+                    if(ps != null){
+                       ps.execute(state);
+                       ps = state.datapop();
+                       if(ps != RNull.getRNull()){
+                           ra.add(ps);
+                       }
+                    }
+                 
                 }
             }
         }

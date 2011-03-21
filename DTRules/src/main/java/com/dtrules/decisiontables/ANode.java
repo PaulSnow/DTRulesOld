@@ -20,10 +20,13 @@
 package com.dtrules.decisiontables;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.IRObject;
+import com.dtrules.interpreter.RArray;
+import com.dtrules.interpreter.operators.ROperator;
 import com.dtrules.session.DTState;
 
 /**
@@ -218,11 +221,32 @@ public class ANode implements DTNode {
         if(other==null)return false;                            // No common path? Not Equal then!
         if(other.anumbers.size()!=anumbers.size()) return false;// Must be the same length.
         for(int i = 0; i< anumbers.size(); i++){
+            if(callsPS(action.get(i), new ArrayList<IRObject>())){
+                return false;
+            }
             if(!other.anumbers.get(i).equals(anumbers.get(i)))return false;  //   Make sure each action is the same action.
         }                                                                    //     If a mismatch is found, Not Equal!!!
         return true;
     }
 
+    private boolean callsPS(IRObject v, ArrayList <IRObject> m){
+        
+        if(v instanceof RArray){
+            
+            if(m.contains(v)) return false;
+            m.add(v);
+            for(IRObject vv : (RArray) v){
+                if(callsPS(vv,m)) return true;
+            }
+            
+        }else if (v instanceof ROperator){
+            if(v.stringValue().equalsIgnoreCase("policystatements")){
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public ANode getCommonANode(DTState state) {
         return this;
     }
