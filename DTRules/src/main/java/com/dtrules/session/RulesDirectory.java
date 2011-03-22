@@ -145,7 +145,7 @@ public class RulesDirectory {
     /**
      * The RulesDirectory manages the various RuleSets and the versions of 
      * RuleSets.  We need to do a good bit of work to make all of this 
-     * managable. For right now, I am loading the property list from the 
+     * manageable. For right now, I am loading the property list from the 
      * path provided this class.  It first attempts to use this path as a
      * jar resource, then an URL, then a file.
      * 

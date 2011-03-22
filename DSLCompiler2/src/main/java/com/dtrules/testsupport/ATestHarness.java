@@ -19,6 +19,7 @@
 package com.dtrules.testsupport;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,7 +28,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.io.FileInputStream;
 
+import com.dtrules.admin.RulesAdminService;
 import com.dtrules.automapping.AutoDataMap;
+import com.dtrules.compiler.excel.util.Rules2Excel;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.RArray;
 import com.dtrules.interpreter.RName;
@@ -217,6 +220,21 @@ public abstract class ATestHarness implements ITestHarness {
 		return returnfiles;
     }
     
+    public void writeDecisionTables(String tables){
+        try {
+            RulesDirectory    rd    = new RulesDirectory(getPath(),getRulesDirectoryFile());
+            RuleSet           rs    = rd.getRuleSet(getRuleSetName());
+            IRSession         s     = rs.newSession();
+            RulesAdminService admin = new RulesAdminService(s);
+            
+            Rules2Excel.writeDecisionTables(admin, tables);
+            
+        } catch (Exception e) {
+            throw new RuntimeException(e.toString());
+        }
+    }
+    
+    
     PrintStream rpt=null; // Report file where summaries are written.
     public void runTests(){
          
@@ -269,7 +287,9 @@ public abstract class ATestHarness implements ITestHarness {
                          String ms = lms<100 ? lms<10 ? "00"+lms : "0"+lms : ""+lms;
                          System.out.println("\nAvg execution time: "+sec+"."+ms);
                      }
+                     
                      String err = runfile(rd,rs,dfcnt,dir.getAbsolutePath(),file.getName());
+                     
                      Date after = new Date();
                      long dt  = (after.getTime()-now.getTime());
                      long sec = dt/1000;
