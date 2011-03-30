@@ -73,6 +73,7 @@ public class DTLoader implements IGenericXMLParser {
 	
 	// Temp Space for collecting data for the decision tables
 	ArrayList<String> context_formal     = new ArrayList<String>();
+    ArrayList<String> context_comments   = new ArrayList<String>();
 	ArrayList<String> context_postfix    = new ArrayList<String>();
 	ArrayList<String> ia_formal          = new ArrayList<String>();
 	ArrayList<String> ia_postfix         = new ArrayList<String>();
@@ -153,6 +154,7 @@ public class DTLoader implements IGenericXMLParser {
 	public void end_decision_table(){
 	    /** Contexts do not have comments **/
         dt.contexts                 = new String[context_cnt];
+        dt.contextComments          = new String[context_cnt];
         dt.contextsPostfix          = new String[context_cnt];
         
         /** Initial Actions have Comments, descriptions, and postfix **/
@@ -177,9 +179,11 @@ public class DTLoader implements IGenericXMLParser {
         
         //Move over the information for the contexts
         adjust(context_formal,context_cnt);
+        adjust(context_comments,context_cnt);
         adjust(context_postfix,context_cnt);
         for(int i=0;i<context_cnt;i++){
             dt.contexts[i]          = context_formal.get(i);
+            dt.contextComments[i]   = context_comments.get(i);
             dt.contextsPostfix[i]   = context_postfix.get(i);
         }
         
@@ -262,11 +266,17 @@ public class DTLoader implements IGenericXMLParser {
                 throw new RulesException("Invalid","Decision Table Load","Bad Decision Table type Encountered: '"+_body+"'");
             }
 		}    
+		
     }
 	
-	public void end_context_description(){
-	    adjust(context_formal,context_cnt);
-	    context_formal.set(context_cnt, _body);
+    public void end_context_description(){
+        adjust(context_formal,context_cnt);
+        context_formal.set(context_cnt, _body);
+    }
+    
+	public void end_context_comment(){
+	    adjust(context_comments,context_cnt);
+	    context_comments.set(context_cnt, _body);
 	}
 	
 	public void end_context_postfix (){

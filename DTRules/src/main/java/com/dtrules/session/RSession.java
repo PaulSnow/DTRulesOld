@@ -335,7 +335,7 @@ public class RSession implements IRSession {
 	    if(id==null){
 	        id = getUniqueID()+"";
 	    }
-		REntity ref = ef.findRefEntity(name);
+		IREntity ref = ef.findRefEntity(name);
         if(ref==null){
             throw new RulesException("undefined","session.createEntity","An attempt ws made to create the entity "+name.stringValue()+"\n" +
                     "This entity isn't defined in the EDD");

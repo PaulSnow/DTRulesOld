@@ -227,7 +227,9 @@ public abstract class ATestHarness implements ITestHarness {
             IRSession         s     = rs.newSession();
             RulesAdminService admin = new RulesAdminService(s);
             
-            Rules2Excel.writeDecisionTables(admin, tables);
+            Rules2Excel r2e = new Rules2Excel();
+            
+            r2e.writeExcel(admin, rs, tables);
             
         } catch (Exception e) {
             throw new RuntimeException(e.toString());

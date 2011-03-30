@@ -315,7 +315,7 @@ public class ImportRuleSets {
         int    colonIndex = value.indexOf(":");
         if(colonIndex>1){
            String attrib  = value.substring(0,colonIndex);
-           attrib  = attrib.replaceAll(" ", "_").toLowerCase();
+           attrib  = attrib.replaceAll(" ", "_");
            try {
 			  Integer.parseInt(attrib);
 			  attrib = "";
@@ -625,6 +625,8 @@ public class ImportRuleSets {
                     if(err!=null){
                         System.out.println(dtName+" : "+err);
                     }
+                    String contextComment = getComments(sheet, rowIndex);
+                    out.printdata("context_comment",contextComment);
                     out.printdata("context_description",context);
                     out.closetag();
                 }else{  

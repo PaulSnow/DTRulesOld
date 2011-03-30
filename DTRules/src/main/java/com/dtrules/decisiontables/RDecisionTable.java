@@ -91,6 +91,7 @@ public class RDecisionTable extends ARObject {
 												//   it won't be if compilation fails.
 
     String   [] contexts;                       // Contexts in which to execute this table.
+    String   [] contextComments;                // Comments on the contexts.
     String   [] contextsPostfix;                // The Postfix for each context statement.
     String      contextsrc;                     // For Tracing...
     IRObject    rcontext;                       //  lists of entities.  It is best if this is done within the table than
@@ -201,6 +202,14 @@ public class RDecisionTable extends ARObject {
      */
     public String[] getInitialActionsComment() {
         return initialActionsComment;
+    }
+    
+    /**
+     * 
+     * @return comments on each context statement.
+     */
+    public String[] getContextComments() {
+        return contextComments;
     }
 
     /**

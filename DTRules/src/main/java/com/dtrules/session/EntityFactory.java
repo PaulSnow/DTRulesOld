@@ -184,7 +184,7 @@ public class EntityFactory {
      * @param name
      * @return
      */
-    public REntity findRefEntity(String name){
+    public IREntity findRefEntity(String name){
         return findRefEntity(RName.getRName(name));
     }
 	/**
@@ -193,7 +193,7 @@ public class EntityFactory {
 	 * @param name
 	 * @return
 	 */
-	public REntity findRefEntity(RName name){
+	public IREntity findRefEntity(RName name){
 		return (REntity) referenceEntities.get(name);
 	}
 	/**
@@ -203,7 +203,7 @@ public class EntityFactory {
 	 * 
 	 * @param name
 	 */
-	public REntity findcreateRefEntity(boolean readonly, RName name)throws RulesException {
+	public IREntity findcreateRefEntity(boolean readonly, RName name)throws RulesException {
 		if(!referenceEntities.containsKey(name)){
 			IREntity entity = new REntity(getUniqueID(), readonly, name); 
 			referenceEntities.put(name,entity);
@@ -412,4 +412,32 @@ public class EntityFactory {
     public IREntity getDecisiontables() {
         return decisiontables;
     }
+
+    /**
+     * If you need a sorted list of entities or a sorted list of attributes,
+     * you can use this quick and dirty bubble sort to convert one of the 
+     * Interators we provide into a list of sorted RNames.
+     * 
+     * @param list
+     * @return
+     */
+    public static ArrayList<RName> sorted(Iterator<RName> list, boolean ascending){
+        ArrayList<RName> slist = new ArrayList<RName>();
+        while(list.hasNext()){
+            slist.add(list.next());
+        }
+                
+        for(int i = 0; i < slist.size()-1; i++){
+            for(int j=0; j <slist.size()-1-i; j++){
+                if (slist.get(j).compareTo(slist.get(j+1))<0 ^ ascending){
+                    RName hld = slist.get(j);
+                    slist.set(j, slist.get(j+1));
+                    slist.set(j+1, hld);
+                }
+            }
+        }
+        return slist;
+    }
+
+    
 }

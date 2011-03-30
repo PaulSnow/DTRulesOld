@@ -21,6 +21,7 @@ package com.dtrules.session;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.dtrules.entity.IREntity;
 import com.dtrules.entity.REntity;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.IRObject;
@@ -132,7 +133,7 @@ public class EDDLoader implements IGenericXMLParser {
           }
 		  RName  entityRName = RName.getRName(entityname.trim(),false);
 		  RName  attributeRName = RName.getRName(attribute.trim(),false);
-		  REntity entity = ef.findcreateRefEntity(false,entityRName);
+		  IREntity entity = ef.findcreateRefEntity(false,entityRName);
           RType   rtype2 = null;
           if(!RType.isType(type)){
         	  errorMsgs += "Bad Type: '"+type+"' encountered on entity: '"+entityname+"' attribute: '"+attribute+"' \n";
@@ -219,7 +220,7 @@ public class EDDLoader implements IGenericXMLParser {
         
         RName  entityRName = RName.getRName(entityname.trim(),false);
         RName  attributeRName = RName.getRName(attrib_name.trim(),false);
-        REntity entity = ef.findcreateRefEntity(false,entityRName);
+        IREntity entity = ef.findcreateRefEntity(false,entityRName);
         
         RType rtype2 = null;
 
