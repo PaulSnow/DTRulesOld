@@ -57,7 +57,6 @@ public class RBooleanOps {
 			new SLessthanequal();
 			new SEqual();	
 			new SEqualIgnoreCase();
-			new SConcat();
 			new Strremove();
 			new Startswith();
 			new Req();
@@ -86,7 +85,7 @@ public class RBooleanOps {
 	     *
 	     */
 		static class Not extends ROperator {
-			Not(){super("not");}
+			Not(){super("not"); alias("!"); }
 
 			public void execute(DTState state) throws RulesException {
 				state.datapush(RBoolean.getRBoolean(!(state.datapop().booleanValue())));
@@ -114,7 +113,7 @@ public class RBooleanOps {
 	     * And Operator, returns the || value of two booleans
 	     */
 		static class Or extends ROperator {
-			Or(){super("||");}
+			Or(){super("||"); alias("or");}
 
 			public void execute(DTState state) throws RulesException {
 				state.datapush(RBoolean.getRBoolean(state.datapop().booleanValue() || state.datapop().booleanValue()));
@@ -153,7 +152,8 @@ public class RBooleanOps {
 		
 	    /**
 	     * Greaterthanequal( Number Number -- Boolean )
-	     * Greaterthanequal Operator, returns the boolean value for condition with the given parameters
+	     * Greaterthanequal Operator, returns the boolean value for condition with the given parameters.
+	     * This is an integer comparision, so 3.5 3.8 >=  is going to return true because 3 == 3
 	     */
 		static class Greaterthanequal extends ROperator {
 			Greaterthanequal(){super(">=");}
@@ -390,19 +390,7 @@ public class RBooleanOps {
 		
 		
 		
-	    /**
-	     * StrConcat( String String -- String )
-	     * StrConcat Operator, add the given two strings and returns a string value
-	     */
-		static class SConcat extends ROperator {
-			SConcat(){super("s+"); alias("strconcat");}
 
-			public void execute(DTState state) throws RulesException {
-				String value2 = state.datapop().stringValue();
-				String value1 = state.datapop().stringValue();
-				state.datapush(RString.newRString(value1+value2));
-			}
-		}		
 
 		 /**
          * startswith ( string1 string2 index -- boolean )

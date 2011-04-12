@@ -164,8 +164,11 @@ public interface ITestHarness {
      * 
      * @param tables
      */
-    public void writeDecisionTables(String tables) throws RuntimeException;
-    
+    public void writeDecisionTables(
+            String  tables, 
+            String  fields[], 
+            boolean ascending, 
+            int     limit) throws RuntimeException;
     /**
      * The name of the report file.
      * @return

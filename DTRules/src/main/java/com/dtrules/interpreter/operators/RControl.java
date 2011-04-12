@@ -46,7 +46,7 @@ public class RControl {
         new Doloop();       new ForFirstElse();     new ExecuteTable(); 
         new Execute();      new Deallocate();       new Allocate();     
         new Localfetch();   new Localstore();       new PerformCatchError();
-        new Lookup();       new PolicyStatements();
+        new Lookup();       new PolicyStatements(); new ThrowException();
     }
     
     /**
@@ -556,4 +556,21 @@ public class RControl {
         }
     }
     
+    /**
+     * ( String -- ) throws a Rules Exception with the given message.
+     * 
+     * @author paul snow
+     *
+     */
+    static class ThrowException extends ROperator {
+        ThrowException(){super("throwexception");}
+
+        public void execute(DTState state) throws RulesException {
+            IRObject value = state.datapop();
+            throw new RulesException(
+                        "throwException",
+                        "ThrowExceiption.execute()",
+                        value.stringValue());
+        }
+    }
 }

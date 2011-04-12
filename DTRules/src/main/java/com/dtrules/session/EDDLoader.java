@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import com.dtrules.entity.IREntity;
-import com.dtrules.entity.REntity;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.IRObject;
 import com.dtrules.interpreter.RName;
@@ -30,7 +29,6 @@ import com.dtrules.interpreter.RNull;
 import com.dtrules.interpreter.RType;
 import com.dtrules.xmlparser.IGenericXMLParser;
 
-@SuppressWarnings({"unchecked"})
 public class EDDLoader implements IGenericXMLParser {
 
 	final IRSession        session;
@@ -63,7 +61,7 @@ public class EDDLoader implements IGenericXMLParser {
 
 
     public void beginTag(String[] tagstk, int tagstkptr, String tag,
-		HashMap attribs) throws IOException, Exception {
+		HashMap<String,String> attribs) throws IOException, Exception {
         
         if(tag.equals("entity_data_dictionary") ){
             
@@ -81,7 +79,7 @@ public class EDDLoader implements IGenericXMLParser {
 			           int      tagstkptr, 
 			           String   tag, 
 			           String   body, 
-			           HashMap  attribs) throws Exception, IOException {
+			           HashMap<String,String>  attribs) throws Exception, IOException {
 	                 // 
 	    
 	    if(version==2){
@@ -126,7 +124,7 @@ public class EDDLoader implements IGenericXMLParser {
 		  } 
 		  
           try{		  
-              defaultO = EntityFactory.computeDefaultValue(session, ef, defaultv, rtype) ;
+              defaultO = session.getComputeDefault().computeDefaultValue(session, ef, defaultv, rtype) ;
           } catch (RulesException e) { 
               errorMsgs += "Bad Default Value '"+defaultv+"' encountered on entity: '"+entityname+"' attribute: '"+attribute+"' \n";
               succeeded = false;
@@ -171,7 +169,7 @@ public class EDDLoader implements IGenericXMLParser {
 	String entitycomment;
 	String entityaccess;
     public void beginTag2(String[] tagstk, int tagstkptr, String tag,
-            HashMap attribs) throws IOException, Exception {
+            HashMap<String,String> attribs) throws IOException, Exception {
         if(tag.equals("entity")){
             entityname      = (String) attribs.get("name");
             entitycomment   = (String) attribs.get("comment");
@@ -183,7 +181,7 @@ public class EDDLoader implements IGenericXMLParser {
                            int      tagstkptr, 
                            String   tag, 
                            String   body, 
-                           HashMap  attribs) throws Exception, IOException {
+                           HashMap<String,String>  attribs) throws Exception, IOException {
         if(!tag.equals("field")) return;
              
         String default_value  = (String) attribs.get("default_value");
@@ -216,7 +214,7 @@ public class EDDLoader implements IGenericXMLParser {
         	rtype = RType.getType(type);
         }
                 
-        IRObject defaultO = EntityFactory.computeDefaultValue(session, ef, default_value, rtype) ;
+        IRObject defaultO = session.getComputeDefault().computeDefaultValue(session, ef, default_value, rtype) ;
         
         RName  entityRName = RName.getRName(entityname.trim(),false);
         RName  attributeRName = RName.getRName(attrib_name.trim(),false);

@@ -40,6 +40,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
 
 import com.dtrules.decisiontables.RDecisionTable;
 import com.dtrules.infrastructure.RulesException;
@@ -160,7 +161,8 @@ public class ImportRuleSets {
                     String v = cell.getRichStringCellValue().getString().trim();
                     return v;
                 
-                default :                           return "";
+                default :                           
+                    return "";
             }        
     }
     /**
@@ -369,11 +371,15 @@ public class ImportRuleSets {
      * @param row
      * @return
      */
+    static int cnt = 0;
     private String getDSL(HSSFSheet sheet, int row){        
         int field = getColumn("dsl");
         if(field==-1)throw new RuntimeException("No DSL Column"); 
-        String value = getCellValue(sheet,row, field);
-        return value.trim();
+        String value = getCellValue(sheet,row, field).trim();
+        if(value.length()>0){
+            System.out.println(++cnt + " -- "+value );
+        }
+        return value;
     }
     /**
      * Get Policy Statement 
@@ -410,12 +416,11 @@ public class ImportRuleSets {
      */
     void clearNumber(HSSFSheet sheet, int row){
         String numberFound = getNumber(sheet,row);
-        if(numberFound.length()>0){
-            int field = getColumn("number");
-            if(field!=-1){
-               sheet.getRow(row).getCell(field).setCellValue(new HSSFRichTextString(""));
+        int field = getColumn("number");
+        if(field!= -1){
+            if(sheet != null && sheet.getRow(row)!=null){
+              sheet.getRow(row).createCell(field).setCellValue("");
             }
-            CountsAreDirty = true;
         }
     }
     
@@ -496,11 +501,14 @@ public class ImportRuleSets {
      * @return
      */
     int nextBlock(HSSFSheet sheet, int row){
-        String attrib = getNextAttribValue(sheet, row);
-        while(attrib == ""){
+        String attrib = getNextAttrib(sheet, row);
+        if(sheet.getRow(row)==null)return row;
+        Cell   c      = sheet.getRow(row).getCell(0);
+        while(attrib.equals("") && c.getCellType()!= HSSFCell.CELL_TYPE_FORMULA){
             row++;
             attrib = getNextAttribValue(sheet, row);
             if(row > sheet.getLastRowNum()) return row-1;
+            c      = sheet.getRow(row).getCell(0);
         }
         return row;
     }
@@ -618,7 +626,7 @@ public class ImportRuleSets {
                 attrib           = getNextAttrib(sheet, rowIndex);
                 if(attrib.length()>0)break;   
                 String context   = getDSL(sheet, rowIndex);
-                if(context != "") 
+                if(!context.equals("") ) 
                 {
                     out.opentag("context_details");
                     String err = printNumber(out,sheet,rowIndex,"context_number",contextCount++);
@@ -647,7 +655,7 @@ public class ImportRuleSets {
             while(isAction(sheet,rowIndex)){  
                 String initialActionDescription = getDSL(sheet, rowIndex); 
     
-                if(initialActionDescription != "") 
+                if(!initialActionDescription.equals("")) 
                 {
                     out.opentag("initial_action_details");
                     String err = printNumber(out,sheet,rowIndex,"intial_action_number",iactionCount++);
@@ -681,7 +689,7 @@ public class ImportRuleSets {
             
         	String conditionDescription = getDSL(sheet, rowIndex); 
 
-        	if(conditionDescription != "") {
+        	if(!conditionDescription.equals("")) {
         		out.opentag("condition_details");
                 String err = printNumber(out,sheet,rowIndex,"condition_number",conditionCount++);
                 if(err!=null){
@@ -707,7 +715,7 @@ public class ImportRuleSets {
 	        		    out.printdata("condition_column","column_number",""+(j+1),"column_value",columnValue,null);
 	        		}else if (columnValue.equalsIgnoreCase(RDecisionTable.DASH)){
 	        		}else{
-	        			if(columnValue != "")
+	        			if(!columnValue.equals(""))
 		                throw new Exception("Undesired value in the condition matrix");
 	        		}
 	        	}

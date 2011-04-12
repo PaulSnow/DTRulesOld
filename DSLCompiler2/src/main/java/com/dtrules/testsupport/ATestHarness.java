@@ -220,7 +220,7 @@ public abstract class ATestHarness implements ITestHarness {
 		return returnfiles;
     }
     
-    public void writeDecisionTables(String tables){
+    public void writeDecisionTables(String tables, String fields[], boolean ascending, int limit){
         try {
             RulesDirectory    rd    = new RulesDirectory(getPath(),getRulesDirectoryFile());
             RuleSet           rs    = rd.getRuleSet(getRuleSetName());
@@ -229,7 +229,7 @@ public abstract class ATestHarness implements ITestHarness {
             
             Rules2Excel r2e = new Rules2Excel();
             
-            r2e.writeExcel(admin, rs, tables);
+            r2e.writeExcel(admin, rs, tables, fields, ascending, limit);
             
         } catch (Exception e) {
             throw new RuntimeException(e.toString());

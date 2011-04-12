@@ -60,7 +60,6 @@ public class RArray extends ARObject implements Collection<IRObject> {
     	}
     }
     
-    
     /**
      * @see java.util.Collection#addAll(java.util.Collection)
      */
@@ -172,6 +171,12 @@ public class RArray extends ARObject implements Collection<IRObject> {
     	this.pair       = otherpair;
     	this.dups       = duplicates;
     }
+
+    static public RArray NewArray(IRSession session, boolean duplicates, boolean executable) throws RulesException {
+        return new RArray(session.getEntityFactory().getUniqueID(), duplicates, executable);
+    }
+
+    
     /**
      * Creates a RArray
      * @param id        A unique ID for all arrays.  Get this from the RSession object

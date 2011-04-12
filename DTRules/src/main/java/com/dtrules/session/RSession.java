@@ -41,7 +41,6 @@ import com.dtrules.xmlparser.IXMLPrinter;
 import com.dtrules.mapping.DataMap;
 import com.dtrules.mapping.Mapping;
 
-@SuppressWarnings("unchecked")
 public class RSession implements IRSession {
 
     final RuleSet               rs;
@@ -49,7 +48,8 @@ public class RSession implements IRSession {
 	final EntityFactory         ef;
     int                         uniqueID = 1;
     HashMap<Object,IREntity>    entityInstances = new HashMap<Object,IREntity>();
-    ICompiler                   compiler = null;       
+    ICompiler                   compiler = null;    
+    IComputeDefaultValue        ComputeDefault = new ComputeDefaultValue();
     ArrayList<DataMap>          registeredMaps = new ArrayList<DataMap>();  
     IDateParser					dateParser = new DateParser();
     
@@ -127,6 +127,10 @@ public class RSession implements IRSession {
         compiler = _compiler;
     }
     
+    public ICompiler getCompiler() {
+        return compiler;
+    }
+
     /**
      * Each RSession is associated with a particular RuleSet
      * @param _ef
@@ -179,9 +183,9 @@ public class RSession implements IRSession {
         dtstate.traceTagEnd();
     }
     
-    private HashMap<REntity,ArrayList> boundries = new HashMap<REntity,ArrayList>(); // Track printing Entity from Entity boundries to stop recursive printing.
+    private HashMap<IREntity,ArrayList<IREntity>> boundries = new HashMap<IREntity,ArrayList<IREntity>>(); // Track printing Entity from Entity boundries to stop recursive printing.
     
-    private String getType(REntity e, RName n) throws RulesException{
+    private String getType(IREntity e, RName n) throws RulesException{
         RType type = e.getEntry(n).type;
         return type.toString();
     }
@@ -192,7 +196,7 @@ public class RSession implements IRSession {
      * @param e The Entity to be dumped.
      * @param depth Dumping is a private, recursive thing.  depth helps us track its recursive nature.
      */
-    private void dump(REntity e,int depth){
+    private void dump(IREntity e,int depth){
         Iterator<RName> anames = e.getAttributeIterator();
         while(anames.hasNext()){
             try {
@@ -213,9 +217,9 @@ public class RSession implements IRSession {
 	                      if(!(boundries.get(e)!= null && boundries.get(e).contains(value))){
 	                          dtstate.debug(" recurse\n");
 	                      }else{
-	                          if(boundries.get(e)==null)boundries.put(e, new ArrayList());
-	                          boundries.get(e).add(value);
-	                          dump((REntity)value, depth+1);
+	                          if(boundries.get(e)==null)boundries.put(e, new ArrayList<IREntity>());
+	                          boundries.get(e).add(value.rEntityValue());
+	                          dump((IREntity)value, depth+1);
 	                      }
 	                      dtstate.traceTagEnd();
                       }
@@ -528,6 +532,20 @@ public class RSession implements IRSession {
             out.println();
             out.println(t);
         }
+    }
+    /**
+     * This is the method that defines how the default value in the EDD is converted into a Rules Engine object
+     * @return
+     */
+    public IComputeDefaultValue getComputeDefault() {
+        return ComputeDefault;
+    }
+    /**
+     * This is the method that defines how the default value in the EDD is converted into a Rules Engine object
+     * @return
+     */
+    public void setComputeDefault(IComputeDefaultValue computeDefault) {
+        ComputeDefault = computeDefault;
     }
     
 }

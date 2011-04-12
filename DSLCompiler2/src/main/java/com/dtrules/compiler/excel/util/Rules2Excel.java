@@ -57,10 +57,10 @@ public class Rules2Excel {
     CellStyle      cs_type;
     CellStyle      cs_number;
     
-    { newWb(); }
-    
     void newWb() {
         wb = new HSSFWorkbook();
+        
+        sheetCnt = 0;
         
         cs_default      = wb.createCellStyle();
         cs_title        = wb.createCellStyle();
@@ -170,7 +170,7 @@ public class Rules2Excel {
        
         r.setHeight((short)-1);
         
-        for(int i =  0; i < columnCnt; i++){
+        for(int i =  0; i <= columnCnt; i++){
             Cell c = r.createCell(i);
             c.setCellStyle(cs_default);
         }
@@ -232,10 +232,21 @@ public class Rules2Excel {
         String sname    = name;
         
         if(sname.length()>30){
-            sname = sname.substring(0,30);
+            sname = sname.substring(0,30)+sheetCnt;
         }
         
-        wb.setSheetName(sheetCnt, sname);               // Set the sheet name, and increment the count.
+        boolean tryAgain    = true;
+        int     cnt         = 0;
+        String  n           = sname;
+        while(tryAgain){
+            try{
+                wb.setSheetName(sheetCnt, sname);           // Set the sheet name, and increment the count.
+                tryAgain = false;
+            }catch(IllegalArgumentException e){
+                sname = ++cnt + n; 
+            }
+        }
+        
         sheetCnt++;
         Row  r = s.getRow(cRow);                        // Get the first row.
         Cell c = r.createCell(0);
@@ -345,8 +356,8 @@ public class Rules2Excel {
         
         cRow++;
 
-        String iactions  [] = dt.getActions();
-        String ciactions [] = dt.getActionsComment();
+        String iactions  [] = dt.getInitialActions();
+        String ciactions [] = dt.getInitialActionsComment();
         for(int cnt=1; cnt<=iactions.length; cnt++){
             r = nextRow(s, cRow, 18);                             // Create a new row
             c = r.createCell(0);
@@ -491,22 +502,69 @@ public class Rules2Excel {
         
         return cRow+1;
     }
+    
+    /**
+     * We by fields specified.  The first field is the primary key, followed by the secondary, etc.
+     * @param dts
+     * @param field
+     * @param ascending
+     */
+    private void sort(ArrayList<RDecisionTable> dts, String fields[], boolean ascending){
+        if(fields == null) return;
+        for(int i = fields.length-1; i >=0 ; i--){
+            sort(dts,fields[i],ascending);
+        }
+    }
+    
+    private void sort(ArrayList<RDecisionTable> dts, String field, boolean ascending){
+        for(int i=0; i < dts.size()-1; i++){
+            for(int j=0; j < dts.size()-1; j++){
+                RDecisionTable a = dts.get(j);
+                RDecisionTable b = dts.get(j+1);
+                String af = a.getField(field);
+                String bf = b.getField(field);
+                if(af != null && bf != null && af.compareTo(bf) < 0 ^ ascending){
+                    dts.set(j+1,a);
+                    dts.set(j, b);
+                }
+            }
+        }
+    }
+
+    
     @SuppressWarnings("unchecked")
-    public void writeDecisionTables(String excelName){
+    public void writeDecisionTables(String excelName, String fields[], boolean ascending, int limit){
         try{            
-            List<String> decisiontables = admin.getDecisionTables(rs.getName());
+            List<String>                decisiontables  = admin.getDecisionTables(rs.getName());
+            ArrayList<RDecisionTable>   dts             = new ArrayList<RDecisionTable>();
+            
+            for(String dt : decisiontables){
+                RDecisionTable rdt = session.getEntityFactory().findTable(dt);
+                dts.add(rdt);
+            }
+            
+            sort(dts,fields,ascending);
+            
+            int index   = 0;
+            int filecnt = 1;
+            
+            while(index < dts.size()){
+                newWb();
+           
+                for(int i = 0; i < limit && index < dts.size();i++,index++){
+                    writeDT(dts.get(index));
+                }
+                String filename = excelName+"_"+filecnt++ +"_.xls";
+                FileOutputStream excelfile = new FileOutputStream(filename);
+                wb.write(excelfile);
+                excelfile.close();
+            }
             
             for(String dt : decisiontables){
                 RDecisionTable rdt = session.getEntityFactory().findTable(dt);
                 writeDT(rdt);
             }
-            
-            FileOutputStream excelfile = new FileOutputStream(excelName);
-            
-            wb.write(excelfile);
-            excelfile.close();
-            newWb();
-            
+                       
         }catch(Exception e){
             System.err.println("\n"+e.toString());
         }
@@ -597,14 +655,20 @@ public class Rules2Excel {
     }
 
     
-    public void writeExcel(IRulesAdminService admin, RuleSet ruleset, String excelName){
+    public void writeExcel(
+            IRulesAdminService  admin, 
+            RuleSet             ruleset, 
+            String              excelName, 
+            String              fields[], 
+            boolean             ascending,
+            int                 limit ){
         try{
             this.admin    = admin;
             rd            = admin.getRulesDirectory();
             rs            = ruleset;
             session       = rs.newSession();
             
-            writeDecisionTables(ruleset.getWorkingdirectory()+excelName+"_dt.xls");
+            writeDecisionTables(ruleset.getWorkingdirectory()+excelName,fields,ascending, limit);
             writeEDD(ruleset.getWorkingdirectory()+excelName+"_edd.xls");
         
         }catch(Exception e){

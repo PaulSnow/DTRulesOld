@@ -65,8 +65,9 @@ public class RDecisionTable extends ARObject {
     
     private        String   filename = null;    // Filename of Excel file where the table is defined,
                                                 //   if this decision table is defined in Excel.
-    
+
     enum UnbalancedType { FIRST, ALL };         // Unbalanced Table Types.
+    
     public static enum Type { 
         BALANCED { void build(DTState state, RDecisionTable dt) {dt.compile(); dt.buildBalanced();                       dt.check(null);}},
         FIRST    { void build(DTState state, RDecisionTable dt) {dt.compile(); dt.buildUnbalanced(state, UnbalancedType.FIRST); dt.check(null);}},
@@ -85,7 +86,7 @@ public class RDecisionTable extends ARObject {
     private final RuleSet ruleset;			    // A decision table must belong to a particular ruleset
     
     public  final Map<RName,String> fields = new HashMap<RName, String>(); // Holds meta information about this decision table.
-	
+
 	private boolean  compiled=false;            // The decision table isn't compiled
 												//   until fully constructed.  And
 												//   it won't be if compilation fails.
@@ -136,6 +137,11 @@ public class RDecisionTable extends ARObject {
 	int starColumn      = -1;                   // Column where a star is found (defaulted to none).	
 	int otherwiseColumn = -1;
 	int alwaysColumn    = -1;
+	
+	// Virtual field values.
+    public static  RName    table_name = RName.getRName("Table_Name");
+    public static  RName    file_name = RName.getRName("File_Name");
+    public static  RName    type_name = RName.getRName("type");	
 	
 	public boolean getHasNullColumn(){
 	    return hasNullColumn;
@@ -390,6 +396,7 @@ public class RDecisionTable extends ARObject {
 
     public void setFilename(String filename) {
         this.filename = filename;
+        fields.put(file_name,filename);
     }
 
     @Override
@@ -1579,7 +1586,26 @@ public class RDecisionTable extends ARObject {
     public DTNode getDecisiontree() {
         return decisiontree;
     }
-    
-    
+    /**
+     * This method provides field values given a field name.  A few "virtual" field names are
+     * supported so as to avoid having to have special code to access these values.  They include
+     * the Table_Name, File_Name, etc.
+     * @param fieldname
+     * @return
+     */
+    public String getField(String fieldname){
+        RName fn = RName.getRName(fieldname);
+        if(fn.equals(table_name)){
+            return dtname.stringValue();
+        }else if(fn.equals(type_name)){
+            switch(type){
+                case ALL :      return "ALL";
+                case FIRST :    return "FIRST";
+                case BALANCED : return "BALANCED";
+                default :       return "UNDEFINED";
+            }
+        }
+        return fields.get(fn);
+    }
     
 }
