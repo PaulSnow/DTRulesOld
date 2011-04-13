@@ -54,7 +54,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class If extends ROperator {
+    public static class If extends ROperator {
         If(){super("if");}
 
         public void execute(DTState state) throws RulesException {
@@ -69,7 +69,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class Ifelse extends ROperator {
+    public static class Ifelse extends ROperator {
         Ifelse(){super("ifelse");}
 
         public void execute(DTState state) throws RulesException {
@@ -97,7 +97,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class ExecuteTable extends ROperator {
+    public static class ExecuteTable extends ROperator {
         ExecuteTable(){super("executetable");}
 
         public void execute(DTState state) throws RulesException {
@@ -112,7 +112,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class Execute extends ROperator {
+    public static class Execute extends ROperator {
         Execute(){super("execute"); }
         
         public void execute(DTState state) throws RulesException {
@@ -127,7 +127,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class While extends ROperator {
+    public static class While extends ROperator {
         While(){super("while");}
 
         public void execute(DTState state) throws RulesException {
@@ -151,7 +151,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class Forallr extends ROperator {
+    public static class Forallr extends ROperator {
         Forallr(){super("forallr");}
 
         public void execute(DTState state) throws RulesException {
@@ -181,7 +181,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class Forall extends ROperator {
+    public static class Forall extends ROperator {
         Forall(){super("forall");}
 
         public void execute(DTState state) throws RulesException {
@@ -207,7 +207,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class For extends ROperator {
+    public static class For extends ROperator {
         For(){super("for");}
 
         public void execute(DTState state) throws RulesException {
@@ -227,7 +227,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class Forr extends ROperator {
+    public static class Forr extends ROperator {
         Forr(){super("forr");}
 
         public void execute(DTState state) throws RulesException {
@@ -247,7 +247,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class Entityforall extends ROperator {
+    public static class Entityforall extends ROperator {
         Entityforall(){super("entityforall");}
 
         public void execute(DTState state) throws RulesException {
@@ -273,7 +273,7 @@ public class RControl {
      * Jan 10, 2007
      *
      */
-    static class Forfirst extends ROperator {
+    public static class Forfirst extends ROperator {
         Forfirst(){super("forfirst");}
 
         public void execute(DTState state) throws RulesException {
@@ -304,7 +304,7 @@ public class RControl {
      * Jan 10, 2007
      *
      */
-    static class ForFirstElse extends ROperator {
+    public static class ForFirstElse extends ROperator {
         ForFirstElse(){super("forfirstelse");}
 
         public void execute(DTState state) throws RulesException {
@@ -340,7 +340,7 @@ public class RControl {
      * Jan 10, 2007
      *
      */
-    static class Doloop extends ROperator {
+    public static class Doloop extends ROperator {
         Doloop(){super("doloop");}
 
         public void execute(DTState state) throws RulesException {
@@ -371,7 +371,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class Allocate extends ROperator {
+    public static class Allocate extends ROperator {
         Allocate(){super("allocate"); alias("cpush");}
 
         public void execute(DTState state) throws RulesException {
@@ -391,7 +391,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class Deallocate extends ROperator {
+    public static class Deallocate extends ROperator {
         Deallocate(){super("deallocate"); alias("cpop");}
         public void execute(DTState state) throws RulesException {
             state.datapush(state.cpop());
@@ -403,7 +403,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class Localfetch extends ROperator {
+    public static class Localfetch extends ROperator {
         Localfetch(){super("local@");}
 
         public void execute(DTState state) throws RulesException {
@@ -421,7 +421,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class Localstore extends ROperator {
+    public static class Localstore extends ROperator {
         Localstore(){super("local!");}
 
         public void execute(DTState state) throws RulesException {
@@ -445,7 +445,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class PerformCatchError extends ROperator {
+    public static class PerformCatchError extends ROperator {
         PerformCatchError(){super("performcatcherror");}
 
         private IRObject p(String v) { return RString.newRString(v==null?"":v); }
@@ -492,7 +492,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class Lookup extends ROperator {
+    public static class Lookup extends ROperator {
         Lookup(){super("lookup");}
 
         public void execute(DTState state) throws RulesException {
@@ -516,7 +516,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class PolicyStatements extends ROperator {
+    public static class PolicyStatements extends ROperator {
         PolicyStatements(){super("policystatements");}
 
         public void execute(DTState state) throws RulesException {
@@ -562,7 +562,7 @@ public class RControl {
      * @author paul snow
      *
      */
-    static class ThrowException extends ROperator {
+    public static class ThrowException extends ROperator {
         ThrowException(){super("throwexception");}
 
         public void execute(DTState state) throws RulesException {

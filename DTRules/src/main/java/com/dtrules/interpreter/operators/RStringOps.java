@@ -36,7 +36,7 @@ public class RStringOps {
      * @author paul snow
      *
      */
-    static class Stringlength extends ROperator {
+    public static class Stringlength extends ROperator {
         Stringlength(){super("strlength");}
 
         @Override
@@ -52,7 +52,7 @@ public class RStringOps {
      * @author paul snow
      *
      */
-    static class Touppercase extends ROperator {
+    public static class Touppercase extends ROperator {
         Touppercase(){super("touppercase");}
 
         @Override
@@ -68,7 +68,7 @@ public class RStringOps {
      * @author paul snow
      *
      */
-    static class Tolowercase extends ROperator {
+    public static class Tolowercase extends ROperator {
         Tolowercase(){super("tolowercase");}
 
         @Override
@@ -84,7 +84,7 @@ public class RStringOps {
      * @author paul snow
      *
      */
-    static class Trim extends ROperator {
+    public static class Trim extends ROperator {
         Trim(){super("trim");}
 
         @Override
@@ -100,7 +100,7 @@ public class RStringOps {
      * @author paul snow
      *
      */
-    static class substring extends ROperator {
+    public static class substring extends ROperator {
         substring(){super("substring");}
 
         @Override
@@ -120,7 +120,7 @@ public class RStringOps {
      * @author Paul Snow
      *
      */
-    static class  RegexMatch   extends ROperator {
+    public static class  RegexMatch   extends ROperator {
         RegexMatch(){super("regexmatch");}
         
         @Override
@@ -139,7 +139,7 @@ public class RStringOps {
      * @author Paul Snow
      *
      */
-    static class  Indexof   extends ROperator {
+    public static class  Indexof   extends ROperator {
         Indexof(){super("indexof");}
         
         @Override
@@ -155,7 +155,7 @@ public class RStringOps {
      * StrConcat( String String -- String )
      * StrConcat Operator, add the given two strings and returns a string value
      */
-    static class SConcat extends ROperator {
+    public static class SConcat extends ROperator {
         SConcat(){super("s+"); alias("strconcat");}
 
         public void execute(DTState state) throws RulesException {

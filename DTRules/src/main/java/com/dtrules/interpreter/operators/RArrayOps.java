@@ -62,7 +62,7 @@ public class RArrayOps {
 	     * @author ps24876
 	     *
 	     */
-	    static class Tokenize extends ROperator {
+	    public static class Tokenize extends ROperator {
             Tokenize(){super("tokenize");}
 
             public void execute(DTState state) throws RulesException {
@@ -93,7 +93,7 @@ public class RArrayOps {
 	     * @author Paul Snow
 	     *
 	     */
-		static class Addto extends ROperator {
+		public static class Addto extends ROperator {
 			Addto(){super("addto");}
 
 			public void execute(DTState state) throws RulesException {
@@ -110,7 +110,7 @@ public class RArrayOps {
 	     * addat( Array int Value --> )
 	     * Addat Operator, adds an element to an array at the given location
 	     */
-		static class Addat extends ROperator {
+		public static class Addat extends ROperator {
 			Addat() {super("addat");}
 			
 			public void execute(DTState state) throws RulesException {
@@ -130,7 +130,7 @@ public class RArrayOps {
 	     * Remove Operator, removes all elements from an array that match the value.  Returns a
          * true if at least one element was removed, and a false otherwise.
 	     */		
-		static class Remove extends ROperator {
+		public static class Remove extends ROperator {
 			Remove() {super("remove");}
 			
 			public void execute(DTState state) throws RulesException {
@@ -161,7 +161,7 @@ public class RArrayOps {
 	     * array at the given location.  Returns true upon
 	     * success
 	     */		
-		static class Removeat extends ROperator {
+		public static class Removeat extends ROperator {
 			Removeat() {super("removeat");}
 			
 			public void execute(DTState state) throws RulesException {
@@ -185,7 +185,7 @@ public class RArrayOps {
 	     * getat( Array int --> value)
 	     * Getat Operator, gets an element from an array at the given location
 	     */		
-		static class Getat extends ROperator {
+		public static class Getat extends ROperator {
 			Getat() {super("getat");}
 			
 			public void execute(DTState state) throws RulesException {
@@ -199,7 +199,7 @@ public class RArrayOps {
 	     * newarray( --> Array)
 	     * Newarray Operator, returns a new empty array
 	     */		
-		static class Newarray extends ROperator {
+		public static class Newarray extends ROperator {
 			Newarray() {super("newarray");}
 			
 			public void execute(DTState state) throws RulesException {
@@ -212,7 +212,7 @@ public class RArrayOps {
 	     * length( Array --> int)
 	     * Length Operator, returns the size of the array
 	     */		
-		static class Length extends ROperator {
+		public static class Length extends ROperator {
 			Length() {super("length");}
 			
 			public void execute(DTState state) throws RulesException {
@@ -225,7 +225,7 @@ public class RArrayOps {
 	     * memberof( Array Value --> boolean)
 	     * Memberof Operator, returns true if the element found in the array
 	     */		
-		static class Memberof extends ROperator {
+		public static class Memberof extends ROperator {
 			Memberof() {super("memberof");}
 			
 			public void execute(DTState state) throws RulesException {
@@ -248,7 +248,7 @@ public class RArrayOps {
 	     * copyelements( Array --> newarray)
 	     * Copyelements Operator, returns the copy of the array
 	     */		
-		static class Copyelements extends ROperator {
+		public static class Copyelements extends ROperator {
 			Copyelements() {super("copyelements");}
 			
 			public void execute(DTState state) throws RulesException {
@@ -271,7 +271,7 @@ public class RArrayOps {
          * Copies the array, and makes copies of all of the elements
          * as well.
          */     
-        static class DeepCopy extends ROperator {
+        public static class DeepCopy extends ROperator {
             DeepCopy () {super("deepcopy");}
             
             public void execute(DTState state) throws RulesException {
@@ -296,7 +296,7 @@ public class RArrayOps {
 	     * sortarray( Array boolean --> )
 	     * Sortarray Operator, sorts the array elements (asc is boolean is true) 
 	     */		
-		static class Sortarray extends ROperator {
+		public static class Sortarray extends ROperator {
 			Sortarray() {super("sortarray");}
 			
 			public void execute(DTState state) throws RulesException {
@@ -328,7 +328,7 @@ public class RArrayOps {
          * randomize ( Array --> )
          * Randomizes the order in the given array. 
          */     
-        static class Randomize extends ROperator {
+        public static class Randomize extends ROperator {
         Randomize() {
             super("randomize");
         }
@@ -352,7 +352,7 @@ public class RArrayOps {
 	     * sortentities( Array field boolean --> )
 	     * Sortentities Operator, 
 	     */		
-	static class Sortentities extends ROperator {
+	public static class Sortentities extends ROperator {
 		Sortentities() {
 			super("sortentities");
 		}
@@ -395,7 +395,7 @@ public class RArrayOps {
 	     * add_no_dups( Array item --> )
 	     * Add_no_dups Operator, adds an element to an array if it is not present
 	     */
-		static class Add_no_dups extends ROperator {
+		public static class Add_no_dups extends ROperator {
 			Add_no_dups(){super("add_no_dups");}
 
 			public void execute(DTState state) throws RulesException {
@@ -419,7 +419,7 @@ public class RArrayOps {
 	     * clear( Array --> )
 	     * Clear Operator, removes all elements from the array
 	     */
-		static class Clear extends ROperator {
+		public static class Clear extends ROperator {
 			Clear(){super("clear");}
 
 			public void execute(DTState state) throws RulesException {
@@ -436,7 +436,7 @@ public class RArrayOps {
 	     * merge( Array Array--> Array)
 	     * Merge Operator, merges two array to one (Array1 elements followed by Array2 elements) 
 	     */
-		static class Merge extends ROperator {
+		public static class Merge extends ROperator {
 			Merge(){super("merge");}
 
 			public void execute(DTState state) throws RulesException {
@@ -453,7 +453,7 @@ public class RArrayOps {
          * Mark ( -- mark ) pushes a mark object onto the data stack.
          * 
          */
-        static class Mark extends ROperator {
+        public static class Mark extends ROperator {
             Mark(){super("mark");}
 
             public void execute(DTState state) throws RulesException {
@@ -466,7 +466,7 @@ public class RArrayOps {
          * of the elements on the data stack down to the first mark.
          * 
          */
-        static class Arraytomark extends ROperator {
+        public static class Arraytomark extends ROperator {
             Arraytomark(){super("arraytomark");}
 
             public void execute(DTState state) throws RulesException {
@@ -489,7 +489,7 @@ public class RArrayOps {
          * (duplicate or not) are added to array2
          * 
          */
-        static class AddArray extends ROperator {
+        public static class AddArray extends ROperator {
             AddArray(){super("addarray");}
 
             public void execute(DTState state) throws RulesException {

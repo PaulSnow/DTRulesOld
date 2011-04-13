@@ -51,7 +51,7 @@ public class RMiscOps {
     /**
      * (  -- RNull ) Return the Null object
      */
-    static class Null extends ROperator {
+    public static class Null extends ROperator {
         Null() {
             super("null");
         }
@@ -64,7 +64,7 @@ public class RMiscOps {
     /**
      * ( entity -- RName ) Get the name of the given entity.
      */
-    static class EntityName extends ROperator {
+    public static class EntityName extends ROperator {
         EntityName() {
             super("entityname");
         }
@@ -79,7 +79,7 @@ public class RMiscOps {
      * 
      *
      */
-    static class RError extends ROperator {
+    public static class RError extends ROperator {
         RError(){super("error");}
 
         public void execute(DTState state) throws RulesException {
@@ -103,7 +103,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class Debug extends ROperator {
+    public static class Debug extends ROperator {
         Debug(){super("debug");}
 
         public void execute(DTState state) throws RulesException {
@@ -119,7 +119,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class Traceon extends ROperator {
+    public static class Traceon extends ROperator {
         Traceon(){super("traceon");}
 
         public void execute(DTState state) throws RulesException {
@@ -132,7 +132,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class Traceoff extends ROperator {
+    public static class Traceoff extends ROperator {
         Traceoff(){super("traceoff");}
 
         public void execute(DTState state) throws RulesException {
@@ -146,7 +146,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class SetDebug extends ROperator {
+    public static class SetDebug extends ROperator {
         SetDebug(){super("setdebug");}
 
         public void execute(DTState state) throws RulesException {
@@ -164,7 +164,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class Ignore extends ROperator {
+    public static class Ignore extends ROperator {
         Ignore(){super("ignore"); alias("nop");}
 
         public void execute(DTState state) throws RulesException {
@@ -177,7 +177,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class Swap extends ROperator {
+    public static class Swap extends ROperator {
         Swap(){super("swap"); alias("exch");}
 
         public void execute(DTState state) throws RulesException {
@@ -193,7 +193,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class Dup extends ROperator {
+    public static class Dup extends ROperator {
         Dup(){super("dup");}
 
         public void execute(DTState state) throws RulesException {
@@ -203,7 +203,7 @@ public class RMiscOps {
         }
     }
 
-    static class Pop    extends ROperator {
+    public static class Pop    extends ROperator {
         Pop(){
             super("pop");
             alias("drop");
@@ -219,7 +219,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class Over    extends ROperator {
+    public static class Over    extends ROperator {
         Over(){super("over");}
 
         public void execute(DTState state) throws RulesException {
@@ -233,7 +233,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class Entitypush    extends ROperator {
+    public static class Entitypush    extends ROperator {
         Entitypush(){super("entitypush");}
 
         public void execute(DTState state) throws RulesException {
@@ -258,7 +258,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class Entitypop    extends ROperator {
+    public static class Entitypop    extends ROperator {
         Entitypop(){super("entitypop");}
 
         public void execute(DTState state) throws RulesException {
@@ -275,7 +275,7 @@ public class RMiscOps {
      * @author Paul Snow
      *
      */
-    static class Get    extends ROperator {
+    public static class Get    extends ROperator {
         Get(){super("get");}
         public void execute(DTState state) throws RulesException {
         	RName    n = state.datapop().rNameValue();
@@ -292,7 +292,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class Entityfetch    extends ROperator {
+    public static class Entityfetch    extends ROperator {
         Entityfetch(){super("entityfetch");}
         public void execute(DTState state) throws RulesException {
             int i = state.datapop().intValue();
@@ -305,7 +305,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  I   extends ROperator {
+    public static class  I   extends ROperator {
         I(){super("i"); alias("r@");}
 
         public void execute(DTState state) throws RulesException {
@@ -318,7 +318,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  J   extends ROperator {
+    public static class  J   extends ROperator {
         J(){super("j");}
 
         public void execute(DTState state) throws RulesException {
@@ -331,7 +331,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  K   extends ROperator {
+    public static class  K   extends ROperator {
         K(){super("k");}
 
         public void execute(DTState state) throws RulesException {
@@ -345,7 +345,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class ToR    extends ROperator {
+    public static class ToR    extends ROperator {
         ToR(){super(">r");}
 
         public void execute(DTState state) throws RulesException {
@@ -359,7 +359,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class FromR    extends ROperator {
+    public static class FromR    extends ROperator {
         FromR(){super("r>");}
 
         public void execute(DTState state) throws RulesException {
@@ -376,7 +376,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  Def extends ROperator {
+    public static class  Def extends ROperator {
         Def(){super("def");}
 
         public void execute(DTState state) throws RulesException {
@@ -396,7 +396,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  Find   extends ROperator {
+    public static class  Find   extends ROperator {
         Find(){super("find");}
 
         public void execute(DTState state) throws RulesException {
@@ -413,7 +413,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */    
-    static class  Print   extends ROperator {
+    public static class  Print   extends ROperator {
         Print(){super("print"); }
 
         public void execute(DTState state) throws RulesException {
@@ -426,7 +426,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class Clone   extends ROperator {
+    public static class Clone   extends ROperator {
         Clone(){super("clone");}
 
         public void execute(DTState state) throws RulesException {
@@ -443,7 +443,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  Xdef extends ROperator {
+    public static class  Xdef extends ROperator {
         Xdef(){super("xdef");}
 
         public void execute(DTState state) throws RulesException {
@@ -469,7 +469,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  PStack   extends ROperator {
+    public static class  PStack   extends ROperator {
         PStack(){super("pstack");}
 
         public void execute(DTState state) throws RulesException {
@@ -483,7 +483,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  Createentity   extends ROperator {
+    public static class  Createentity   extends ROperator {
         Createentity(){super("createentity");}
         
         public void execute(DTState state) throws RulesException {
@@ -500,7 +500,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  Cvi   extends ROperator {
+    public static class  Cvi   extends ROperator {
         Cvi(){super("cvi");}
         
         public void execute(DTState state) throws RulesException {
@@ -519,7 +519,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  Cvr   extends ROperator {
+    public static class  Cvr   extends ROperator {
         Cvr(){super("cvr"); }
         
         public void execute(DTState state) throws RulesException {
@@ -538,7 +538,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  Cvb   extends ROperator {
+    public static class  Cvb   extends ROperator {
         Cvb(){super("cvb");}
         
         public void execute(DTState state) throws RulesException {
@@ -556,7 +556,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  Cve   extends ROperator {
+    public static class  Cve   extends ROperator {
         Cve(){super("cve");}
         
         public void execute(DTState state) throws RulesException {
@@ -574,7 +574,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  Cvs   extends ROperator {
+    public static class  Cvs   extends ROperator {
         Cvs(){super("cvs");}
         
         public void execute(DTState state) throws RulesException {
@@ -593,7 +593,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  Cvn   extends ROperator {
+    public static class  Cvn   extends ROperator {
         Cvn(){super("cvn");}
         
         public void execute(DTState state) throws RulesException {
@@ -612,7 +612,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  Cvd   extends ROperator {
+    public static class  Cvd   extends ROperator {
         Cvd(){super("cvd");}
         
         public void execute(DTState state) throws RulesException {
@@ -636,7 +636,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  ActionString   extends ROperator {
+    public static class  ActionString   extends ROperator {
         ActionString(){super("actionstring");}
         
         public void execute(DTState state) throws RulesException {
@@ -652,7 +652,7 @@ public class RMiscOps {
      * @author paul snow
      *
      */
-    static class  GetDescription   extends ROperator {
+    public static class  GetDescription   extends ROperator {
         GetDescription(){super("getdescription");}
         
         public void execute(DTState state) throws RulesException {

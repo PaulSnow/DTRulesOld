@@ -71,7 +71,7 @@ public class RDateTimeOps {
 	     * a RNull if the string failed to convert to a date.
 	     *
 	     */
-		static class Newdate extends ROperator {
+		public static class Newdate extends ROperator {
 			Newdate(){super("newdate");}
 
 			public void execute(DTState state) throws RulesException {
@@ -91,7 +91,7 @@ public class RDateTimeOps {
          * Returns a Date object holding this number of days.
          *
          */
-        static class Days extends ROperator {
+        public static class Days extends ROperator {
             Days(){super("days");}
 
             public void execute(DTState state) throws RulesException {
@@ -106,7 +106,7 @@ public class RDateTimeOps {
          * Given a date, returns date2 pointing to the first of the month.
          * So given 2/23/07 would return 2/1/07
          */
-        static class FirstOfMonth extends ROperator {
+        public static class FirstOfMonth extends ROperator {
             FirstOfMonth(){super("firstofmonth");}
 
             public void execute(DTState state) throws RulesException {
@@ -124,7 +124,7 @@ public class RDateTimeOps {
          * Given a date, returns date2 pointing to the first of the year.
          * So given 2/23/07 would return 2/1/07
          */
-        static class FirstOfYear extends ROperator {
+        public static class FirstOfYear extends ROperator {
             FirstOfYear(){super("firstofyear");}
 
             public void execute(DTState state) throws RulesException {
@@ -143,7 +143,7 @@ public class RDateTimeOps {
          * Given a date, returns date2 pointing to the first of the month.
          * So given 2/23/07 would return 2/1/07
          */
-        static class EndOfMonth extends ROperator {
+        public static class EndOfMonth extends ROperator {
             EndOfMonth(){super("endofmonth");}
 
             public void execute(DTState state) throws RulesException {
@@ -164,7 +164,7 @@ public class RDateTimeOps {
          * taken where leap years are in effect. The month can change.
          * So given 2/23/07  3 addYears would return 2/23/10
          */
-        static class AddYears extends ROperator {
+        public static class AddYears extends ROperator {
             AddYears(){super("addyears");}
 
             public void execute(DTState state) throws RulesException {
@@ -185,7 +185,7 @@ public class RDateTimeOps {
          * Calendar.
          * So given 2/23/07  3 addMonths would return 5/23/07
          */
-        static class AddMonths extends ROperator {
+        public static class AddMonths extends ROperator {
             AddMonths(){super("addmonths");}
 
             public void execute(DTState state) throws RulesException {
@@ -203,7 +203,7 @@ public class RDateTimeOps {
          * Adds the given number of days to the given date.  You might 
          * move over to the next month!
          */
-        static class AddDays extends ROperator {
+        public static class AddDays extends ROperator {
             AddDays(){super("adddays");}
 
             public void execute(DTState state) throws RulesException {
@@ -220,7 +220,7 @@ public class RDateTimeOps {
 	     * SetCalendar Operator, 
 	     */
         @SuppressWarnings({"unchecked"})
-		static class SetCalendar extends ROperator {
+		public static class SetCalendar extends ROperator {
 			SetCalendar(){super("setCalendar");}
 
 			public void execute(DTState state) throws RulesException {
@@ -242,7 +242,7 @@ public class RDateTimeOps {
 	     * Yearof( date -- int )
 	     * Yearof Operator, returns the year value for the given date
 	     */
-		static class Yearof extends ROperator {
+		public static class Yearof extends ROperator {
 			Yearof(){super("yearof");}
 
 			public void execute(DTState state) throws RulesException {
@@ -256,7 +256,7 @@ public class RDateTimeOps {
 	     * Getdaysinyear( date -- long )
 	     * Getdaysinyear Operator, returns the number of days in a year from the given date
 	     */
-		static class Getdaysinyear extends ROperator {
+		public static class Getdaysinyear extends ROperator {
 			Getdaysinyear(){super("getdaysinyear");}
 
 			public void execute(DTState state) throws RulesException {
@@ -273,7 +273,7 @@ public class RDateTimeOps {
 	     * Getdayofmonth( date -- long )
 	     * Returns the day of the month in the given date
 	     */
-		static class Getdayofmonth extends ROperator {
+		public static class Getdayofmonth extends ROperator {
 			Getdayofmonth(){super("getdayofmonth");}
 
 			public void execute(DTState state) throws RulesException {
@@ -287,7 +287,7 @@ public class RDateTimeOps {
 	     * GetdaysinMonth( date -- long )
 	     * Getdaysinyear Operator, returns the number of days in a year from the given date
 	     */
-		static class Getdaysinmonth extends ROperator {
+		public static class Getdaysinmonth extends ROperator {
 			Getdaysinmonth(){super("getdaysinmonth");}
 
 			public void execute(DTState state) throws RulesException {
@@ -302,7 +302,7 @@ public class RDateTimeOps {
 	     * Datelt( date1 date2 -- boolean )
 	     * Datelt Operator, returns true if date1 is less than date2
 	     */
-		static class Datelt extends ROperator {
+		public static class Datelt extends ROperator {
 			Datelt(){super("d<");}
 
 			public void execute(DTState state) throws RulesException {
@@ -317,7 +317,7 @@ public class RDateTimeOps {
 	     * Dategt( date1 date2 -- boolean )
 	     * Dategt Operator, returns true if date1 is greater than date2
 	     */
-		static class Dategt extends ROperator {
+		public static class Dategt extends ROperator {
 			Dategt(){super("d>");}
 
 			public void execute(DTState state) throws RulesException {
@@ -349,7 +349,7 @@ public class RDateTimeOps {
 	     * Dateeq (date1 date2 -- boolean )
 	     * Dateeq Operator, returns true if date1 is equals to date2
 	     */
-		static class Dateeq extends ROperator {
+		public static class Dateeq extends ROperator {
 			Dateeq(){super("d==");}
 
 			public void execute(DTState state) throws RulesException {
@@ -363,7 +363,7 @@ public class RDateTimeOps {
 	     * Gettimestamp( date -- String )
 	     * Gettimestamp Operator, creates a string timestamp from s date
 	     */
-		static class Gettimestamp extends ROperator {
+		public static class Gettimestamp extends ROperator {
 			Gettimestamp(){super("gettimestamp");}
 
 			public void execute(DTState state) throws RulesException {
@@ -377,7 +377,7 @@ public class RDateTimeOps {
          * Add two dates together.  This doesn't make all that much sense unless
          * one or both of the dates is just a count of days.
          */
-        static class DatePlus extends ROperator {
+        public static class DatePlus extends ROperator {
             DatePlus() {super("d+"); }
             public void execute(DTState state) throws RulesException {
                 long date2 = state.datapop().timeValue().getTime();
@@ -392,7 +392,7 @@ public class RDateTimeOps {
          * Subtract date2 from date1  This doesn't make all that much sense unless
          * one or both of the dates is just a count of days.
          */
-        static class DateMinus extends ROperator {
+        public static class DateMinus extends ROperator {
             DateMinus() {super("d-"); }
             public void execute(DTState state) throws RulesException {
                 long date2 = state.datapop().timeValue().getTime();
@@ -406,7 +406,7 @@ public class RDateTimeOps {
          * Returns the number of years between date1 and date2.  It is always
          * the difference.  the value returned is negative if date1 is before date2.
          */
-        static class YearsBetween extends ROperator {
+        public static class YearsBetween extends ROperator {
             YearsBetween() {super("yearsbetween"); }
             public void execute(DTState state) throws RulesException {
                 Date date2 = state.datapop().timeValue();
@@ -439,7 +439,7 @@ public class RDateTimeOps {
          * Returns the number of months between date1 and date2.  If date1
          * is after date2, the number returned is negative.
          */
-        static class MonthsBetween extends ROperator {
+        public static class MonthsBetween extends ROperator {
             MonthsBetween() {super("monthsbetween"); }
             public void execute(DTState state) throws RulesException {
                 Date date2 = state.datapop().timeValue();
@@ -477,7 +477,7 @@ public class RDateTimeOps {
            * @author Paul Snow
            *
            */
-          static class DaysBetween extends ROperator {
+          public static class DaysBetween extends ROperator {
         	  DaysBetween() {super("daysbetween"); }
               public void execute(DTState state) throws RulesException {
                   Date date2 = state.datapop().timeValue();
@@ -509,7 +509,7 @@ public class RDateTimeOps {
            * @author Paul Snow
            *
            */
-          static class TestDateFormat extends ROperator {
+          public static class TestDateFormat extends ROperator {
         	  TestDateFormat() {super("testdateformat"); }
               public void execute(DTState state) throws RulesException {
                   RArray formatStrings = state.datapop().rArrayValue();
