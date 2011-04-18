@@ -139,7 +139,7 @@ public class RDecisionTable extends ARObject {
 	int alwaysColumn    = -1;
 	
 	// Virtual field values.
-    public static  RName    table_name = RName.getRName("Table_Name");
+    public static  RName    table_name = RName.getRName("Name");
     public static  RName    file_name = RName.getRName("File_Name");
     public static  RName    type_name = RName.getRName("type");	
 	

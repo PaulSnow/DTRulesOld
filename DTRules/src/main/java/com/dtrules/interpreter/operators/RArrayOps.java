@@ -19,6 +19,7 @@
 package com.dtrules.interpreter.operators;
 
 import java.util.ArrayList;
+
 import com.dtrules.entity.REntity;
 import com.dtrules.infrastructure.RulesException;
 import com.dtrules.interpreter.IRObject;
@@ -30,7 +31,6 @@ import com.dtrules.interpreter.RName;
 import com.dtrules.interpreter.RString;
 import com.dtrules.session.DTState;
 
-@SuppressWarnings("unchecked")
 public class RArrayOps {
 	 static {
 	    	new Addto();
@@ -53,6 +53,8 @@ public class RArrayOps {
             new Randomize();
             new AddArray();
             new Tokenize();
+            new Intersection();
+            new Intersects();
 	    }
 	    /**
 	     * tokenize ( String1 String2 --> array )
@@ -134,9 +136,9 @@ public class RArrayOps {
 			Remove() {super("remove");}
 			
 			public void execute(DTState state) throws RulesException {
-				IRObject  value   = state.datapop();
-				RArray    rarray  = (RArray)state.datapop();
-                ArrayList array   = rarray.arrayValue();
+				IRObject            value   = state.datapop();
+				RArray              rarray  = (RArray)state.datapop();
+                ArrayList<IRObject> array   = rarray.arrayValue();
                 boolean removed = false;
                 if(value!=null){
 					for(int i=0; i<array.size();){
@@ -171,7 +173,7 @@ public class RArrayOps {
                     state.datapush(RBoolean.getRBoolean(false));
                 }
                 
-                ArrayList array   = rarray.arrayValue();
+                ArrayList<IRObject> array   = rarray.arrayValue();
                    if(state.testState(DTState.TRACE)){
                        state.traceInfo("removed", "arrayID",rarray.getID()+"","position",position+"",null);
                    }
@@ -189,8 +191,8 @@ public class RArrayOps {
 			Getat() {super("getat");}
 			
 			public void execute(DTState state) throws RulesException {
-				int position = state.datapop().intValue();
-				ArrayList array  = state.datapop().arrayValue();
+				int                 position    = state.datapop().intValue();
+				ArrayList<IRObject> array       = state.datapop().arrayValue();
 				state.datapush((IRObject)array.get(position));				
 			}
 		}
@@ -216,7 +218,7 @@ public class RArrayOps {
 			Length() {super("length");}
 			
 			public void execute(DTState state) throws RulesException {
-				ArrayList array  = state.datapop().arrayValue();
+				ArrayList<IRObject> array  = state.datapop().arrayValue();
 				state.datapush(RInteger.getRIntegerValue(array.size()));
 			}
 		}		
@@ -230,7 +232,7 @@ public class RArrayOps {
 			
 			public void execute(DTState state) throws RulesException {
 				IRObject  value = state.datapop();
-				ArrayList array  = state.datapop().arrayValue();
+				ArrayList<IRObject> array  = state.datapop().arrayValue();
 				boolean found = false;
 				if(value!=null){
 					for(int i=0; i<array.size(); i++){
@@ -423,8 +425,8 @@ public class RArrayOps {
 			Clear(){super("clear");}
 
 			public void execute(DTState state) throws RulesException {
-				IRObject  rarray = state.datapop();
-                ArrayList array  = rarray.arrayValue();
+				IRObject            rarray = state.datapop();
+				ArrayList<IRObject> array  = rarray.arrayValue();
 				array.clear();
                 if (state.testState(DTState.TRACE)){
                     state.traceInfo("clear","array",rarray.stringValue(),null);
@@ -440,9 +442,9 @@ public class RArrayOps {
 			Merge(){super("merge");}
 
 			public void execute(DTState state) throws RulesException {
-				ArrayList array2  = state.datapop().arrayValue();
-				ArrayList array1  = state.datapop().arrayValue();
-				ArrayList newarray = new ArrayList();
+			    ArrayList<IRObject> array2  = state.datapop().arrayValue();
+			    ArrayList<IRObject> array1  = state.datapop().arrayValue();
+			    ArrayList<IRObject> newarray = new ArrayList<IRObject>();
 				newarray.addAll(array1);
 				newarray.addAll(array2);
 				state.datapush(new RArray(state.getSession().getUniqueID(),false,newarray, false));
@@ -503,6 +505,53 @@ public class RArrayOps {
                     }
                 }
                
+            }
+        }
+        
+        /**
+         * ( array1 array2 -- array3 ) Returns the intersection of Array1 and Array2. 
+         * Returns an empty array if no members of array1 are found in array2. Duplicates
+         * are removed.
+         */
+        public static class Intersection extends ROperator {
+            Intersection(){super("intersection");}
+
+            public void execute(DTState state) throws RulesException {
+                
+                RArray array1 = state.datapop().rArrayValue();
+                RArray array2 = state.datapop().rArrayValue();
+                
+                RArray ret = RArray.NewArray(state.getSession(), false, false);
+    
+                for(IRObject v : array1){
+                    if(array2.contains(v)){
+                        ret.add(v);
+                    }
+                }
+                
+                state.datapush(ret);
+            }
+        }
+        
+        /**
+         * ( array1 array2 -- boolean ) Returns true if any member of array1 is in array2
+         */
+        public static class Intersects extends ROperator {
+            Intersects(){super("intersects");}
+
+            public void execute(DTState state) throws RulesException {
+                
+                RArray array1 = state.datapop().rArrayValue();
+                RArray array2 = state.datapop().rArrayValue();
+                  
+                for(IRObject v : array1){
+                    if(array2.contains(v)){
+                        state.datapush(RBoolean.getRBoolean(true));
+                        return;
+                    }
+                }
+                
+                state.datapush(RBoolean.getRBoolean(false));
             }
         }
 }

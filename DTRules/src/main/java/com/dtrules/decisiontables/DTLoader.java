@@ -177,6 +177,16 @@ public class DTLoader implements IGenericXMLParser {
         dt.actionsPostfix           = new String[a_cnt];
         dt.actiontable              = new String[a_cnt][col_cnt];
         
+        /** PolicyStatements have a statement **/
+        int realcnt = 0;
+        for(int i=0; i<ps_formal.size(); i++){
+            if(ps_formal.get(i)!=null && ps_formal.get(i).trim().length()>0){
+                realcnt = i+1;
+            }
+        }
+        dt.policystatements         = new String [realcnt];
+        dt.policystatementsPostfix  = new String [realcnt];
+            
         //Move over the information for the contexts
         adjust(context_formal,context_cnt);
         adjust(context_comments,context_cnt);
@@ -222,11 +232,12 @@ public class DTLoader implements IGenericXMLParser {
 		
 		adjust(ps_formal,col_cnt);
 		adjust(ps_postfix,col_cnt);
-        dt.policystatements = new String [col_cnt];
-        dt.policystatements = ps_formal.toArray(dt.policystatements);
-        dt.policystatementsPostfix = new String [col_cnt];
-        dt.policystatementsPostfix = ps_postfix.toArray(dt.policystatementsPostfix);
-        
+		for(int i=0; i<realcnt;i++){
+		    dt.policystatements[i] = ps_formal.get(i);
+		    dt.policystatementsPostfix[i] = ps_postfix.get(i);
+		}
+        ps_formal.clear();
+        ps_postfix.clear();
 	}
 	
 	/**

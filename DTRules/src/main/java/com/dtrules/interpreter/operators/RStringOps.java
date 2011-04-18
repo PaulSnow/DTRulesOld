@@ -27,7 +27,7 @@ import com.dtrules.session.DTState;
 public class RStringOps {
     static {
         new Stringlength(); new Touppercase();  new Tolowercase();  new Trim();
-        new substring();    new RegexMatch();   new Indexof();      new SConcat();
+        new substring();    new RegexMatch();   new Indexof();      new StrConcat();
     }
 
 
@@ -155,8 +155,8 @@ public class RStringOps {
      * StrConcat( String String -- String )
      * StrConcat Operator, add the given two strings and returns a string value
      */
-    public static class SConcat extends ROperator {
-        SConcat(){super("s+"); alias("strconcat");}
+    public static class StrConcat extends ROperator {
+        StrConcat(){super("s+"); alias("strconcat");}
 
         public void execute(DTState state) throws RulesException {
             String value2 = state.datapop().stringValue();

@@ -104,8 +104,9 @@ public class RDate extends ARObject {
         if(time==null){
             throw new RulesException("Undefined", "getYear()", "No valid date available");
         }
-        state.calendar.setTime(time);
-        return state.calendar.get(Calendar.YEAR);
+        Calendar c = Calendar.getInstance();
+        c.setTime(time);
+        return c.get(Calendar.YEAR);
     }
     /**
      * Returns self.

@@ -321,7 +321,7 @@ public class Excel2XML {
             String ruleset,
             String applicationRepositoryPath,
             String [] mappings,
-            int    errorcnt) throws Exception {
+            int    errorcnt) {
         try{
             System.out.println("Starting: "+ new Date());
             Excel2XML converter     = new Excel2XML(path, rulesConfig, ruleset);
@@ -350,8 +350,6 @@ public class Excel2XML {
     
         } catch ( Exception ex ) {
             System.out.println("Failed to convert the Excel files");
-            ex.printStackTrace();
-            throw ex;
         }
     }
 }

@@ -52,6 +52,9 @@ public class ImportRuleSets {
 	
     boolean CountsAreDirty;
     
+    ArrayList<String> errors   = new ArrayList<String>();
+    ArrayList<String> warnings = new ArrayList<String>();
+    
     String tmpEDD = "tmpEDD.xml";
     
     String defaultColumns[]={"number","comments","dsl","table"};
@@ -106,6 +109,23 @@ public class ImportRuleSets {
                 }  
             }    
         }
+
+        {
+            int i = 1;
+            for(String warning : warnings){
+                System.err.println("WARNING["+i++ +"] "+warning);
+            }
+        }
+        
+        if(errors.size()>0){
+            int i = 1;
+            for(String error : errors){
+                System.err.println("ERROR["+i++ +"] "+error);
+            }
+            System.err.println("Number of errors found: "+errors.size());
+            throw new RuntimeException();
+        }
+        
         if(xlsFound)return data;
         return null;
     }
@@ -318,10 +338,6 @@ public class ImportRuleSets {
         if(colonIndex>1){
            String attrib  = value.substring(0,colonIndex);
            attrib  = attrib.replaceAll(" ", "_");
-           try {
-			  Integer.parseInt(attrib);
-			  attrib = "";
-		   } catch (NumberFormatException e) { }
            return attrib;
         }
         return "";
@@ -343,11 +359,12 @@ public class ImportRuleSets {
         int    colonIndex = value.indexOf(":");
         if(colonIndex>1){
            value = value.substring(colonIndex+1).trim();
+        }else {
+            try{
+            	Integer.parseInt(value);
+            	value = getCellValue(sheet,row,2).trim();
+            }catch(NumberFormatException e){};
         }
-        try{
-        	Integer.parseInt(value);
-        	value = getCellValue(sheet,row,2).trim();
-        }catch(NumberFormatException e){};
         return value;
     }
     /**
@@ -371,14 +388,10 @@ public class ImportRuleSets {
      * @param row
      * @return
      */
-    static int cnt = 0;
     private String getDSL(HSSFSheet sheet, int row){        
         int field = getColumn("dsl");
         if(field==-1)throw new RuntimeException("No DSL Column"); 
         String value = getCellValue(sheet,row, field).trim();
-        if(value.length()>0){
-            System.out.println(++cnt + " -- "+value );
-        }
         return value;
     }
     /**
@@ -502,11 +515,13 @@ public class ImportRuleSets {
      */
     int nextBlock(HSSFSheet sheet, int row){
         String attrib = getNextAttrib(sheet, row);
-        if(sheet.getRow(row)==null)return row;
+        if(sheet.getRow(row)==null){
+            return row;
+        }
         Cell   c      = sheet.getRow(row).getCell(0);
         while(attrib.equals("") && c.getCellType()!= HSSFCell.CELL_TYPE_FORMULA){
             row++;
-            attrib = getNextAttribValue(sheet, row);
+            attrib = getNextAttrib(sheet, row);
             if(row > sheet.getLastRowNum()) return row-1;
             c      = sheet.getRow(row).getCell(0);
         }
@@ -614,10 +629,10 @@ public class ImportRuleSets {
               out.printdata(attributes.get(i),attributes.get(i+1));
           }
         out.closetag();
-        
+  
         rowIndex = nextBlock(sheet, rowIndex);
         attrib = getNextAttrib(sheet, rowIndex);
-        
+      
         if(attrib.equalsIgnoreCase("contexts")){
             rowIndex++;
             out.opentag("contexts");
@@ -631,7 +646,7 @@ public class ImportRuleSets {
                     out.opentag("context_details");
                     String err = printNumber(out,sheet,rowIndex,"context_number",contextCount++);
                     if(err!=null){
-                        System.out.println(dtName+" : "+err);
+                        warnings.add(dtName+" : "+err);
                     }
                     String contextComment = getComments(sheet, rowIndex);
                     out.printdata("context_comment",contextComment);
@@ -644,7 +659,7 @@ public class ImportRuleSets {
             }
             out.closetag();
         }
-        
+     
         rowIndex = nextBlock(sheet, rowIndex);
         attrib = getNextAttrib(sheet, rowIndex);
         
@@ -660,7 +675,8 @@ public class ImportRuleSets {
                     out.opentag("initial_action_details");
                     String err = printNumber(out,sheet,rowIndex,"intial_action_number",iactionCount++);
                     if(err!=null){
-                        System.out.println(dtName+" : "+err);
+                        warnings.add(dtName+" : "+err);
+
                     }
 
                     String initialActionComment = getComments(sheet, rowIndex);
@@ -682,7 +698,6 @@ public class ImportRuleSets {
         rowIndex = nextBlock(sheet, rowIndex);
         attrib = getNextAttrib(sheet, rowIndex);
         rowIndex++;
-        
         out.opentag("conditions");
         int conditionCount = 1;
         while(isCondition(sheet, rowIndex)){
@@ -693,7 +708,8 @@ public class ImportRuleSets {
         		out.opentag("condition_details");
                 String err = printNumber(out,sheet,rowIndex,"condition_number",conditionCount++);
                 if(err!=null){
-                    System.out.println(dtName+" : "+err);
+                    warnings.add(dtName+" : "+err);
+
                 }
 	
 	        	String conditionComment = getComments(sheet, rowIndex);
@@ -705,7 +721,7 @@ public class ImportRuleSets {
                 out.printdata("condition_description",conditionDescription);
 	        	
 	        	for(int j=0; j<16;j++){
-	        		String columnValue =getTableValue(sheet, rowIndex, j);  
+	        		String columnValue =getTableValue(sheet, rowIndex, j).trim();  
 	        		if(columnValue.equals("") || columnValue.equals(RDecisionTable.DASH)){
 	        		    columnValue = RDecisionTable.DASH;
 	        		}
@@ -715,8 +731,10 @@ public class ImportRuleSets {
 	        		    out.printdata("condition_column","column_number",""+(j+1),"column_value",columnValue,null);
 	        		}else if (columnValue.equalsIgnoreCase(RDecisionTable.DASH)){
 	        		}else{
-	        			if(!columnValue.equals(""))
-		                throw new Exception("Undesired value in the condition matrix");
+	        			if(!columnValue.equals("")){
+		                  errors.add(dtName+": Undesired value in the condition matrix: '"+
+                                  columnValue+"' Row: "+rowIndex);
+	        			}
 	        		}
 	        	}
                 out.closetag();
@@ -726,11 +744,11 @@ public class ImportRuleSets {
         	rowIndex++;
         }
         out.closetag();
-        
+      
         rowIndex = nextBlock(sheet, rowIndex);
         attrib = getNextAttrib(sheet, rowIndex);
         rowIndex++;
-        
+                
         out.opentag("actions");
         int actionCount = 1;
         	while(isAction(sheet,rowIndex)){
@@ -739,7 +757,7 @@ public class ImportRuleSets {
                     out.opentag("action_details");
                     String err = printNumber(out,sheet,rowIndex,"action_number",actionCount++);
                     if(err!=null){
-                        System.out.println(dtName+" : "+err);
+                        warnings.add(dtName+" : "+err);
                     }
 
                 	String actionComment = getComments(sheet, rowIndex); 
@@ -757,7 +775,7 @@ public class ImportRuleSets {
                             out.printdata("action_column","column_number",""+(j+1),"column_value",columnValue,null);
                 		}else{
                 			if(columnValue.length() != 0){
-        	                   System.out.println(dtName+": Undesired value '"+columnValue+"' in the action matrix ("+j+","+rowIndex+")");
+        	                   errors.add(dtName+": Undesired value '"+columnValue+"' in the action matrix ("+j+","+rowIndex+")");
                 			}  
                 		}
                 	}
