@@ -283,6 +283,8 @@ public class Excel2XML {
                 rs.getFilepath()+rs.getEDD_XMLName(),
                 rs.getWorkingdirectory()+filename);
     }
+    
+    
     public static void compile (
             String path, 
             String rulesConfig, 
@@ -290,6 +292,7 @@ public class Excel2XML {
             String applicationRepositoryPath) throws Exception {
         compile(path,rulesConfig,ruleset,applicationRepositoryPath,null);
     }
+    
     
     public static void compile (
             String path, 
