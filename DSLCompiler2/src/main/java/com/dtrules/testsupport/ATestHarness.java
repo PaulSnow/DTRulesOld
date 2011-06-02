@@ -243,6 +243,9 @@ public abstract class ATestHarness implements ITestHarness {
         try{
             // Delete old output files
             File dir         = new File(getOutputDirectory());
+            if(!dir.exists()){
+            	dir.mkdirs();
+            }
             File oldOutput[] = dir.listFiles();
             for(File file : oldOutput){
                file.delete(); 
