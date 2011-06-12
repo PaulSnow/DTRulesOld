@@ -630,8 +630,10 @@ public class ChangeReport {
                    return true;
                }
            }
-           if(executionChanged(n1.getTags().get(i),n2.getTags().get(i))){
-               return true;
+           if(i >= n1.getTags().size() && i >= n2.getTags().size()){
+	           if(executionChanged(n1.getTags().get(i),n2.getTags().get(i))){
+	               return true;
+	           }
            }
        }
        return false;
