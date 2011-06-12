@@ -72,8 +72,7 @@ public class RulesDirectory {
 		try{
 		   this.defaultCompiler = (Class<ICompiler>) Class.forName(qualifiedCompilerClassName);
 		}catch(ClassNotFoundException e){
-		    throw new RuntimeException("Cannot find the specfied compiler: "+qualifiedCompilerClassName);
-		    
+		    System.err.println("WARNING:  Cannot find the specfied compiler: "+qualifiedCompilerClassName);
 		}
 	}
 
