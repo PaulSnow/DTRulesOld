@@ -45,7 +45,7 @@ public class RMiscOps {
         new Createentity(); new Cvi();          new Cvr();
         new Cvb();          new Cve();          new Cvs();
         new Cvn();          new Cvd();          new ActionString();
-        new GetDescription();                   
+        new PrintTOS();     new GetDescription();                   
     }
 
     /**
@@ -114,6 +114,18 @@ public class RMiscOps {
         }
     }
 
+    public static class Print extends ROperator {
+    	Print(){super("print"); }
+    	public void execute(DTState state) throws RulesException {
+            String msg = state.datapop().stringValue();
+            msg = msg.replaceAll("\\\\n", "\n");
+            state.print(msg);
+        }
+    }
+    
+    
+    
+    
     /**
      * ( -- ) Turn on the trace flag.
      * @author paul snow
@@ -413,8 +425,8 @@ public class RMiscOps {
      * @author paul snow
      *
      */    
-    public static class  Print   extends ROperator {
-        Print(){super("print"); }
+    public static class  PrintTOS   extends ROperator {
+        PrintTOS(){super("printtos"); }
 
         public void execute(DTState state) throws RulesException {
             state.debug(state.datapop().toString());
