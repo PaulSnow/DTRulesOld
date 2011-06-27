@@ -353,6 +353,7 @@ public class Excel2XML {
     
         } catch ( Exception ex ) {
             System.out.println("Failed to convert the Excel files");
+            System.out.println(ex.toString());
         }
     }
 }
