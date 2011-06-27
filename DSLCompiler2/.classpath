@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="/DTRules"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/java-cup-11a.jar"/>
-	<classpathentry kind="lib" path="lib/JFlex.jar"/>
 	<classpathentry kind="lib" path="lib/poi-3.8-beta1-20110307.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

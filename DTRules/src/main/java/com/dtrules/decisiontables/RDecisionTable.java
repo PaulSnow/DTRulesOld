@@ -1229,10 +1229,17 @@ public class RDecisionTable extends ARObject {
      * routine executes all columns whose conditions are met.
      */
     public void buildUnbalanced(DTState state, UnbalancedType type) {
+        if( 
+                conditiontable.length == 0    ||
+                conditiontable[0].length == 0 ||           // If we have no conditions, or
+                conditiontable[0][0]==null)   {            // we have nothing, or
+         	   return;
+            }	
        if( 
-           conditiontable.length == 0 ||
-    	   conditiontable[0].length == 0 ||           // If we have no conditions, or
-           conditiontable[0][0].equals("*")){         // If *, we just execute all actions
+           conditiontable.length == 0    ||
+           conditiontable[0].length == 0 ||           // If we have no conditions, or
+           conditiontable[0][0]==null    ||           // we have nothing, or
+            conditiontable[0][0].equals("*")){        // If *, we just execute all actions
     	   decisiontree = ANode.newANode(this,0);	  //   checked in the first column             
     	   return;
        }	

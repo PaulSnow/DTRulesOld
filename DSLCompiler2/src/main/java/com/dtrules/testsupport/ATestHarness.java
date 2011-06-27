@@ -75,11 +75,11 @@ public abstract class ATestHarness implements ITestHarness {
     public void executeDecisionTables(IRSession session)throws RulesException{
     	String [] decisionTables = getDecisionTableNames(); 
     	if(decisionTables == null){
-    		decisionTables = new String[1];
-    		decisionTables[0] = getDecisionTableName();
-    	}
-    	for(String table : decisionTables){
-    		session.execute(table);
+    		session.execute(getDecisionTableName());
+    	}else{
+	    	for(String table : decisionTables){
+	    		session.execute(table);
+	    	}
     	}
     };
     
@@ -243,6 +243,9 @@ public abstract class ATestHarness implements ITestHarness {
         try{
             // Delete old output files
             File dir         = new File(getOutputDirectory());
+            if(!dir.exists()){
+            	dir.mkdirs();
+            }
             File oldOutput[] = dir.listFiles();
             for(File file : oldOutput){
                file.delete(); 
@@ -351,19 +354,18 @@ public abstract class ATestHarness implements ITestHarness {
     	 InputStream input = new FileInputStream(path+"/"+dataset);
     	 if( harnessVersion() < 2){
 	         Mapping   mapping  = session.getMapping();
-	         
-	         datamap = session.getDataMap(mapping,null);
-	         
+	         DataMap datamap = session.getDataMap(mapping,null);
 	         datamap.loadXML(input);
-	         
 	         mapping.loadData(session, datamap);
+	         
+	         this.datamap = datamap;
     	 }else{
-    		 autoDataMap = session.getRuleSet().getAutoDataMap(session, mapName());
-    		 
-    	     autoDataMap.setCurrentGroup("applicationDataload");
+    		 AutoDataMap autoDataMap = session.getRuleSet().getAutoDataMap(session, mapName());
+    		 autoDataMap.setCurrentGroup("applicationDataload");
     		 autoDataMap.LoadXML(input);
-    		 
     		 autoDataMap.mapDataToTarget("dtrules");
+    		 
+    		 this.autoDataMap = autoDataMap;
     	 }
      }
     

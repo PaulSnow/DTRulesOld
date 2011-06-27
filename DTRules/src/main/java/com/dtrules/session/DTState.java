@@ -373,6 +373,13 @@ public class DTState {
     }
 
     /**
+     * Prints a string to System.out. 
+     */
+    public void print(String s) {
+        System.out.print(s);
+    }
+    
+    /**
      * Prints the Data Stack, Entity Stack, and Control Stack to the debugging
      * output stream.
      */

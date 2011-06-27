@@ -52,10 +52,7 @@ public class RulesDirectory {
     		try{
     			defaultCompiler = (Class<ICompiler>)Class.forName("com.dtrules.compiler.el.EL");
     		}catch(ClassNotFoundException e){
-    			throw new RulesException(
-    					"undefined", 
-    					"Rules Engine Initiation", 
-    					"Could not find the default DTRules compiler: com.dtrules.compiler.el.EL");
+    			return null;			// No default compiler found.
     		}
     	}
 		return defaultCompiler;
@@ -72,8 +69,7 @@ public class RulesDirectory {
 		try{
 		   this.defaultCompiler = (Class<ICompiler>) Class.forName(qualifiedCompilerClassName);
 		}catch(ClassNotFoundException e){
-		    throw new RuntimeException("Cannot find the specfied compiler: "+qualifiedCompilerClassName);
-		    
+		    System.err.println("WARNING:  Cannot find the specfied compiler: "+qualifiedCompilerClassName);
 		}
 	}
 
